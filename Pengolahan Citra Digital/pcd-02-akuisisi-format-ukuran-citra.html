@@ -1,0 +1,1397 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>PCD: Akuisisi, Format, dan Ukuran Citra | Rangkuman dan Kuis Kahoot</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&family=Source+Serif+4:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F4F5FA; --surface:#FFFFFF; --ink:#161A3C; --muted:#5B6285; --line:#D9DCEC;
+  --accent:#46178F; --accent-ink:#FFFFFF; --soft:#EEE8FA; --warn:#FBF3D9; --warn-line:#C99A1B;
+  --font-head:'Montserrat',system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+  --font-body:'Source Serif 4',Georgia,'Times New Roman',serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1024; --surface:#171A38; --ink:#EDEFFC; --muted:#A5ABCF; --line:#2B2F5C;
+    --accent:#B99CF2; --accent-ink:#1A0B3B; --soft:#261E52; --warn:#2E2810; --warn-line:#8C7326;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1024; --surface:#171A38; --ink:#EDEFFC; --muted:#A5ABCF; --line:#2B2F5C;
+  --accent:#B99CF2; --accent-ink:#1A0B3B; --soft:#261E52; --warn:#2E2810; --warn-line:#8C7326;
+}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 76px);scroll-behavior:smooth}
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:18px;line-height:1.72;-webkit-text-size-adjust:100%}
+h1,h2,h3,h4{font-family:var(--font-head);line-height:1.2;margin:0}
+p{margin:0 0 1em}
+a{color:var(--accent)}
+:focus-visible{outline:3px solid #F5B301;outline-offset:2px}
+
+/* ---------- Header ---------- */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:var(--bg);border-bottom:1px solid var(--line)}
+.top-in{max-width:1120px;margin:0 auto;padding:10px 20px;display:flex;align-items:center;gap:16px;justify-content:space-between}
+.brand{font-family:var(--font-head);font-weight:800;font-size:.95rem;letter-spacing:.01em}
+.tabs{flex:none;display:flex;gap:6px;background:var(--soft);padding:4px;border-radius:999px}
+.tab{white-space:nowrap;font:700 .82rem var(--font-head);border:0;background:transparent;color:var(--ink);padding:8px 16px;border-radius:999px;cursor:pointer}
+.tab[aria-selected="true"]{background:var(--accent);color:var(--accent-ink)}
+
+/* ---------- Ringkasan ---------- */
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+.hero{padding:44px 0 28px}
+.hero h1{font-size:clamp(2rem,5.2vw,3.4rem);font-weight:800;letter-spacing:-.02em;max-width:18ch}
+.hero .lede{font-size:1.15rem;color:var(--muted);max-width:60ch;margin-top:16px}
+
+.explorer{border:1.5px solid var(--ink);border-radius:8px;padding:22px;margin:8px 0 12px;background:var(--surface)}
+.explorer h2{font-size:1.15rem;font-weight:800}
+.explorer p.sub{color:var(--muted);font-size:.95rem;margin:6px 0 18px}
+.spec{position:relative;height:54px;border-radius:6px;overflow:hidden;border:1px solid var(--line)}
+.spec input[type=range]{position:absolute;inset:0;width:100%;height:100%;margin:0;background:transparent;-webkit-appearance:none;appearance:none;cursor:ew-resize}
+.spec input[type=range]::-webkit-slider-runnable-track{background:transparent;height:54px}
+.spec input[type=range]::-moz-range-track{background:transparent;height:54px}
+.spec input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:8px;height:54px;background:#fff;border:2px solid #161A3C;border-radius:2px;box-shadow:0 0 0 2px rgba(255,255,255,.7)}
+.spec input[type=range]::-moz-range-thumb{width:6px;height:52px;background:#fff;border:2px solid #161A3C;border-radius:2px}
+.ticks{position:relative;height:34px;font:600 .74rem var(--font-head);color:var(--muted)}
+.ticks span{position:absolute;top:6px;transform:translateX(-50%);white-space:nowrap}
+.ticks span::before{content:"";position:absolute;left:50%;top:-6px;width:1px;height:6px;background:var(--muted)}
+.readout{display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:stretch;margin-top:6px}
+.swatch{width:96px;border-radius:6px;border:1px solid var(--line);min-height:96px}
+.rgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 22px}
+.rgrid dt{font:600 .74rem var(--font-head);color:var(--muted);margin:0}
+.rgrid dd{margin:0;font:700 1rem var(--font-head);word-break:break-word}
+.verdict{grid-column:1/-1;font-size:.98rem;line-height:1.5;margin:4px 0 0;padding:10px 14px;border-left:4px solid var(--accent);background:var(--soft);border-radius:0 6px 6px 0}
+.verdict.ion{border-left-color:#E21B3C}
+.presets{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;align-items:center}
+.presets button{font:600 .78rem var(--font-head);padding:7px 12px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;cursor:pointer}
+.presets button:hover{border-color:var(--accent)}
+.numin{display:flex;align-items:center;gap:8px;margin-left:auto;font:600 .8rem var(--font-head)}
+.numin input{width:120px;font:600 .9rem var(--font-head);padding:6px 8px;border:1.5px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink)}
+
+.doc{display:grid;grid-template-columns:220px minmax(0,1fr);gap:56px;padding:24px 0 80px}
+.toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 76px);align-self:start;font-family:var(--font-head);font-size:.84rem}
+.toc b{display:block;margin-bottom:10px;font-size:.9rem}
+.toc a{display:block;padding:7px 0 7px 14px;border-left:3px solid var(--line);color:var(--muted);text-decoration:none;font-weight:600;line-height:1.35}
+.toc a.on{border-left-color:var(--accent);color:var(--ink)}
+article section{margin-bottom:64px}
+article h2{font-size:clamp(1.5rem,3vw,2rem);font-weight:800;letter-spacing:-.01em;margin-bottom:18px;padding-top:6px}
+article h3{font-size:1.12rem;font-weight:700;margin:32px 0 10px}
+article ul,article ol{padding-left:1.25em;margin:0 0 1em}
+article li{margin-bottom:.4em}
+.tw{overflow-x:auto;margin:16px 0 22px;border:1px solid var(--line);border-radius:6px}
+table{border-collapse:collapse;width:100%;font-family:var(--font-head);font-size:.84rem;line-height:1.45;min-width:520px;background:var(--surface)}
+th,td{padding:10px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+th{background:var(--soft);font-weight:700}
+tr:last-child td{border-bottom:0}
+td:first-child{font-weight:700}
+.eq{font-style:italic;font-size:1.35rem;text-align:center;padding:14px 12px;margin:14px 0;background:var(--soft);border-radius:6px;overflow-x:auto;white-space:nowrap}
+.eq small{font-style:normal;font-family:var(--font-head);font-size:.78rem;color:var(--muted);display:block;margin-top:4px;white-space:normal}
+.note{border-left:4px solid var(--accent);background:var(--soft);padding:14px 18px;border-radius:0 6px 6px 0;margin:20px 0}
+.note.warn{border-left-color:var(--warn-line);background:var(--warn)}
+.note p:last-child{margin-bottom:0}
+.quote{font-family:var(--font-head);font-weight:700;font-size:1.25rem;line-height:1.4;border-left:5px solid var(--accent);padding:6px 0 6px 20px;margin:26px 0}
+.figure{margin:22px 0}
+.figure svg{width:100%;height:auto;display:block}
+.figure figcaption{font-family:var(--font-head);font-size:.78rem;color:var(--muted);margin-top:6px}
+svg text{font-family:var(--font-head);fill:var(--ink)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 18px}
+.chip{font:700 .78rem var(--font-head);padding:6px 10px;border-radius:5px;color:#111}
+
+.grp{border:1.5px dashed var(--muted);border-radius:8px;padding:12px;margin-bottom:10px}
+.grp-title{font:800 .85rem var(--font-head);margin-bottom:10px}
+.grp.cv{border-color:var(--accent)}
+.chain{display:flex;flex-wrap:wrap;align-items:stretch;gap:8px}
+.node{flex:1 1 150px;border:1.5px solid var(--line);background:var(--surface);padding:10px 12px;border-radius:6px;font-family:var(--font-head);font-size:.8rem;line-height:1.4}
+.node b{display:block;font-size:.88rem;margin-bottom:2px}
+.node span{color:var(--muted);font-family:var(--font-body);font-size:.88rem;line-height:1.4;display:block}
+.arrow{align-self:center;color:var(--accent);font:800 1.2rem var(--font-head)}
+.between{text-align:center;font:800 1.3rem var(--font-head);color:var(--accent);margin:2px 0 10px}
+
+details.bank-item{border-bottom:1px solid var(--line);padding:12px 0;font-family:var(--font-head);font-size:.9rem}
+details.bank-item summary{cursor:pointer;font-weight:700;line-height:1.45}
+details.bank-item ol{list-style:upper-alpha;margin:10px 0 8px;padding-left:1.6em;font-weight:500}
+details.bank-item li.key{font-weight:800;color:var(--accent)}
+details.bank-item p{font-family:var(--font-body);font-size:.95rem;color:var(--muted);margin:6px 0 0}
+
+@media (max-width:900px){
+  .doc{grid-template-columns:minmax(0,1fr);gap:0}
+  .toc{display:none}
+  .readout{grid-template-columns:1fr}
+  .swatch{width:100%;min-height:44px}
+  .numin{margin-left:0;width:100%}
+  .chain{flex-direction:column}
+  .arrow{transform:rotate(90deg)}
+}
+@media (max-width:520px){
+  body{font-size:17px}
+  .brand{font-size:.8rem}
+  .tab{padding:8px 12px}
+  .rgrid{grid-template-columns:1fr 1fr}
+  .ticks .edge{display:none}
+}
+
+
+/* ---------- Laboratorium mini & contoh ---------- */
+.lab{border:1.5px solid var(--ink);border-radius:8px;padding:18px 20px;margin:22px 0;background:var(--surface);font-family:var(--font-head)}
+.lab h4{font-size:1rem;font-weight:800;margin-bottom:4px}
+.lab .labp{font-size:.88rem;color:var(--muted);margin:0 0 12px;line-height:1.5}
+.lab .ctl{display:flex;flex-direction:column;gap:6px;font-size:.88rem;font-weight:600;margin-bottom:8px}
+.lab input[type=range]{width:100%;accent-color:var(--accent)}
+.lab .chk{display:flex;gap:8px;align-items:center;font-size:.85rem;font-weight:600;margin-bottom:12px}
+.mats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:10px}
+.mat{display:flex;flex-direction:column;gap:2px;font-size:.8rem;line-height:1.4}
+.mat .sw{height:64px;border-radius:6px;border:1px solid var(--line);margin-bottom:4px}
+.mat span{color:var(--muted);font-weight:600}
+.bs-stage{position:relative;height:96px;background:#fff;border:1px solid var(--line);border-radius:6px;overflow:hidden;margin:6px 0 10px}
+.bs-cross{position:absolute;left:40px;top:50%;transform:translate(-50%,-50%);font:700 30px/1 var(--font-head);color:#111}
+.bs-dot{position:absolute;top:50%;width:22px;height:22px;border-radius:50%;background:#d0021b;transform:translate(-50%,-50%);left:300px}
+.sc{display:flex;border-radius:6px;overflow:hidden;border:1px solid var(--line);margin:8px 0}
+.sc div{flex:1;height:130px;display:grid;place-items:center}
+.sc i{display:block;width:56px;height:56px;background:#808080}
+.hots-tag{display:inline-block;background:#F5B301;color:#3a2a00;font:800 .7rem var(--font-head);padding:2px 8px;border-radius:4px;margin-right:6px}
+.kq-hots{background:#F5B301;color:#3a2a00;font-weight:800;padding:6px 16px;border-radius:999px;font-size:.85rem}
+@media (max-width:520px){.mats{grid-template-columns:1fr}.mat{flex-direction:row;flex-wrap:wrap;gap:4px 12px;align-items:center}.mat .sw{width:100%;height:36px}}
+
+/* ---------- Kuis Kahoot ---------- */
+#view-quiz{background:#46178F;color:#fff;transition:background .35s;font-family:var(--font-head)}
+#view-quiz[data-mood="correct"]{background:#26890C}
+#view-quiz[data-mood="wrong"]{background:#C4162F}
+#view-quiz[data-mood="timeout"]{background:#1368CE}
+#view-quiz[data-mood="board"]{background:#2B0B5C}
+.kq-stage{max-width:1000px;margin:0 auto;padding:20px 20px 32px;min-height:640px;display:flex;flex-direction:column}
+.kq-bar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
+.kq-pill{background:rgba(0,0,0,.28);border-radius:6px;padding:7px 14px;font-weight:800;font-size:.9rem}
+.kq-mute{border:0;background:rgba(0,0,0,.28);color:#fff;font:700 .78rem var(--font-head);border-radius:6px;padding:7px 12px;cursor:pointer}
+.kq-center{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:14px;padding:14px 0}
+.kq-logo{font-weight:800;font-size:clamp(2.2rem,7vw,3.8rem);letter-spacing:-.02em}
+.kq-sub{opacity:.85;font-weight:600;max-width:46ch;line-height:1.5}
+.kq-pin{background:#fff;color:#46178F;border-radius:8px;padding:10px 26px;font-weight:800}
+.kq-pin small{display:block;font-size:.72rem;font-weight:700;color:#5b3d94}
+.kq-pin b{font-size:2rem;letter-spacing:.14em}
+.kq-form{background:#fff;border-radius:8px;padding:16px;width:min(360px,100%);display:flex;flex-direction:column;gap:10px;color:#222}
+.kq-form input[type=text]{font:700 1.1rem var(--font-head);padding:13px 14px;border:2px solid #c9c9d6;border-radius:6px;text-align:center;color:#222;background:#fff}
+.kq-form label.opt{display:flex;gap:8px;align-items:center;font:600 .82rem var(--font-head);color:#444;text-align:left}
+.kq-btn{font:800 1.05rem var(--font-head);border:0;border-radius:6px;padding:14px 26px;background:#333;color:#fff;cursor:pointer;box-shadow:0 4px 0 rgba(0,0,0,.35)}
+.kq-btn:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(0,0,0,.35)}
+.kq-btn.light{background:#fff;color:#46178F}
+.kq-btn.ghost{background:rgba(0,0,0,.28);box-shadow:none;font-size:.85rem;padding:10px 16px}
+.kq-count{font-weight:800;font-size:1.05rem;background:rgba(0,0,0,.28);padding:8px 18px;border-radius:999px}
+.kq-bigq{font-size:clamp(1.4rem,4vw,2.3rem);font-weight:800;line-height:1.3;max-width:26ch}
+.kq-bigq i,.kq-qbox i,.kq-exp i{font-family:var(--font-body);font-weight:600}
+.kq-introbar{width:min(420px,80%);height:10px;background:rgba(255,255,255,.25);border-radius:6px;overflow:hidden}
+.kq-introbar i{display:block;height:100%;background:#fff;width:0;animation:fill 3s linear forwards}
+@keyframes fill{to{width:100%}}
+.kq-qbox{background:#fff;color:#1c1c28;border-radius:8px;padding:18px 22px;font-weight:800;font-size:clamp(1.05rem,2.6vw,1.6rem);line-height:1.35;text-align:center;margin:6px 0 12px}
+.kq-timer{display:flex;align-items:center;gap:14px;margin-bottom:14px}
+.tnum{flex:none;width:56px;height:56px;border-radius:50%;background:#fff;color:#46178F;display:grid;place-items:center;font-weight:800;font-size:1.5rem}
+.tnum.low{background:#E21B3C;color:#fff;animation:pulse .5s ease-in-out infinite alternate}
+@keyframes pulse{to{transform:scale(1.12)}}
+.tbar{flex:1;height:14px;background:rgba(0,0,0,.3);border-radius:8px;overflow:hidden}
+.tbar i{display:block;height:100%;width:100%;background:#F5B301;transform-origin:left}
+.answers{display:grid;grid-template-columns:1fr 1fr;gap:12px;flex:1}
+.ans{display:flex;align-items:center;gap:16px;min-height:104px;border:0;border-radius:6px;color:#fff;font:700 clamp(1rem,2.4vw,1.35rem) var(--font-head);text-align:left;padding:14px 20px;cursor:pointer;box-shadow:0 5px 0 rgba(0,0,0,.3);line-height:1.3}
+.ans svg{flex:none;width:34px;height:34px;fill:#fff}
+.ans:active{transform:translateY(3px);box-shadow:0 2px 0 rgba(0,0,0,.3)}
+.ans.c0{background:#E21B3C}.ans.c1{background:#1368CE}.ans.c2{background:#B98400}.ans.c3{background:#26890C}
+.answers.locked .ans{pointer-events:none;opacity:.35}
+.answers.locked .ans.picked{opacity:1;outline:4px solid #fff}
+.kq-foot{display:flex;justify-content:space-between;margin-top:14px;background:rgba(0,0,0,.3);padding:10px 16px;border-radius:6px;font-weight:700;font-size:.9rem}
+.kq-verdict{font-weight:800;font-size:clamp(2rem,6vw,3.2rem)}
+.kq-pts{background:rgba(0,0,0,.3);padding:8px 28px;border-radius:999px;font-weight:800;font-size:1.6rem}
+.kq-streak{font-weight:700;background:#F5B301;color:#3a2a00;padding:6px 16px;border-radius:999px;font-size:.9rem}
+.kq-dist{display:flex;gap:12px;align-items:flex-end;height:120px;margin:4px 0}
+.kq-dist div{width:64px;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:4px;font-weight:800;font-size:.9rem}
+.kq-dist i{display:block;width:100%;min-height:6px;border-radius:4px 4px 0 0}
+.kq-dist svg{width:20px;height:20px;fill:#fff}
+.kq-dist .ok{outline:3px solid #fff;outline-offset:2px;border-radius:4px}
+.kq-dist .no{opacity:.45}
+.kq-exp{background:#fff;color:#1c1c28;border-radius:8px;padding:14px 18px;max-width:640px;text-align:left;font-size:.95rem;line-height:1.5}
+.kq-exp b{display:block;margin-bottom:4px;font-size:1rem}
+.kq-exp p{margin:0;font-family:var(--font-body);font-size:1rem;color:#333}
+.kq-rank{font-weight:700;opacity:.92}
+.lb{width:min(620px,100%);display:flex;flex-direction:column;gap:8px;text-align:left}
+.lb-row{display:grid;grid-template-columns:34px 1fr auto;gap:10px;align-items:center;background:rgba(255,255,255,.1);border-radius:6px;padding:8px 12px;position:relative;overflow:hidden}
+.lb-row.me{outline:3px solid #F5B301}
+.lb-fill{position:absolute;inset:0 auto 0 0;background:rgba(255,255,255,.16);width:0;transition:width 1s cubic-bezier(.2,.7,.2,1)}
+.lb-row>:not(.lb-fill){position:relative}
+.lb-rank{font-weight:800;opacity:.8}
+.lb-name{font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lb-score{font-weight:800}
+.podium{display:flex;align-items:flex-end;justify-content:center;gap:10px;height:230px;margin:6px 0 4px;width:min(560px,100%)}
+.pod{flex:1 1 0;min-width:0;max-width:180px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:4px;text-align:center;font-weight:700}
+.pod .nm{font-size:.9rem;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pod .bl{width:100%;border-radius:6px 6px 0 0;background:linear-gradient(#ffd75e,#F5B301);color:#3a2a00;display:grid;place-items:start center;padding-top:10px;font-weight:800;font-size:1.6rem;transform-origin:bottom;animation:rise .9s cubic-bezier(.2,.7,.2,1) both}
+.pod.p1 .bl{height:150px;animation-delay:.5s}.pod.p2 .bl{height:110px;animation-delay:.25s;background:linear-gradient(#e2e6ee,#a9b0c0)}.pod.p3 .bl{height:80px;background:linear-gradient(#e9b98a,#b9783f)}
+@keyframes rise{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;width:min(720px,100%)}
+.stats div{background:rgba(0,0,0,.28);border-radius:6px;padding:12px 8px}
+.stats b{display:block;font-size:1.4rem}
+.stats span{font-size:.74rem;opacity:.85;font-weight:600}
+.review{width:min(720px,100%);text-align:left;display:flex;flex-direction:column;gap:6px}
+.review details{background:rgba(0,0,0,.25);border-radius:6px;padding:10px 14px;font-size:.9rem}
+.review summary{cursor:pointer;font-weight:700;line-height:1.4}
+.review p{margin:8px 0 0;font-family:var(--font-body);font-size:.98rem;opacity:.95}
+.review .tag{display:inline-block;font-weight:800;font-size:.72rem;padding:2px 8px;border-radius:4px;margin-right:6px;background:#26890C}
+.review .tag.x{background:#E21B3C}.review .tag.t{background:#1368CE}
+.btnrow{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+@media (max-width:640px){
+  .ans{min-height:84px;padding:12px 14px;gap:10px}
+  .ans svg{width:26px;height:26px}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .kq-dist div{width:52px}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.01ms!important;animation-delay:0s!important;transition-duration:.01ms!important}
+}
+
+/* ---------- Tambahan: kalkulator & lab materi akuisisi ---------- */
+.calc{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:16px;font-family:var(--font-head)}
+.calc label{display:flex;flex-direction:column;gap:4px;font:600 .78rem var(--font-head);color:var(--muted)}
+.calc input,.calc select{font:700 .95rem var(--font-head);padding:8px 10px;border:1.5px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink);width:100%}
+.calc .dim{opacity:.4;pointer-events:none}
+.rgrid.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+.cvbox{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;margin:6px 0 10px}
+.cvbox figure{margin:0;font-size:.78rem;color:var(--muted);font-weight:600}
+.cvbox canvas{width:100%;height:auto;aspect-ratio:1/1;display:block;border:1px solid var(--line);border-radius:6px;image-rendering:pixelated;image-rendering:crisp-edges;background:#000}
+.qbar{display:flex;height:34px;border-radius:6px;overflow:hidden;border:1px solid var(--line);margin:8px 0 4px}
+.qbar i{flex:1;display:block}
+.qticks{display:flex;justify-content:space-between;font:600 .72rem var(--font-head);color:var(--muted);margin-bottom:10px}
+.ngrid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;max-width:420px;margin:10px 0}
+.ngrid button{aspect-ratio:1/1;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);border-radius:5px;font:700 .8rem var(--font-head);cursor:pointer;padding:0}
+.ngrid button.p{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.ngrid button.n{background:#F5B301;color:#3a2a00;border-color:#C99A1B}
+.seg{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
+.seg button{font:700 .78rem var(--font-head);padding:7px 12px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.lut{display:flex;flex-wrap:wrap;gap:16px;align-items:center;margin:14px 0;font-family:var(--font-head);font-size:.8rem}
+.lut table{min-width:0;width:auto}
+.lut td,.lut th{padding:6px 10px;text-align:center}
+.lut td:first-child{font-weight:700}
+.idx{display:grid;grid-template-columns:repeat(4,34px);gap:3px}
+.idx span{height:34px;display:grid;place-items:center;border-radius:4px;font-weight:800;border:1px solid var(--line);background:var(--bg)}
+.idx.col span{color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.6)}
+.lut .ar{font:800 1.3rem var(--font-head);color:var(--accent)}
+.fix{display:inline-block;background:#E21B3C;color:#fff;font:800 .7rem var(--font-head);padding:2px 8px;border-radius:4px;margin-right:6px;vertical-align:1px}
+@media (max-width:900px){.calc{grid-template-columns:1fr 1fr}.rgrid.three{grid-template-columns:1fr 1fr}}
+@media (max-width:520px){.cvbox{grid-template-columns:1fr 1fr;gap:8px}.lut{gap:10px}}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-in">
+    <div class="brand">Pengolahan Citra Digital</div>
+    <div class="tabs" role="tablist" aria-label="Pilih tampilan">
+      <button class="tab" role="tab" data-view="summary" aria-selected="true">Rangkuman</button>
+      <button class="tab" role="tab" data-view="quiz" aria-selected="false">Kuis Kahoot</button>
+    </div>
+  </div>
+</header>
+
+<!-- =================== RANGKUMAN =================== -->
+<main id="view-summary">
+  <div class="wrap">
+    <div class="hero">
+      <h1>Dari objek nyata menjadi berkas: berapa bit sebuah citra?</h1>
+      <p class="lede">Rangkuman pertemuan akuisisi citra: sampling dan kuantisasi, jenis citra dan ruang warna, dimensi dan resolusi, ukuran berkas beserta header BMP, format bitmap vs vektor, serta hubungan antarpiksel. Semua latihan di catatan dibahas ulang lengkap dengan koreksinya. Di bagian akhir ada kuis gaya Kahoot.</p>
+    </div>
+
+    <section class="explorer" aria-labelledby="ex-h">
+      <h2 id="ex-h">Kalkulator ukuran berkas citra</h2>
+      <p class="sub">Isi dimensi dan jenis citra. Kalkulator menghitung ukuran teoretis (piksel × bit per piksel) dan ukuran nyata sebagai berkas BMP, lengkap dengan header, palet, dan padding baris.</p>
+      <div class="calc">
+        <label>Lebar (px)<input type="number" id="cW" min="1" step="1" value="1024"></label>
+        <label>Tinggi (px)<input type="number" id="cH" min="1" step="1" value="768"></label>
+        <label>Jenis citra
+          <select id="cMode">
+            <option value="bin">Biner (1 bit)</option>
+            <option value="gray">Grayscale (pilih level)</option>
+            <option value="idx">Terindeks (palet 256 warna)</option>
+            <option value="rgb" selected>RGB (24 bit)</option>
+            <option value="rgba">RGBA (32 bit)</option>
+          </select>
+        </label>
+        <label id="cLvWrap">Level keabuan (L)
+          <select id="cLv">
+            <option value="2">2 (1 bit)</option><option value="4">4 (2 bit)</option><option value="16">16 (4 bit)</option><option value="64">64 (6 bit)</option><option value="256" selected>256 (8 bit)</option>
+          </select>
+        </label>
+      </div>
+      <div class="readout">
+        <div class="swatch" id="cSw" aria-hidden="true"></div>
+        <dl class="rgrid three">
+          <div><dt>Total piksel</dt><dd id="oPx"></dd></div>
+          <div><dt>Bit per piksel (k)</dt><dd id="oK"></dd></div>
+          <div><dt>Kemungkinan nilai / warna (2<sup>k</sup>)</dt><dd id="oCol"></dd></div>
+          <div><dt>Ukuran teoretis (bit)</dt><dd id="oBit"></dd></div>
+          <div><dt>Ukuran teoretis (byte)</dt><dd id="oByte"></dd></div>
+          <div><dt>Header + palet BMP</dt><dd id="oHdr"></dd></div>
+          <div><dt>Ukuran nyata BMP (byte)</dt><dd id="oReal"></dd></div>
+          <div><dt>Ukuran nyata BMP (bit)</dt><dd id="oRealBit"></dd></div>
+          <div><dt>Selisih nyata − teoretis</dt><dd id="oDiff"></dd></div>
+        </dl>
+        <p class="verdict" id="cV"></p>
+      </div>
+      <div class="presets" id="cPresets">
+        <button data-p="1024,768,rgb,256">Soal 4a: RGB 1024×768</button>
+        <button data-p="1024,768,gray,256">Soal 4b: grayscale 1024×768</button>
+        <button data-p="200,200,gray,256">Soal 3a: 200×200, 256 level</button>
+        <button data-p="200,200,gray,4">Soal 3b: 200×200, 4 level</button>
+        <button data-p="1920,1080,rgb,256">Full HD RGB</button>
+        <button data-p="9248,6936,rgb,256">Kamera 64 MP</button>
+      </div>
+    </section>
+
+    <div class="doc">
+      <nav class="toc" aria-label="Daftar isi">
+        <b>Daftar isi</b>
+        <a href="#s1">1. Akuisisi citra</a>
+        <a href="#s2">2. Sampling dan kuantisasi</a>
+        <a href="#s3">3. Jenis citra</a>
+        <a href="#s4">4. Ruang warna</a>
+        <a href="#s5">5. Dimensi, resolusi, sensor</a>
+        <a href="#s6">6. Ukuran berkas dan header</a>
+        <a href="#s7">7. Format: bitmap vs vektor</a>
+        <a href="#s8">8. Hubungan antarpiksel</a>
+        <a href="#s9">Ringkasan rumus</a>
+        <a href="#s10">Bank soal dan kunci</a>
+      </nav>
+
+      <article>
+<!-- ---------------- 1 ---------------- -->
+<section id="s1">
+  <h2>1. Akuisisi citra: dari cahaya sampai berkas</h2>
+  <p><b>Akuisisi citra</b> adalah proses mengubah objek nyata menjadi citra digital. Objek di dunia nyata bersifat kontinu: posisinya bisa di titik mana saja dan kecerahannya bisa bernilai berapa saja. Komputer hanya bisa menyimpan bilangan diskret dalam bentuk biner, jadi di tengah jalan ada dua kali "pemotongan": pada ruang (sampling) dan pada nilai (kuantisasi).</p>
+
+  <h3>Lima tahap akuisisi (jawaban Latihan 1)</h3>
+  <div class="figure" role="group" aria-label="Rantai akuisisi citra">
+    <div class="grp">
+      <div class="grp-title">Dunia analog: kontinu</div>
+      <div class="chain">
+        <div class="node"><b>1. Objek memantulkan cahaya</b><span>Sumber cahaya menyinari objek; sebagian cahaya dipantulkan ke arah kamera.</span></div>
+        <div class="arrow">→</div>
+        <div class="node"><b>2. Sensor menangkap foton</b><span>Sensor (CCD/CMOS) mengubah intensitas foton menjadi sinyal listrik analog yang kontinu.</span></div>
+      </div>
+    </div>
+    <div class="between" aria-hidden="true">↓</div>
+    <div class="grp cv">
+      <div class="grp-title">Digitalisasi: diskret</div>
+      <div class="chain">
+        <div class="node"><b>3. Sampling</b><span>Sinyal dipetakan ke grid titik diskret sehingga terbentuk matriks piksel.</span></div>
+        <div class="arrow">→</div>
+        <div class="node"><b>4. Kuantisasi</b><span>Nilai tiap piksel dibulatkan ke salah satu dari L level (derajat keabuan atau warna).</span></div>
+        <div class="arrow">→</div>
+        <div class="node"><b>5. Penyimpanan</b><span>Matriks bilangan bulat disimpan di memori sebagai berkas citra (BMP, PNG, JPEG, ...).</span></div>
+      </div>
+    </div>
+    <figcaption>Sampling menentukan berapa banyak piksel; kuantisasi menentukan berapa banyak nilai yang bisa dimiliki tiap piksel.</figcaption>
+  </div>
+
+  <div class="note">
+    <p><b>Mengapa harus diskret?</b> Komputer memproses dan menyimpan data dalam bentuk biner. Fungsi kontinu punya tak hingga titik dan tak hingga kemungkinan nilai, sehingga tidak mungkin disimpan utuh. Sampling dan kuantisasi membuat citra menjadi matriks berukuran terbatas dengan nilai bilangan bulat terbatas.</p>
+  </div>
+
+  <h3>Citra sebagai matriks</h3>
+  <p>Hasil akhirnya adalah fungsi diskret <i>f</i>(<i>x</i>,<i>y</i>) berukuran <i>M</i> × <i>N</i>. Setiap elemen matriks adalah satu piksel (<em>picture element</em>) dengan nilai bulat 0 sampai <i>L</i> − 1.</p>
+  <div class="eq">f(x, y) ∈ {0, 1, …, L − 1} &nbsp;&nbsp; dengan &nbsp; L = 2<sup>k</sup>
+    <small>x = 0 … N − 1 (kolom) &nbsp;|&nbsp; y = 0 … M − 1 (baris) &nbsp;|&nbsp; k = jumlah bit per piksel</small>
+  </div>
+</section>
+
+<!-- ---------------- 2 ---------------- -->
+<section id="s2">
+  <h2>2. Sampling dan kuantisasi</h2>
+  <div class="tw"><table>
+    <thead><tr><th></th><th>Sampling</th><th>Kuantisasi</th></tr></thead>
+    <tbody>
+      <tr><td>Yang didiskretkan</td><td>Koordinat ruang (<i>x</i>, <i>y</i>)</td><td>Nilai intensitas atau warna <i>f</i></td></tr>
+      <tr><td>Hasilnya</td><td>Grid piksel berukuran <i>M</i> × <i>N</i></td><td>L level nilai, L = 2<sup>k</sup></td></tr>
+      <tr><td>Menentukan</td><td>Resolusi spasial (ketajaman detail)</td><td>Resolusi intensitas (kehalusan gradasi)</td></tr>
+      <tr><td>Bila terlalu sedikit</td><td>Citra kotak-kotak (pikselasi), detail halus hilang</td><td>Gradasi patah menjadi pita-pita (<em>false contouring</em>)</td></tr>
+      <tr><td>Contoh angka</td><td>1024 × 768, 64 MP</td><td>2 level (biner), 256 level (8 bit)</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Cara kerja kuantisasi</h3>
+  <p>Rentang nilai 0–255 dibagi menjadi beberapa kelompok sama lebar, lalu setiap kelompok diwakili oleh satu nilai. Pada catatan, 4 level membagi rentang menjadi 0–63, 64–127, 128–191, dan 192–255. Semua nilai dalam satu kelompok diganti satu wakil, misalnya nilai tengah kelompok.</p>
+  <div class="eq">lebar kelompok Δ = 256 / L &nbsp;&nbsp;&nbsp; wakil = ⌊v / Δ⌋ · Δ + Δ/2
+    <small>konvensi nilai tengah, seperti di catatan (0–63 diwakili 32). Buku lain memakai batas bawah atau menyebar level ke 0 dan 255; yang penting konsisten.</small>
+  </div>
+  <div class="note">
+    <p><b>Contoh.</b> Kuantisasi 4 level (Δ = 64). Piksel bernilai 100 berada di kelompok 64–127, sehingga diwakili 96. Piksel 30 menjadi 32, piksel 200 menjadi 224. Di catatan tertulis "0–64 diwakili 32"; tepatnya rentangnya 0–63, karena 64 sudah masuk kelompok kedua.</p>
+  </div>
+
+  <div class="lab" id="labSQ">
+    <h4>Coba sendiri: sampling dan kuantisasi pada satu citra</h4>
+    <p class="labp">Kiri adalah citra acuan beresolusi tinggi dengan 256 level. Kanan adalah hasil digitalisasi. Kurangi jumlah sampel untuk melihat pikselasi; kurangi bit untuk melihat pita warna palsu.</p>
+    <div class="ctl"><label for="sqS">Sampling: <output id="sqSv">64 × 64</output> piksel</label><input type="range" id="sqS" min="0" max="5" step="1" value="3"></div>
+    <div class="ctl"><label for="sqQ">Kuantisasi: <output id="sqQv">8 bit (256 level)</output></label><input type="range" id="sqQ" min="1" max="8" step="1" value="8"></div>
+    <div class="cvbox">
+      <figure><canvas id="sqRef" width="256" height="256"></canvas><figcaption>Acuan: 256 × 256, 256 level</figcaption></figure>
+      <figure><canvas id="sqOut" width="256" height="256"></canvas><figcaption id="sqCap">Hasil</figcaption></figure>
+    </div>
+    <div class="qbar" id="sqBar" aria-hidden="true"></div>
+    <div class="qticks"><span>0</span><span>64</span><span>128</span><span>192</span><span>255</span></div>
+    <p class="verdict" id="sqNote"></p>
+  </div>
+
+  <h3>Pertanyaan di catatan: "64 MP" maksudnya apa?</h3>
+  <p><b>MP (megapiksel)</b> berarti sejuta piksel. Kamera 64 MP menghasilkan citra sekitar 64 juta piksel, misalnya 9248 × 6936 = 64.144.128 piksel. Angka ini hanya menyatakan hasil <em>sampling</em> (berapa banyak titik), bukan kualitas warna. Kualitas foto juga ditentukan ukuran sensor, ukuran tiap piksel, lensa, dan pengolahan kamera. Pada ponsel, sensor 64 MP sering menggabungkan 4 piksel menjadi 1 (<em>pixel binning</em>) dan menghasilkan foto 16 MP yang lebih bersih di cahaya redup.</p>
+  <div class="note warn">
+    <p><b>Konsekuensi ukuran.</b> 64.144.128 piksel × 24 bit = 1.539.459.072 bit = 192.432.384 byte, kira-kira 183,5 MB tanpa kompresi. Karena itu kamera menyimpan JPEG atau HEIF yang terkompresi, biasanya belasan MB.</p>
+  </div>
+</section>
+
+<!-- ---------------- 3 ---------------- -->
+<section id="s3">
+  <h2>3. Jenis citra berdasarkan nilai pikselnya</h2>
+  <div class="tw"><table>
+    <thead><tr><th>Jenis</th><th>Kanal</th><th>Bit per piksel</th><th>Nilai piksel</th><th>Kegunaan</th></tr></thead>
+    <tbody>
+      <tr><td>Biner</td><td>1</td><td>1</td><td>0 (hitam) atau 1 (putih)</td><td>Dokumen hasil scan, masker segmentasi, OCR</td></tr>
+      <tr><td>Grayscale</td><td>1</td><td>8 (umumnya)</td><td>0–255 derajat keabuan</td><td>Rontgen, analisis tepi dan tekstur</td></tr>
+      <tr><td>Berwarna (RGB)</td><td>3</td><td>24</td><td>(R, G, B), masing-masing 0–255</td><td>Foto, video, layar</td></tr>
+      <tr><td>Berwarna + transparansi (RGBA)</td><td>4</td><td>32</td><td>(R, G, B, A)</td><td>Ikon, stiker, lapisan desain</td></tr>
+      <tr><td>Terindeks</td><td>1 (indeks) + palet</td><td>8 (umumnya)</td><td>Indeks 0–255 ke tabel warna</td><td>GIF, logo, grafik sederhana</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Citra biner</h3>
+  <p>Setiap piksel hanya punya dua kemungkinan: 0 untuk hitam dan 1 untuk putih. Informasi warna dan gradasi hilang, yang tersisa hanya bentuk. Justru karena sederhana, citra biner hemat memori (1 bit per piksel) dan cepat diproses, sehingga banyak dipakai sebagai tahap antara: menghitung objek, mengukur luas, atau mengenali huruf. Citra biner biasanya dibuat dari citra grayscale dengan <em>thresholding</em>: piksel ≥ ambang menjadi 1, sisanya 0.</p>
+
+  <h3>Citra grayscale (monokrom)</h3>
+  <p>Terdiri dari satu kanal berukuran 8 bit yang nilainya disebut <b>intensitas</b> atau <b>derajat keabuan</b>, dari 0 (hitam) sampai 255 (putih). Ada dua cara umum mengonversi RGB ke grayscale.</p>
+  <div class="eq">rata-rata: &nbsp;Y = (R + G + B) / 3 &nbsp;&nbsp;&nbsp; luminositas: &nbsp;Y = 0,299·R + 0,587·G + 0,114·B
+    <small>bobot luminositas mengikuti standar ITU-R BT.601; jumlah ketiga bobot = 1</small>
+  </div>
+  <p>Rumus luminositas lebih mendekati persepsi manusia karena mata paling peka terhadap hijau dan paling tidak peka terhadap biru. Dengan rata-rata, hijau murni (0, 255, 0) dan biru murni (0, 0, 255) sama-sama menjadi 85, padahal hijau terlihat jauh lebih terang. Dengan luminositas, hijau menjadi 150 dan biru hanya 29.</p>
+
+  <div class="lab" id="labGray">
+    <h4>Coba sendiri: RGB → grayscale → biner</h4>
+    <p class="labp">Atur warna lalu bandingkan dua cara konversi. Ambang menentukan hasil biner dari nilai luminositas.</p>
+    <div class="ctl"><label for="gR">R = <output id="gRv">200</output></label><input type="range" id="gR" min="0" max="255" value="200"></div>
+    <div class="ctl"><label for="gG">G = <output id="gGv">100</output></label><input type="range" id="gG" min="0" max="255" value="100"></div>
+    <div class="ctl"><label for="gB">B = <output id="gBv">50</output></label><input type="range" id="gB" min="0" max="255" value="50"></div>
+    <div class="ctl"><label for="gT">Ambang biner = <output id="gTv">128</output></label><input type="range" id="gT" min="0" max="255" value="128"></div>
+    <div class="mats" id="gMats"></div>
+    <p class="verdict" id="gNote"></p>
+  </div>
+
+  <h3>Citra berwarna dan RGBA</h3>
+  <p>Citra berwarna memiliki tiga kanal, misalnya R, G, dan B. Dengan 8 bit per kanal, satu piksel butuh 24 bit, sehingga jumlah kemungkinan warna adalah 2<sup>24</sup> = 16.777.216, yang di catatan ditulis "16,7 M" (<em>true color</em>).</p>
+  <p><b>RGBA</b> menambahkan kanal alfa (transparansi). Makin besar nilai alfa, makin tampak (opak) pikselnya; makin kecil, makin transparan. Pada 8 bit, A = 255 berarti opak penuh dan A = 0 berarti tidak terlihat sama sekali. Karena ada kanal keempat, RGBA memakai 32 bit per piksel.</p>
+
+  <h3>Citra terindeks (indexed image)</h3>
+  <p>Piksel tidak menyimpan warna, melainkan <b>indeks</b> (nomor) ke sebuah tabel warna yang disebut <em>palet</em>, <em>colormap</em>, atau <em>Look-Up Table (LUT)</em>. Saat citra dibuka, setiap indeks dicocokkan ke LUT dan dikeluarkan tiga nilai (R, G, B).</p>
+  <div class="lut" role="group" aria-label="Contoh citra terindeks">
+    <div><div style="margin-bottom:6px;font-weight:700">Matriks indeks</div>
+      <div class="idx"><span>0</span><span>0</span><span>1</span><span>1</span><span>0</span><span>2</span><span>2</span><span>1</span><span>3</span><span>2</span><span>2</span><span>3</span><span>3</span><span>3</span><span>0</span><span>0</span></div></div>
+    <div class="ar" aria-hidden="true">+</div>
+    <div class="tw" style="margin:0"><table>
+      <thead><tr><th>Indeks</th><th>R</th><th>G</th><th>B</th></tr></thead>
+      <tbody>
+        <tr><td>0</td><td>70</td><td>23</td><td>143</td></tr>
+        <tr><td>1</td><td>226</td><td>27</td><td>60</td></tr>
+        <tr><td>2</td><td>245</td><td>179</td><td>1</td></tr>
+        <tr><td>3</td><td>38</td><td>137</td><td>12</td></tr>
+      </tbody>
+    </table></div>
+    <div class="ar" aria-hidden="true">=</div>
+    <div><div style="margin-bottom:6px;font-weight:700">Citra tampil</div>
+      <div class="idx col" id="idxCol"></div></div>
+  </div>
+  <div class="note warn">
+    <p><span class="fix">Koreksi catatan</span> Di catatan tertulis citra terindeks "bagus untuk citra natural". Sebaliknya: palet dibatasi (umumnya 256 warna), sedangkan foto alam berisi ribuan hingga jutaan warna, sehingga hasilnya berpita atau berbintik (<em>dithering</em>). Citra terindeks cocok untuk grafik dengan sedikit warna: logo, ikon, diagram, animasi GIF. Untuk foto, gunakan RGB 24 bit.</p>
+  </div>
+  <div class="note">
+    <p><b>Kenapa hemat?</b> Citra RGB 1024 × 768 butuh 2.359.296 byte. Versi terindeks 256 warna hanya butuh 786.432 byte untuk indeks ditambah 1.024 byte untuk palet (256 × 4 byte di BMP), sekitar sepertiganya.</p>
+  </div>
+</section>
+
+<!-- ---------------- 4 ---------------- -->
+<section id="s4">
+  <h2>4. Ruang warna (kanal citra)</h2>
+  <div class="tw"><table>
+    <thead><tr><th>Ruang warna</th><th>Kanal</th><th>Arti tiap kanal</th><th>Dipakai untuk</th></tr></thead>
+    <tbody>
+      <tr><td>RGB</td><td>3</td><td>Red, Green, Blue. Aditif: makin besar nilainya makin terang; R + G + B maksimum = putih.</td><td>Layar, kamera, pengolahan umum</td></tr>
+      <tr><td>CMYK</td><td>4</td><td>Cyan, Magenta, Yellow, Black (K). Subtraktif: tinta menyerap cahaya; K ditambahkan agar hitam pekat dan hemat tinta.</td><td>Percetakan</td></tr>
+      <tr><td>HSV</td><td>3</td><td>Hue: jenis warna (sudut 0–360°). Saturation: tingkat kemurnian atau kepekatan warna. Value: kecerahan.</td><td>Segmentasi berbasis warna, pemilih warna</td></tr>
+      <tr><td>L*a*b* (CIELAB)</td><td>3</td><td>L*: kecerahan 0–100. a*: hijau (−) ke merah (+). b*: biru (−) ke kuning (+).</td><td>Mengukur beda warna, koreksi warna lintas perangkat</td></tr>
+    </tbody>
+  </table></div>
+  <h3>Melengkapi catatan: kanal citra Lab</h3>
+  <p>Lab dirancang agar <b>seragam secara persepsi</b>: jarak angka antara dua warna kira-kira sebanding dengan beda yang dirasakan mata. Lab juga <b>tidak bergantung perangkat</b> (<em>device-independent</em>), berbeda dengan RGB yang hasilnya bisa lain di tiap layar. Karena kecerahan (L*) terpisah dari warna (a*, b*), kita bisa menajamkan atau mengatur kontras pada kanal L* saja tanpa menggeser warna.</p>
+  <div class="note">
+    <p><b>Mengapa HSV berguna?</b> Misalkan ingin mendeteksi buah tomat merah. Di RGB, tomat yang terkena bayangan punya nilai R, G, B yang berubah semua. Di HSV, bayangan terutama menurunkan V, sedangkan H (merah, sekitar 0°) hampir tetap. Maka ambang pada kanal H lebih tahan terhadap perubahan pencahayaan.</p>
+  </div>
+  <div class="note">
+    <p><b>Contoh hitung RGB ke CMY.</b> Dengan nilai dinormalkan 0–1: C = 1 − R, M = 1 − G, Y = 1 − B. Merah murni (1, 0, 0) menjadi C = 0, M = 1, Y = 1: tinta magenta dan kuning dicampur menghasilkan merah.</p>
+  </div>
+</section>
+
+<!-- ---------------- 5 ---------------- -->
+<section id="s5">
+  <h2>5. Dimensi, resolusi, dan ukuran sensor</h2>
+  <h3>Dimensi citra</h3>
+  <p>Dimensi citra dinyatakan dalam format <b>lebar (width) × tinggi (height)</b> dengan satuan piksel (px), misalnya 1920 px × 1080 px (Full HD). Total piksel = lebar × tinggi = 2.073.600 piksel, sekitar 2,1 MP.</p>
+  <h3>Resolusi: dpi dan lpi</h3>
+  <ul>
+    <li><b>dpi (dots per inch)</b>: jumlah titik per inci. Dipakai untuk printer dan pemindai; untuk layar dan berkas digital sering disebut <b>ppi</b> (pixels per inch).</li>
+    <li><b>lpi (lines per inch)</b>: jumlah baris <em>halftone</em> per inci pada percetakan offset, misalnya koran sekitar 85 lpi dan majalah sekitar 150 lpi.</li>
+  </ul>
+  <p>Dimensi piksel dan resolusi bersama-sama menentukan ukuran fisik saat dicetak.</p>
+  <div class="eq">ukuran cetak (inci) = jumlah piksel / dpi &nbsp;&nbsp;&nbsp; 1 inci = 2,54 cm</div>
+  <div class="note">
+    <p><b>Contoh.</b> Foto 3000 × 2000 px dicetak pada 300 dpi menjadi 10 × 6,67 inci, yaitu 25,4 × 16,9 cm. Jika dicetak pada 150 dpi, ukurannya dua kali lebih besar (50,8 × 33,9 cm) tetapi tiap inci hanya berisi separuh titik sehingga kurang tajam dilihat dari dekat. Jumlah pikselnya sama; yang berubah hanya kerapatannya.</p>
+  </div>
+
+  <h3>Latihan 2: ukuran piksel pada sensor kamera</h3>
+  <p>Sebuah sensor kamera berukuran fisik 12,8 mm × 9,6 mm dan berisi 640 × 480 piksel.</p>
+  <div class="eq">ukuran 1 piksel (pixel pitch) = ukuran fisik sensor / jumlah piksel
+    <small>lebar: 12,8 / 640 = 0,02 mm/piksel &nbsp;|&nbsp; tinggi: 9,6 / 480 = 0,02 mm/piksel (piksel persegi, 20 µm)</small>
+  </div>
+  <div class="tw"><table>
+    <thead><tr><th>Pertanyaan</th><th>Perhitungan</th><th>Jawaban</th></tr></thead>
+    <tbody>
+      <tr><td>(a) Citra yang jatuh pada area sensor 6,4 mm × 4,8 mm berukuran berapa piksel?</td><td>6,4 / 0,02 = 320 &nbsp;dan&nbsp; 4,8 / 0,02 = 240</td><td>320 × 240 piksel</td></tr>
+      <tr><td>(b) Citra 320 × 280 piksel menempati berapa mm pada sensor?</td><td>320 × 0,02 = 6,4 &nbsp;dan&nbsp; 280 × 0,02 = 5,6</td><td>6,4 mm × 5,6 mm</td></tr>
+    </tbody>
+  </table></div>
+  <div class="note">
+    <p><b>Arah konversi.</b> Dari mm ke piksel: <em>bagi</em> dengan pixel pitch. Dari piksel ke mm: <em>kali</em> dengan pixel pitch. Jawaban di catatan sudah benar untuk kedua bagian.</p>
+  </div>
+</section>
+
+<!-- ---------------- 6 ---------------- -->
+<section id="s6">
+  <h2>6. Ukuran berkas citra dan header</h2>
+  <div class="eq">ukuran (bit) = lebar × tinggi × k &nbsp;&nbsp;&nbsp; ukuran (byte) = ukuran (bit) / 8
+    <small>k = bit per piksel = log₂ L untuk grayscale; 24 untuk RGB; 32 untuk RGBA &nbsp;|&nbsp; 1 KB = 1.024 byte, 1 MB = 1.024 KB</small>
+  </div>
+  <p>Kedalaman bit menentukan jumlah level: 1 bit → 2 level, 2 bit → 4, 4 bit → 16, 8 bit → 256. Untuk RGB dengan 256 level per kanal, tiap kanal butuh 8 bit, sehingga satu piksel = 3 × 8 = 24 bit.</p>
+
+  <h3>Latihan 3: citra grayscale 200 × 200</h3>
+  <p>Total piksel = 200 × 200 = 40.000 piksel.</p>
+  <div class="tw"><table>
+    <thead><tr><th>Level keabuan</th><th>Bit per piksel</th><th>Ukuran (bit)</th><th>Ukuran (byte)</th></tr></thead>
+    <tbody>
+      <tr><td>(a) 256 = 2<sup>8</sup></td><td>8</td><td>40.000 × 8 = 320.000</td><td>40.000</td></tr>
+      <tr><td>(b) 4 = 2<sup>2</sup></td><td>2</td><td>40.000 × 2 = 80.000</td><td>10.000</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Latihan 4: citra RGB 1024 × 768</h3>
+  <p>Total piksel = 1024 × 768 = 786.432 piksel.</p>
+  <p><b>(a) Ukuran berkas RGB.</b></p>
+  <div class="eq">786.432 × 3 kanal × 8 bit = 786.432 × 24 = 18.874.368 bit
+    <small>= 2.359.296 byte = 2.304 KB = 2,25 MB</small>
+  </div>
+  <div class="note warn">
+    <p><span class="fix">Koreksi catatan</span> Di catatan tertulis "786.432 × 256 × 3". Hasil akhirnya (18.874.368 bit) benar, tetapi rumusnya keliru: pengalinya adalah <b>jumlah bit</b> (8), bukan jumlah level (256). Jika benar-benar dikalikan 256 hasilnya 603.979.776, jauh berbeda. Ingat: 256 level membutuhkan log₂ 256 = 8 bit.</p>
+  </div>
+  <p><b>(b) Setelah dikonversi menjadi grayscale 8 bit.</b></p>
+  <div class="eq">786.432 × 8 = 6.291.456 bit = 786.432 byte
+    <small>sama dengan 18.874.368 / 3, karena 3 kanal menjadi 1 kanal</small>
+  </div>
+
+  <p><b>(c) Ukuran nyata sebagai berkas BMP.</b> Berkas tidak hanya berisi piksel. Di depannya ada <b>header</b> yang mencatat informasi seperti tanda format, ukuran berkas, lebar, tinggi, dan kedalaman bit. BMP standar memakai header 54 byte: 14 byte <em>file header</em> + 40 byte <em>info header</em>. Citra 8 bit atau kurang juga menyimpan <b>palet</b> ("kamus warna"): 2<sup>k</sup> entri × 4 byte (B, G, R, cadangan).</p>
+  <div class="tw"><table>
+    <thead><tr><th>Berkas</th><th>Data piksel</th><th>Header + palet</th><th>Ukuran nyata</th></tr></thead>
+    <tbody>
+      <tr><td>4a: RGB 24 bit</td><td>2.359.296 byte</td><td>54 byte (tanpa palet)</td><td>2.359.350 byte = 18.874.800 bit</td></tr>
+      <tr><td>4b: grayscale 8 bit</td><td>786.432 byte</td><td>54 + 256 × 4 = 54 + 1.024 = 1.078 byte</td><td>787.510 byte = 6.300.080 bit</td></tr>
+    </tbody>
+  </table></div>
+  <div class="note warn">
+    <p><span class="fix">Koreksi catatan</span> Untuk 4b, catatan hanya menambahkan 8.192 bit (1.024 byte palet) sehingga mendapat 6.299.648 bit. Header 54 byte tetap ada pada semua BMP, jadi yang ditambahkan adalah 54 + 1.024 = 1.078 byte = 8.624 bit, dan hasilnya 6.300.080 bit. Artinya ukuran header BMP grayscale bukan "sampai 1.024 byte", melainkan 54 byte header ditambah 1.024 byte palet.</p>
+  </div>
+  <p><b>Kesimpulan 4c.</b> Ukuran nyata selalu lebih besar daripada ukuran teoretis karena ada tambahan header (dan palet). Meski 4b memiliki tambahan yang lebih besar (1.078 byte vs 54 byte), berkas 4a tetap jauh lebih besar karena data pikselnya tiga kali lipat. Pada format terkompresi seperti PNG atau JPEG, ukuran nyata justru bisa jauh lebih kecil dari ukuran teoretis.</p>
+  <div class="note">
+    <p><b>Satu detail lagi: padding baris.</b> BMP menyimpan setiap baris dengan panjang kelipatan 4 byte. Pada 1024 × 3 = 3.072 byte per baris sudah kelipatan 4, jadi tidak ada padding. Tetapi citra RGB selebar 1023 px punya 3.069 byte per baris, sehingga ditambah 3 byte kosong menjadi 3.072 byte. Kalkulator di atas sudah memperhitungkan ini.</p>
+  </div>
+
+  <h3>Ukuran header beberapa format</h3>
+  <div class="tw"><table>
+    <thead><tr><th>Format</th><th>Header dan metadata</th><th>Catatan</th></tr></thead>
+    <tbody>
+      <tr><td>BMP</td><td>54 byte (14 + 40); versi V4/V5 108–124 byte info header</td><td>Palet 2<sup>k</sup> × 4 byte untuk k ≤ 8</td></tr>
+      <tr><td>PNG</td><td>Tanda tangan 8 byte + chunk IHDR 25 byte, lalu chunk lain</td><td>Data dikompresi lossless, jadi ukuran bergantung isi</td></tr>
+      <tr><td>GIF</td><td>13 byte header + tabel warna global hingga 256 × 3 byte</td><td>Maksimum 256 warna per bingkai</td></tr>
+      <tr><td>JPEG</td><td>Bervariasi (tabel kuantisasi, Huffman, EXIF bisa beberapa KB)</td><td>Kompresi lossy; tidak ada ukuran header tetap</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- ---------------- 7 ---------------- -->
+<section id="s7">
+  <h2>7. Format citra: bitmap vs vektor</h2>
+  <div class="figure">
+    <svg viewBox="0 0 640 220" role="img" aria-label="Perbandingan kurva bitmap yang bergerigi saat diperbesar dan kurva vektor yang tetap halus">
+      <g transform="translate(20,20)">
+        <rect x="0" y="0" width="270" height="170" fill="var(--soft)" stroke="var(--line)"/>
+        <g fill="var(--accent)">
+          <rect x="20" y="130" width="30" height="20"/><rect x="50" y="110" width="30" height="20"/><rect x="80" y="90" width="30" height="20"/>
+          <rect x="110" y="70" width="30" height="20"/><rect x="140" y="50" width="30" height="20"/><rect x="170" y="40" width="30" height="20"/>
+          <rect x="200" y="30" width="30" height="20"/><rect x="230" y="30" width="30" height="20"/>
+        </g>
+        <text x="135" y="195" text-anchor="middle" font-size="13" font-weight="700">Bitmap diperbesar 800%: bergerigi</text>
+      </g>
+      <g transform="translate(350,20)">
+        <rect x="0" y="0" width="270" height="170" fill="var(--soft)" stroke="var(--line)"/>
+        <path d="M20 145 C 90 140, 150 60, 255 38" fill="none" stroke="var(--accent)" stroke-width="18" stroke-linecap="round"/>
+        <circle cx="20" cy="145" r="5" fill="var(--ink)"/><circle cx="255" cy="38" r="5" fill="var(--ink)"/>
+        <text x="135" y="195" text-anchor="middle" font-size="13" font-weight="700">Vektor diperbesar 800%: tetap halus</text>
+      </g>
+    </svg>
+    <figcaption>Bitmap menyimpan warna tiap piksel. Vektor menyimpan rumus bentuk (titik, garis, kurva Bézier) yang digambar ulang pada setiap ukuran.</figcaption>
+  </div>
+  <div class="tw"><table>
+    <thead><tr><th>Aspek</th><th>Bitmap (raster)</th><th>Vektor</th></tr></thead>
+    <tbody>
+      <tr><td>Ciri</td><td>Tersusun dari grid piksel; tiap piksel punya nilai warna</td><td>Tersusun dari objek matematis: titik, garis, kurva, bidang, beserta atribut warna</td></tr>
+      <tr><td>Kelebihan</td><td>Mampu menampilkan gradasi dan detail rumit seperti foto; didukung semua perangkat; mudah diolah per piksel</td><td>Bisa diperbesar tanpa batas tanpa pecah; ukuran berkas kecil untuk grafik sederhana; tiap objek mudah diedit</td></tr>
+      <tr><td>Kekurangan</td><td>Pecah atau bergerigi saat diperbesar; ukuran berkas besar dan naik seiring resolusi</td><td>Tidak cocok untuk foto realistis; harus di-<em>render</em> menjadi piksel sebelum tampil di layar</td></tr>
+      <tr><td>Ukuran berkas bergantung pada</td><td>Dimensi × kedalaman bit (dan kompresi)</td><td>Jumlah dan kerumitan objek</td></tr>
+      <tr><td>Contoh perangkat lunak</td><td>Adobe Photoshop, GIMP, Paint, Krita, Photopea</td><td>Adobe Illustrator, CorelDRAW, Inkscape, Figma</td></tr>
+      <tr><td>Contoh format</td><td>BMP, JPEG, PNG, GIF, TIFF, WebP, HEIF</td><td>SVG, AI, EPS, CDR, PDF (bagian vektornya)</td></tr>
+      <tr><td>Contoh penggunaan</td><td>Foto, hasil scan, citra medis dan satelit</td><td>Logo, ikon, font, peta, desain spanduk</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Format bitmap yang sering dipakai</h3>
+  <div class="tw"><table>
+    <thead><tr><th>Format</th><th>Kompresi</th><th>Warna</th><th>Transparansi</th><th>Cocok untuk</th></tr></thead>
+    <tbody>
+      <tr><td>BMP</td><td>Umumnya tanpa kompresi</td><td>Hingga 32 bit</td><td>Terbatas</td><td>Contoh hitung, penyimpanan mentah sederhana</td></tr>
+      <tr><td>JPEG</td><td>Lossy (ada informasi yang dibuang)</td><td>24 bit</td><td>Tidak</td><td>Foto</td></tr>
+      <tr><td>PNG</td><td>Lossless</td><td>Hingga 48 bit, bisa terindeks</td><td>Ya (kanal alfa)</td><td>Tangkapan layar, grafik, logo</td></tr>
+      <tr><td>GIF</td><td>Lossless (LZW)</td><td>Terindeks, maksimal 256</td><td>Satu warna transparan</td><td>Animasi sederhana</td></tr>
+      <tr><td>TIFF</td><td>Tanpa kompresi atau lossless</td><td>Hingga 16 bit per kanal</td><td>Ya</td><td>Percetakan, arsip, citra ilmiah</td></tr>
+    </tbody>
+  </table></div>
+  <div class="note">
+    <p><b>Cara memilih.</b> Foto untuk dibagikan: JPEG. Grafik dengan teks tajam atau butuh latar transparan: PNG. Logo yang akan dicetak dari kartu nama sampai baliho: simpan master dalam vektor (SVG atau AI), lalu ekspor ke bitmap sesuai ukuran yang dibutuhkan.</p>
+  </div>
+</section>
+
+<!-- ---------------- 8 ---------------- -->
+<section id="s8">
+  <h2>8. Hubungan antarpiksel</h2>
+  <h3>Ketetanggaan (neighborhood)</h3>
+  <p>Untuk piksel <i>p</i> di koordinat (<i>x</i>, <i>y</i>) ada tiga jenis tetangga:</p>
+  <ul>
+    <li><b>4-tetangga N<sub>4</sub>(p)</b>: atas, bawah, kiri, kanan, yaitu (<i>x</i>±1, <i>y</i>) dan (<i>x</i>, <i>y</i>±1).</li>
+    <li><b>Tetangga diagonal N<sub>D</sub>(p)</b>: empat sudut, (<i>x</i>±1, <i>y</i>±1).</li>
+    <li><b>8-tetangga N<sub>8</sub>(p)</b> = N<sub>4</sub>(p) ∪ N<sub>D</sub>(p), yaitu semua 8 piksel di sekelilingnya.</li>
+  </ul>
+  <p>Piksel di tepi citra punya tetangga lebih sedikit karena sebagian jatuh di luar citra.</p>
+
+  <h3>Tiga ukuran jarak antarpiksel</h3>
+  <p>Untuk <i>p</i> = (<i>x</i>, <i>y</i>) dan <i>q</i> = (<i>s</i>, <i>t</i>):</p>
+  <div class="tw"><table>
+    <thead><tr><th>Jarak</th><th>Rumus</th><th>Bentuk "lingkaran" jarak 1</th></tr></thead>
+    <tbody>
+      <tr><td>Euclidean D<sub>e</sub></td><td>√((x − s)² + (y − t)²)</td><td>Lingkaran</td></tr>
+      <tr><td>City-block D<sub>4</sub> (Manhattan)</td><td>|x − s| + |y − t|</td><td>Belah ketupat; jarak 1 = N<sub>4</sub></td></tr>
+      <tr><td>Chessboard D<sub>8</sub></td><td>max(|x − s|, |y − t|)</td><td>Persegi; jarak 1 = N<sub>8</sub></td></tr>
+    </tbody>
+  </table></div>
+  <div class="note">
+    <p><b>Contoh.</b> <i>p</i> = (2, 3) dan <i>q</i> = (5, 7). Selisih 3 dan 4. D<sub>e</sub> = √(9 + 16) = 5; D<sub>4</sub> = 3 + 4 = 7; D<sub>8</sub> = max(3, 4) = 4. Selalu berlaku D<sub>8</sub> ≤ D<sub>e</sub> ≤ D<sub>4</sub>.</p>
+  </div>
+
+  <div class="lab" id="labN">
+    <h4>Coba sendiri: tetangga dan jarak</h4>
+    <p class="labp">Ketuk sebuah sel untuk memindahkan piksel <i>p</i>. Pilih jenis tetangga untuk menandainya, atau pilih jarak untuk melihat nilai jarak setiap sel dari <i>p</i>.</p>
+    <div class="seg" id="nMode">
+      <button data-m="n4" aria-pressed="true">N₄</button>
+      <button data-m="nd" aria-pressed="false">N_D</button>
+      <button data-m="n8" aria-pressed="false">N₈</button>
+      <button data-m="de" aria-pressed="false">Jarak Euclidean</button>
+      <button data-m="d4" aria-pressed="false">Jarak city-block</button>
+      <button data-m="d8" aria-pressed="false">Jarak chessboard</button>
+    </div>
+    <div class="ngrid" id="nGrid" role="grid" aria-label="Grid piksel 7 kali 7"></div>
+    <p class="verdict" id="nNote"></p>
+  </div>
+
+  <h3>Konektivitas</h3>
+  <p>Dua piksel objek (misalnya bernilai 1 pada citra biner) dikatakan <b>terhubung-4</b> jika saling bertetangga N<sub>4</sub>, dan <b>terhubung-8</b> jika saling bertetangga N<sub>8</sub>. Pilihan ini memengaruhi hasil penghitungan objek: dua piksel yang hanya bersentuhan di sudut dihitung sebagai dua objek pada konektivitas-4, tetapi satu objek pada konektivitas-8.</p>
+</section>
+
+<!-- ---------------- Rumus ---------------- -->
+<section id="s9">
+  <h2>Ringkasan rumus</h2>
+  <div class="tw"><table>
+    <thead><tr><th>Besaran</th><th>Rumus</th><th>Contoh</th></tr></thead>
+    <tbody>
+      <tr><td>Jumlah level</td><td>L = 2<sup>k</sup></td><td>k = 8 → 256 level</td></tr>
+      <tr><td>Bit per piksel</td><td>k = log₂ L</td><td>4 level → 2 bit</td></tr>
+      <tr><td>Kemungkinan warna RGB</td><td>2<sup>8</sup> × 2<sup>8</sup> × 2<sup>8</sup> = 2<sup>24</sup></td><td>16.777.216</td></tr>
+      <tr><td>Total piksel</td><td>lebar × tinggi</td><td>1024 × 768 = 786.432</td></tr>
+      <tr><td>Ukuran teoretis</td><td>lebar × tinggi × k (bit)</td><td>786.432 × 24 = 18.874.368 bit</td></tr>
+      <tr><td>Bit → byte</td><td>÷ 8</td><td>18.874.368 bit = 2.359.296 byte</td></tr>
+      <tr><td>Ukuran BMP nyata</td><td>54 + palet (2<sup>k</sup> × 4, bila k ≤ 8) + data per baris kelipatan 4</td><td>Grayscale 1024 × 768 = 787.510 byte</td></tr>
+      <tr><td>Kuantisasi (wakil nilai tengah)</td><td>⌊v / Δ⌋ · Δ + Δ/2, Δ = 256/L</td><td>L = 4, v = 100 → 96</td></tr>
+      <tr><td>Grayscale luminositas</td><td>0,299R + 0,587G + 0,114B</td><td>(200, 100, 50) → 124</td></tr>
+      <tr><td>Grayscale rata-rata</td><td>(R + G + B) / 3</td><td>(200, 100, 50) → 117</td></tr>
+      <tr><td>Pixel pitch sensor</td><td>ukuran sensor / jumlah piksel</td><td>12,8 mm / 640 = 0,02 mm</td></tr>
+      <tr><td>Ukuran cetak</td><td>piksel / dpi (inci)</td><td>3000 / 300 = 10 inci</td></tr>
+      <tr><td>Jarak D<sub>e</sub>, D<sub>4</sub>, D<sub>8</sub></td><td>√(Δx² + Δy²), |Δx| + |Δy|, max(|Δx|, |Δy|)</td><td>(2,3)–(5,7): 5, 7, 4</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="s10">
+  <h2>Bank soal Kahoot beserta kunci</h2>
+  <p>Ada 35 soal: 30 soal reguler dan 5 soal HOTS (berpikir tingkat tinggi) di ronde akhir, dengan poin ganda. Semuanya dipakai pada kuis interaktif. Ketuk sebuah soal untuk melihat kunci dan pembahasan kilat, atau buka tab <b>Kuis Kahoot</b> untuk memainkannya.</p>
+  <div id="bank"></div>
+  <p style="margin-top:22px"><button class="kq-btn" style="background:#46178F" id="goQuiz">Main kuis sekarang</button></p>
+</section>
+      </article>
+    </div>
+  </div>
+</main>
+
+<!-- =================== KUIS =================== -->
+<section id="view-quiz" hidden aria-label="Kuis Kahoot">
+  <div class="kq-stage">
+    <div class="kq-bar">
+      <span class="kq-pill" id="kqTitle">Kuis PCD</span>
+      <button class="kq-mute" id="muteBtn" aria-pressed="false">Suara: nyala</button>
+    </div>
+    <div id="kq-root" style="flex:1;display:flex;flex-direction:column" aria-live="polite"></div>
+  </div>
+</section>
+
+<script>
+/* ============ Data soal ============ */
+const Q = [
+ {topic:"Akuisisi citra", time:20,
+  q:"Proses mengubah objek nyata menjadi citra digital disebut...",
+  o:["Kompresi citra","Akuisisi citra","Segmentasi citra","Rendering"], a:1,
+  e:"Akuisisi citra mencakup penangkapan cahaya oleh sensor, sampling, kuantisasi, hingga penyimpanan sebagai berkas digital."},
+ {topic:"Sampling", time:20,
+  q:"<b>Sampling</b> pada digitalisasi citra adalah proses...",
+  o:["Membulatkan nilai intensitas ke sejumlah level","Mengompresi berkas agar lebih kecil","Mendiskretkan koordinat ruang sehingga terbentuk grid piksel","Mengubah citra RGB menjadi grayscale"], a:2,
+  e:"Sampling mendiskretkan posisi (x, y). Pembulatan nilai intensitas adalah tugas kuantisasi."},
+ {topic:"Kuantisasi", time:20,
+  q:"<b>Kuantisasi</b> adalah teknik...",
+  o:["Mengelompokkan nilai intensitas kontinu ke dalam sejumlah level diskret","Menentukan jumlah piksel lebar × tinggi","Mengatur jarak antarpiksel","Menambahkan header pada berkas"], a:0,
+  e:"Kuantisasi memetakan nilai intensitas yang kontinu ke L level diskret, misalnya 256 level untuk 8 bit."},
+ {topic:"Alasan digitalisasi", time:20,
+  q:"Mengapa sinyal hasil sensor harus dijadikan diskret?",
+  o:["Agar warnanya lebih cerah","Karena komputer memproses dan menyimpan data dalam bentuk biner","Agar citra tidak perlu header","Karena mata manusia hanya melihat titik"], a:1,
+  e:"Fungsi kontinu memiliki tak hingga titik dan nilai. Komputer hanya dapat menyimpan bilangan diskret dalam bentuk biner."},
+ {topic:"Tahap akuisisi", time:25,
+  q:"Urutan tahap akuisisi citra yang benar adalah...",
+  o:["Sampling → objek memantulkan cahaya → sensor → kuantisasi → simpan","Sensor → kuantisasi → sampling → objek memantulkan cahaya → simpan","Objek memantulkan cahaya → kuantisasi → sensor → sampling → simpan","Objek memantulkan cahaya → sensor → sampling → kuantisasi → simpan"], a:3,
+  e:"Cahaya dipantulkan objek, ditangkap sensor menjadi sinyal analog, disampling menjadi grid piksel, dikuantisasi, lalu disimpan."},
+ {topic:"Sensor", time:20,
+  q:"Sensor kamera (CCD/CMOS) mengubah intensitas foton yang diterima menjadi...",
+  o:["Sinyal listrik analog yang kontinu","Berkas JPEG","Matriks biner 0 dan 1","Palet warna"], a:0,
+  e:"Keluaran awal sensor masih analog. Baru setelah sampling dan kuantisasi (melalui ADC) nilainya menjadi digital."},
+ {topic:"Kedalaman bit RGB", time:20,
+  q:"Citra RGB dengan 256 level per kanal membutuhkan berapa bit per piksel?",
+  o:["8 bit","16 bit","24 bit","768 bit"], a:2,
+  e:"256 level = 2<sup>8</sup>, jadi 8 bit per kanal. Tiga kanal: 3 × 8 = 24 bit."},
+ {topic:"Jumlah warna", time:20,
+  q:"Jumlah kemungkinan warna pada citra RGB 24 bit adalah...",
+  o:["768","65.536","16.777.216","4.294.967.296"], a:2,
+  e:"2<sup>24</sup> = 16.777.216, sering ditulis 16,7 juta warna (true color)."},
+ {topic:"Kuantisasi", time:30,
+  q:"Rentang 0–255 dikuantisasi menjadi 4 level, dan tiap kelompok diwakili nilai tengahnya. Piksel bernilai <b>100</b> menjadi...",
+  o:["64","96","100","128"], a:1,
+  e:"Δ = 256 / 4 = 64. Nilai 100 berada di kelompok 64–127, yang nilai tengahnya 64 + 32 = 96."},
+ {topic:"Megapiksel", time:20,
+  q:"Kamera ponsel \"64 MP\" berarti citra yang dihasilkan memiliki...",
+  o:["Sekitar 64 juta piksel","Ukuran berkas 64 MB","64 juta warna","Kedalaman 64 bit per piksel"], a:0,
+  e:"MP = megapiksel = sejuta piksel. Angka ini menyatakan hasil sampling (jumlah titik), bukan ukuran berkas atau jumlah warna."},
+ {topic:"Citra biner", time:20,
+  q:"Citra biner adalah citra yang setiap pikselnya...",
+  o:["Bernilai 0–255","Hanya bernilai 0 atau 1","Menyimpan indeks ke palet","Memiliki tiga kanal warna"], a:1,
+  e:"Citra biner hanya punya dua nilai: 0 (hitam) dan 1 (putih), cukup 1 bit per piksel."},
+ {topic:"Citra biner", time:20,
+  q:"Keunggulan utama citra biner dibanding citra berwarna adalah...",
+  o:["Warna lebih akurat","Bisa diperbesar tanpa pecah","Mendukung transparansi","Hemat memori dan cepat diproses"], a:3,
+  e:"Informasi warna dan gradasi hilang, tetapi bentuk tetap. Karena hanya 1 bit per piksel, pemrosesannya cepat dan hemat."},
+ {topic:"Grayscale", time:20,
+  q:"Citra grayscale umumnya terdiri dari...",
+  o:["Satu kanal 8 bit bernilai 0–255","Tiga kanal 8 bit","Empat kanal termasuk alfa","Satu kanal 1 bit"], a:0,
+  e:"Grayscale (monokrom) punya satu kanal intensitas atau derajat keabuan, biasanya 8 bit."},
+ {topic:"Konversi grayscale", time:25,
+  q:"Rumus konversi RGB ke grayscale dengan pembobotan luminositas adalah...",
+  o:["0,333R + 0,333G + 0,333B","0,114R + 0,587G + 0,299B","0,299R + 0,587G + 0,114B","0,587R + 0,299G + 0,114B"], a:2,
+  e:"Y = 0,299R + 0,587G + 0,114B (ITU-R BT.601). Hijau berbobot terbesar, biru terkecil."},
+ {topic:"Konversi grayscale", time:30,
+  q:"Piksel RGB (200, 100, 50) dikonversi dengan metode <b>rata-rata</b>. Nilai grayscale-nya sekitar...",
+  o:["100","117","124","150"], a:1,
+  e:"(200 + 100 + 50) / 3 = 116,7 ≈ 117. Dengan luminositas hasilnya 124."},
+ {topic:"Konversi grayscale", time:20,
+  q:"Mengapa bobot hijau paling besar pada rumus luminositas?",
+  o:["Hijau punya panjang gelombang terpendek","Sensor kamera tidak menangkap biru","Nilai hijau selalu paling besar","Mata manusia paling peka terhadap hijau"], a:3,
+  e:"Kepekaan mata memuncak di sekitar hijau, sehingga hijau terlihat lebih terang daripada biru pada intensitas yang sama."},
+ {topic:"RGBA", time:20,
+  q:"Pada citra RGBA 8 bit, piksel dengan nilai alfa <b>A = 0</b> akan tampak...",
+  o:["Transparan penuh (tidak terlihat)","Hitam pekat","Putih","Opak penuh"], a:0,
+  e:"Makin besar alfa makin opak; A = 255 opak penuh, A = 0 tidak terlihat."},
+ {topic:"Citra terindeks", time:20,
+  q:"Setiap piksel pada citra terindeks menyimpan...",
+  o:["Tiga nilai R, G, B","Nilai alfa","Indeks yang merujuk ke tabel warna (LUT / palet)","Koordinat vektor"], a:2,
+  e:"Nilai piksel adalah indeks. Saat ditampilkan, indeks dicari di LUT yang mengembalikan nilai (R, G, B)."},
+ {topic:"Citra terindeks", time:25,
+  q:"Citra terindeks dengan palet 256 warna paling cocok untuk...",
+  o:["Foto pemandangan alam","Logo, ikon, dan grafik dengan sedikit warna","Citra medis 16 bit","Foto HDR"], a:1,
+  e:"Palet terbatas membuat foto alam berpita atau berbintik. Grafik dengan sedikit warna tidak kehilangan apa pun."},
+ {topic:"CMYK", time:20,
+  q:"Ruang warna CMYK memiliki berapa kanal dan terutama dipakai untuk apa?",
+  o:["3 kanal, layar monitor","4 kanal, layar ponsel","4 kanal, percetakan","3 kanal, kamera"], a:2,
+  e:"Cyan, Magenta, Yellow, dan Black (K). Model subtraktif untuk tinta cetak."},
+ {topic:"HSV", time:20,
+  q:"Pada ruang warna HSV, komponen <b>Hue</b> menyatakan...",
+  o:["Jenis warna, dinyatakan sebagai sudut 0–360°","Kecerahan","Tingkat kemurnian warna","Transparansi"], a:0,
+  e:"Hue = jenis warna, Saturation = kemurnian atau kepekatan, Value = kecerahan."},
+ {topic:"Lab", time:20,
+  q:"Pada ruang warna L*a*b*, kanal <b>L*</b> menyatakan...",
+  o:["Rentang hijau ke merah","Rentang biru ke kuning","Nilai alfa","Kecerahan (lightness)"], a:3,
+  e:"L* = kecerahan 0–100, a* = hijau (−) ke merah (+), b* = biru (−) ke kuning (+)."},
+ {topic:"Dimensi citra", time:20,
+  q:"Dimensi citra 1920 × 1080 dinyatakan dalam format...",
+  o:["Tinggi × lebar dalam inci","Lebar × tinggi dalam piksel","dpi × lpi","Bit × byte"], a:1,
+  e:"Dimensi = lebar (width) × tinggi (height) dalam piksel. 1920 × 1080 = 2.073.600 piksel."},
+ {topic:"Resolusi cetak", time:30,
+  q:"Foto 3000 × 2000 px dicetak pada <b>300 dpi</b>. Ukuran cetaknya adalah...",
+  o:["30 × 20 inci","3 × 2 inci","10 × 6,67 inci","900 × 600 inci"], a:2,
+  e:"Ukuran cetak = piksel / dpi: 3000 / 300 = 10 dan 2000 / 300 ≈ 6,67 inci (25,4 × 16,9 cm)."},
+ {topic:"Pixel pitch", time:25,
+  q:"Sensor berukuran 12,8 mm × 9,6 mm berisi 640 × 480 piksel. Ukuran satu pikselnya adalah...",
+  o:["0,02 mm","0,2 mm","0,05 mm","50 mm"], a:0,
+  e:"12,8 / 640 = 0,02 mm dan 9,6 / 480 = 0,02 mm (20 µm, piksel persegi)."},
+ {topic:"Pixel pitch", time:30,
+  q:"Pada sensor yang sama (0,02 mm/piksel), bayangan objek selebar 6,4 mm dan setinggi 4,8 mm menempati...",
+  o:["128 × 96 piksel","640 × 480 piksel","32 × 24 piksel","320 × 240 piksel"], a:3,
+  e:"6,4 / 0,02 = 320 dan 4,8 / 0,02 = 240. Dari mm ke piksel: bagi dengan pixel pitch."},
+ {topic:"Ukuran berkas", time:30,
+  q:"Citra grayscale 200 × 200 dengan 256 tingkat keabuan berukuran...",
+  o:["40.000 bit","40.000 byte","10.000 byte","10.240.000 byte"], a:1,
+  e:"40.000 piksel × 8 bit = 320.000 bit = 40.000 byte."},
+ {topic:"Ukuran berkas", time:30,
+  q:"Citra yang sama (200 × 200) direpresentasikan dengan <b>4 tingkat keabuan</b>. Ukurannya menjadi...",
+  o:["160.000 byte","20.000 byte","10.000 byte","5.000 byte"], a:2,
+  e:"4 = 2<sup>2</sup>, jadi 2 bit per piksel. 40.000 × 2 = 80.000 bit = 10.000 byte."},
+ {topic:"Bitmap vs vektor", time:20,
+  q:"Jenis citra yang tetap halus berapa pun diperbesar adalah...",
+  o:["Citra vektor","Citra bitmap","Citra JPEG","Citra terindeks"], a:0,
+  e:"Vektor menyimpan rumus bentuk (titik, garis, kurva) yang digambar ulang pada setiap ukuran. Bitmap akan pecah atau bergerigi."},
+ {topic:"Ketetanggaan", time:20,
+  q:"Tetangga-4 (N<sub>4</sub>) dari sebuah piksel adalah piksel di posisi...",
+  o:["Empat sudut diagonal","Atas, bawah, kiri, dan kanan","Delapan piksel di sekelilingnya","Dua piksel kiri dan kanan"], a:1,
+  e:"N<sub>4</sub>: (x±1, y) dan (x, y±1). Sudut diagonal adalah N<sub>D</sub>; gabungan keduanya N<sub>8</sub>."},
+ {topic:"HOTS: ukuran BMP nyata", time:45, hots:true,
+  q:"Citra RGB 24 bit berukuran 1024 × 768 disimpan sebagai BMP standar (header 54 byte). Ukuran berkas nyatanya adalah...",
+  o:["2.359.296 byte, karena header tidak dihitung","603.979.830 byte, dari 786.432 × 256 × 3 + 54","2.359.350 byte, dari 786.432 × 3 byte + 54 byte header","787.510 byte, karena BMP menyimpan palet"], a:2,
+  e:"Data piksel = 786.432 × 24 / 8 = 2.359.296 byte. Ditambah header 54 byte = 2.359.350 byte. RGB 24 bit tidak memakai palet, dan pengalinya 8 bit, bukan 256 level."},
+ {topic:"HOTS: header dan palet", time:45, hots:true,
+  q:"Citra tersebut dikonversi menjadi grayscale 8 bit lalu disimpan sebagai BMP. Mahasiswa menulis 6.291.456 + 8.192 = 6.299.648 bit. Evaluasi yang tepat adalah...",
+  o:["Benar, header grayscale memang 1.024 byte","Kurang 54 byte header; hasil yang benar 6.300.080 bit (787.510 byte)","Salah, grayscale tidak memakai palet sehingga cukup + 432 bit","Salah, palet grayscale 256 × 3 byte sehingga + 6.144 bit"], a:1,
+  e:"8.192 bit hanyalah palet 256 × 4 byte. Header 54 byte tetap ada: tambahan total 1.078 byte = 8.624 bit, sehingga 6.291.456 + 8.624 = 6.300.080 bit."},
+ {topic:"HOTS: kuantisasi dan dampaknya", time:40, hots:true,
+  q:"Citra grayscale 512 × 512 diturunkan dari 256 level menjadi 16 level tanpa mengubah dimensi. Apa akibatnya?",
+  o:["Ukuran data menjadi 1/16 dan citra menjadi kotak-kotak","Ukuran tetap, hanya warna yang berubah","Dimensi menjadi 128 × 128","Ukuran data menjadi setengah (8 → 4 bit) dan gradasi halus berubah menjadi pita-pita (false contouring)"], a:3,
+  e:"Jumlah piksel tetap, bit per piksel turun dari 8 ke 4, jadi ukuran data setengahnya (262.144 → 131.072 byte). Efeknya pada nilai (pita warna), bukan pada ruang (kotak-kotak)."},
+ {topic:"HOTS: memilih format", time:40, hots:true,
+  q:"Sebuah UMKM butuh logo yang dipakai di kartu nama, situs web, dan baliho 3 × 5 meter, serta foto produk untuk katalog daring. Pilihan penyimpanan terbaik adalah...",
+  o:["Logo sebagai master vektor (SVG/AI), foto produk sebagai JPEG","Semuanya BMP agar tanpa kompresi","Logo sebagai GIF 256 warna, foto produk sebagai SVG","Logo sebagai JPEG resolusi rendah, foto produk sebagai citra terindeks"], a:0,
+  e:"Vektor dapat diskalakan dari kartu nama hingga baliho tanpa pecah. Foto realistis tidak dapat direpresentasikan dengan efisien sebagai vektor, dan JPEG memberi ukuran kecil untuk web."},
+ {topic:"HOTS: konektivitas", time:40, hots:true,
+  q:"Pada citra biner, dua piksel objek di (3, 3) dan (4, 4) hanya bersentuhan di sudut. Berapa jumlah objek yang terhitung, dan berapa jarak chessboard D<sub>8</sub> keduanya?",
+  o:["1 objek pada konektivitas-4 maupun 8; D₈ = 2","2 objek pada konektivitas-4 maupun 8; D₈ = √2","2 objek pada konektivitas-4, 1 objek pada konektivitas-8; D₈ = 1","1 objek pada konektivitas-4, 2 objek pada konektivitas-8; D₈ = 2"], a:2,
+  e:"(4, 4) adalah tetangga diagonal (N<sub>D</sub>) dari (3, 3), jadi hanya terhubung pada konektivitas-8. D<sub>8</sub> = max(1, 1) = 1; D<sub>4</sub> = 2; D<sub>e</sub> = √2."}
+];
+
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const idn = (n, d=0) => Number(n).toLocaleString('id-ID', {maximumFractionDigits:d});
+const LET = ['A','B','C','D'];
+const MOODS = {'':'#46178F', correct:'#26890C', wrong:'#C4162F', timeout:'#1368CE', board:'#2B0B5C'};
+
+/* ============ Tab / tampilan ============ */
+function showView(v){
+  document.querySelectorAll('.tab').forEach(t => t.setAttribute('aria-selected', String(t.dataset.view === v)));
+  $('#view-summary').hidden = (v !== 'summary');
+  $('#view-quiz').hidden = (v !== 'quiz');
+  if (v === 'quiz') { if (game.phase === 'idle') game.lobby(); }
+  else { game.abort(); document.body.style.background = ''; }
+  window.scrollTo(0, 0);
+}
+document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => showView(t.dataset.view)));
+$('#goQuiz').addEventListener('click', () => showView('quiz'));
+
+/* ============ TOC aktif ============ */
+(function(){
+  const links = [...document.querySelectorAll('.toc a')];
+  const map = new Map(links.map(a => [a.getAttribute('href').slice(1), a]));
+  if (!('IntersectionObserver' in window)) return;
+  const io = new IntersectionObserver(es => {
+    es.forEach(en => { if (en.isIntersecting){ links.forEach(l => l.classList.remove('on')); const a = map.get(en.target.id); if (a) a.classList.add('on'); } });
+  }, {rootMargin:'-20% 0px -70% 0px'});
+  map.forEach((_, id) => { const el = document.getElementById(id); if (el) io.observe(el); });
+})();
+
+/* ============ Bank soal ============ */
+$('#bank').innerHTML = Q.map((q, i) => `
+  <details class="bank-item"><summary>${q.hots?'<span class="hots-tag">HOTS</span>':''}Soal ${i+1}. ${q.q}</summary>
+    <ol>${q.o.map((t, k) => `<li class="${k===q.a?'key':''}">${esc(t)}${k===q.a?' (Kunci)':''}</li>`).join('')}</ol>
+    <p><b>Pembahasan:</b> ${q.e}</p>
+  </details>`).join('');
+
+/* ============ Suara ============ */
+let actx = null, soundOn = true;
+function tone(freq, dur=.12, type='sine', vol=.07, delay=0){
+  if (!soundOn) return;
+  try{
+    actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+    const t = actx.currentTime + delay, o = actx.createOscillator(), g = actx.createGain();
+    o.type = type; o.frequency.value = freq;
+    g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(g); g.connect(actx.destination); o.start(t); o.stop(t + dur + .02);
+  }catch(e){}
+}
+const sfx = {
+  tick: () => tone(880, .05, 'square', .03),
+  start: () => { tone(523,.12,'triangle',.08,0); tone(659,.12,'triangle',.08,.12); tone(784,.2,'triangle',.08,.24); },
+  ok: () => { tone(660,.12,'sine',.09,0); tone(880,.22,'sine',.09,.12); },
+  no: () => tone(150,.4,'sawtooth',.05),
+  late: () => tone(300,.3,'triangle',.06),
+  end: () => { [523,659,784,1047].forEach((f,i) => tone(f,.22,'triangle',.08,i*.14)); }
+};
+$('#muteBtn').addEventListener('click', e => {
+  soundOn = !soundOn;
+  e.currentTarget.textContent = 'Suara: ' + (soundOn ? 'nyala' : 'mati');
+  e.currentTarget.setAttribute('aria-pressed', String(!soundOn));
+});
+
+/* ============ Mesin kuis ============ */
+const SHAPES = [
+  '<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3 30 28H2z"/></svg>',
+  '<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 2 30 16 16 30 2 16z"/></svg>',
+  '<svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="13"/></svg>',
+  '<svg viewBox="0 0 32 32" aria-hidden="true"><rect x="4" y="4" width="24" height="24"/></svg>'
+];
+const SHAPE_NAME = ['Segitiga merah','Belah ketupat biru','Lingkaran kuning','Persegi hijau'];
+const BOTS = ['Ayu_PCD','Bima88','NoraPixel','RGB_Rafi','Sinta.Gray','KernelKing','DimasCV','LenaLux','Citra_Dewi','Fajar404','Wulan_Rods','Kucing_Cones','AlHaytham_fan','Piksel_Pagi','ConvNet_Kevin'];
+
+const game = {
+  phase:'idle', i:0, name:'Pemain', shuffle:true, perm:[], bots:[], me:null, timer:null, intro:null, t0:0, T:20, locked:false, lastSec:0, last:null,
+
+  clear(){ clearInterval(this.timer); clearTimeout(this.intro); this.timer = null; this.intro = null; },
+  abort(){ if (this.phase !== 'idle' && this.phase !== 'lobby' && this.phase !== 'final'){ this.clear(); this.phase = 'idle'; } else if (this.phase==='lobby'||this.phase==='final'){ this.phase = 'idle'; } },
+  draw(html, mood, title){
+    $('#kq-root').innerHTML = html;
+    $('#view-quiz').dataset.mood = mood || '';
+    document.body.style.background = MOODS[mood || ''];
+    $('#kqTitle').textContent = title || 'Kuis PCD';
+    const f = $('#kq-root [data-focus]'); if (f) f.focus({preventScroll:true});
+  },
+
+  lobby(){
+    this.clear(); this.phase = 'lobby';
+    const pin = String(Math.floor(100000 + Math.random()*900000));
+    this.draw(`
+      <div class="kq-center">
+        <div class="kq-logo">Kuis PCD</div>
+        <div class="kq-pin"><small>Game PIN</small><b>${pin}</b></div>
+        <p class="kq-sub">${Q.length} soal pilihan ganda: ${Q.length - Q.filter(x => x.hots).length} soal reguler (20–30 detik) dan ${Q.filter(x => x.hots).length} soal HOTS di ronde akhir (40–45 detik, poin ganda). Makin cepat menjawab, makin besar poin. Jawab benar berturut-turut untuk bonus beruntun. Di keyboard, tekan 1–4 atau A–D sesuai urutan warna.</p>
+        <div class="kq-form">
+          <input type="text" id="nick" maxlength="16" placeholder="Nama panggilan" value="${esc(this.name === 'Pemain' ? '' : this.name)}" aria-label="Nama panggilan" autocomplete="off">
+          <label class="opt"><input type="checkbox" id="optShuffle" ${this.shuffle?'checked':''}> Acak posisi jawaban tiap soal</label>
+          <button class="kq-btn" id="startBtn" data-focus>Mulai</button>
+        </div>
+      </div>`, '', 'Kuis PCD');
+    $('#startBtn').addEventListener('click', () => this.start());
+    $('#nick').addEventListener('keydown', e => { if (e.key === 'Enter') this.start(); });
+  },
+
+  start(){
+    const nick = ($('#nick').value || '').trim();
+    this.name = nick || 'Pemain';
+    this.shuffle = $('#optShuffle').checked;
+    this.perm = Q.map(() => {
+      const p = [0,1,2,3];
+      if (this.shuffle) for (let k=3;k>0;k--){ const j = Math.floor(Math.random()*(k+1)); [p[k],p[j]] = [p[j],p[k]]; }
+      return p;
+    });
+    const pool = BOTS.slice().sort(() => Math.random()-.5).slice(0, 12);
+    this.bots = pool.map(n => ({name:n, skill:.4+Math.random()*.5, speed:.12+Math.random()*.5, score:0, streak:0}));
+    this.me = {name:this.name, score:0, streak:0, best:0, correct:0, time:0, answered:0, log:[]};
+    this.i = 0;
+    sfx.start();
+    this.intro_();
+  },
+
+  intro_(){
+    const q = Q[this.i]; this.T = q.time; this.phase = 'intro';
+    this.draw(`
+      <div class="kq-center">
+        <div class="kq-count">Soal ${this.i+1} dari ${Q.length}</div>
+        ${q.hots ? '<div class="kq-hots">Soal HOTS: poin ganda</div>' : ''}
+        <h2 class="kq-bigq">${q.q}</h2>
+        <div class="kq-sub">Waktu menjawab: ${q.time} detik</div>
+        <div class="kq-introbar" aria-hidden="true"><i></i></div>
+        <button class="kq-btn ghost" id="skipIntro" data-focus>Langsung jawab</button>
+      </div>`, '', `Soal ${this.i+1}/${Q.length}`);
+    $('#skipIntro').addEventListener('click', () => { this.clear(); this.ask(); });
+    this.intro = setTimeout(() => this.ask(), 3000);
+  },
+
+  ask(){
+    const q = Q[this.i], p = this.perm[this.i];
+    this.clear(); this.phase = 'ask'; this.locked = false; this.lastSec = this.T;
+    this.draw(`
+      <div class="kq-qbox">${q.q}</div>
+      <div class="kq-timer"><div class="tnum" id="tnum" aria-label="Sisa waktu">${this.T}</div><div class="tbar"><i id="tbar"></i></div></div>
+      <div class="answers" id="answers">
+        ${p.map((orig, d) => `<button class="ans c${d}" data-d="${d}" aria-label="${SHAPE_NAME[d]}: ${esc(q.o[orig])}">${SHAPES[d]}<span>${esc(q.o[orig])}</span></button>`).join('')}
+      </div>
+      <div class="kq-foot"><span>${esc(this.me.name)}</span><span>Skor ${idn(this.me.score)}${this.me.streak>1?' | Beruntun ×'+this.me.streak:''}</span></div>`,
+      '', `Soal ${this.i+1}/${Q.length}`);
+    document.querySelectorAll('.ans').forEach(b => b.addEventListener('click', () => this.pick(+b.dataset.d)));
+    this.t0 = performance.now();
+    this.timer = setInterval(() => this.tickTimer(), 100);
+  },
+
+  tickTimer(){
+    const el = (performance.now() - this.t0) / 1000;
+    const left = Math.max(0, this.T - el);
+    const bar = $('#tbar'), num = $('#tnum'); if (!bar) return;
+    bar.style.transform = `scaleX(${left / this.T})`;
+    const sec = Math.ceil(left);
+    num.textContent = sec;
+    if (sec <= 5){ num.classList.add('low'); if (sec !== this.lastSec && sec > 0) sfx.tick(); }
+    this.lastSec = sec;
+    if (left <= 0) this.finish(null, this.T);
+  },
+
+  pick(d){
+    if (this.locked || this.phase !== 'ask') return;
+    const dt = Math.min(this.T, (performance.now() - this.t0) / 1000);
+    this.locked = true; clearInterval(this.timer);
+    const ans = $('#answers'); ans.classList.add('locked');
+    ans.querySelector(`[data-d="${d}"]`).classList.add('picked');
+    setTimeout(() => this.finish(d, dt), 650);
+  },
+
+  finish(d, dt){
+    this.clear(); this.phase = 'result';
+    const q = Q[this.i], p = this.perm[this.i], me = this.me;
+    const picked = d === null ? -1 : p[d];
+    const ok = picked === q.a;
+    const mult = q.hots ? 2 : 1;
+    const pts = k => Math.round((1 - (k/this.T)/2) * 1000) * mult;
+    let base = 0, bonus = 0;
+    if (ok){ me.streak++; me.correct++; base = pts(dt); bonus = me.streak > 1 ? Math.min(me.streak-1, 5) * 100 : 0; me.best = Math.max(me.best, me.streak); }
+    else me.streak = 0;
+    if (d !== null){ me.time += dt; me.answered++; }
+    me.score += base + bonus;
+    // bot
+    const counts = [0,0,0,0]; if (picked >= 0) counts[picked]++;
+    this.bots.forEach(b => {
+      const right = Math.random() < b.skill * (q.hots ? .75 : 1);
+      const rt = Math.min(.97, Math.max(.06, b.speed + (Math.random()-.5)*.4)) * this.T;
+      b.prev = b.score;
+      if (right){ b.streak++; b.score += pts(rt) + (b.streak>1 ? Math.min(b.streak-1,5)*100 : 0); counts[q.a]++; }
+      else { b.streak = 0; const wrong = [0,1,2,3].filter(x => x !== q.a); counts[wrong[Math.floor(Math.random()*3)]]++; }
+    });
+    me.prev = me.score - base - bonus;
+    me.log.push({i:this.i, picked, ok, timeout: d === null, pts: base + bonus});
+    this.last = {ok, timeout: d === null, base, bonus, counts, picked};
+
+    const mood = d === null ? 'timeout' : (ok ? 'correct' : 'wrong');
+    d === null ? sfx.late() : (ok ? sfx.ok() : sfx.no());
+    const verdict = d === null ? 'Waktu habis' : (ok ? 'Benar!' : 'Kurang tepat');
+    const rank = this.ranking().findIndex(x => x.me) + 1;
+    const mx = Math.max(...counts, 1);
+    const dist = p.map((orig, disp) => `
+      <div class="${orig===q.a?'ok':'no'}">
+        <span>${counts[orig]}</span>
+        <i style="height:${Math.max(6, counts[orig]/mx*80)}px;background:${['#E21B3C','#1368CE','#D89E00','#26890C'][disp]}"></i>
+        ${SHAPES[disp]}
+      </div>`).join('');
+    const last = this.i === Q.length - 1;
+    this.draw(`
+      <div class="kq-center">
+        <div class="kq-verdict">${verdict}</div>
+        ${ok ? `<div class="kq-pts">+${idn(base + bonus)}</div>` : ''}
+        ${ok && me.streak > 1 ? `<div class="kq-streak">Beruntun ×${me.streak}${bonus ? ` (bonus +${bonus})` : ''}</div>` : ''}
+        <div class="kq-dist" aria-label="Sebaran jawaban pemain">${dist}</div>
+        <div class="kq-exp"><b>Jawaban: ${esc(q.o[q.a])}</b><p>${q.e}</p></div>
+        <div class="kq-rank">Skor ${idn(me.score)} | Peringkat ${rank} dari ${this.bots.length + 1}</div>
+        <button class="kq-btn light" id="toBoard" data-focus>Papan skor</button>
+      </div>`, mood, `Soal ${this.i+1}/${Q.length}`);
+    $('#toBoard').addEventListener('click', () => this.board());
+  },
+
+  ranking(){
+    const all = this.bots.map(b => ({name:b.name, score:b.score, prev:b.prev ?? 0, me:false}));
+    all.push({name:this.me.name, score:this.me.score, prev:this.me.prev ?? 0, me:true});
+    return all.sort((a, b) => b.score - a.score || (a.me ? -1 : 1));
+  },
+
+  board(){
+    this.phase = 'board';
+    const r = this.ranking(), mx = Math.max(...r.map(x => x.score), 1);
+    const shown = r.slice(0, 5);
+    const meIdx = r.findIndex(x => x.me);
+    if (meIdx >= 5) shown.push(r[meIdx]);
+    const last = this.i === Q.length - 1;
+    const prevMax = Math.max(...r.map(x => x.prev), 1);
+    this.draw(`
+      <div class="kq-center">
+        <h2 class="kq-verdict" style="font-size:2rem">Papan skor</h2>
+        <div class="lb">
+          ${shown.map(x => `<div class="lb-row ${x.me?'me':''}"><div class="lb-fill" data-w="${Math.max(4, x.score/mx*100)}" style="width:${Math.max(4, x.prev/mx*100)}%"></div><span class="lb-rank">${r.indexOf(x)+1}</span><span class="lb-name">${esc(x.name)}${x.me?' (kamu)':''}</span><span class="lb-score">${idn(x.score)}</span></div>`).join('')}
+        </div>
+        <button class="kq-btn light" id="nextQ" data-focus>${last ? 'Lihat hasil akhir' : 'Soal berikutnya'}</button>
+      </div>`, 'board', `Soal ${this.i+1}/${Q.length}`);
+    requestAnimationFrame(() => requestAnimationFrame(() => document.querySelectorAll('.lb-fill').forEach(el => el.style.width = el.dataset.w + '%')));
+    $('#nextQ').addEventListener('click', () => { if (last) this.final(); else { this.i++; this.intro_(); } });
+  },
+
+  final(){
+    this.phase = 'final'; sfx.end();
+    const r = this.ranking(), me = this.me, myRank = r.findIndex(x => x.me) + 1;
+    const top = [r[1], r[0], r[2]], cls = ['p2','p1','p3'], pos = [2,1,3];
+    const acc = Math.round(me.correct / Q.length * 100);
+    const avg = me.answered ? (me.time / me.answered).toFixed(1).replace('.', ',') : '-';
+    const msg = myRank === 1 ? 'Juara 1! Pemahamanmu sudah kuat.' : (myRank <= 3 ? 'Masuk podium, tinggal sedikit lagi ke puncak.' : (acc >= 70 ? 'Pemahaman bagus; percepat lagi jawabanmu.' : 'Baca kembali rangkuman lalu coba lagi.'));
+    this.draw(`
+      <div class="kq-center">
+        <div class="kq-verdict" style="font-size:2rem">Hasil akhir</div>
+        <div class="podium">
+          ${top.map((x, k) => `<div class="pod ${cls[k]}"><span class="nm">${esc(x.name)}${x.me?' (kamu)':''}</span><span>${idn(x.score)}</span><div class="bl">${pos[k]}</div></div>`).join('')}
+        </div>
+        <p class="kq-sub"><b>Peringkatmu: ${myRank} dari ${r.length}.</b> ${msg}</p>
+        <div class="stats">
+          <div><b>${idn(me.score)}</b><span>Skor total</span></div>
+          <div><b>${me.correct}/${Q.length}</b><span>Jawaban benar (${acc}%)</span></div>
+          <div><b>×${me.best}</b><span>Beruntun terbaik</span></div>
+          <div><b>${avg}${avg==='-'?'':' dtk'}</b><span>Rata-rata waktu</span></div>
+        </div>
+        <div class="review">
+          ${me.log.map(l => { const q = Q[l.i]; const t = l.timeout ? '<span class="tag t">Waktu habis</span>' : (l.ok ? '<span class="tag">Benar</span>' : '<span class="tag x">Salah</span>');
+            return `<details><summary>${t}${q.hots?'<span class="tag" style="background:#F5B301;color:#3a2a00">HOTS</span>':''}Soal ${l.i+1}: ${q.q}</summary><p><b>Kunci: ${esc(q.o[q.a])}.</b>${l.ok||l.timeout?'':' Jawabanmu: '+esc(q.o[l.picked])+'.'} ${q.e}</p></details>`; }).join('')}
+        </div>
+        <div class="btnrow">
+          <button class="kq-btn light" id="again" data-focus>Main lagi</button>
+          <button class="kq-btn ghost" id="toSum">Kembali ke rangkuman</button>
+        </div>
+      </div>`, 'board', 'Hasil akhir');
+    $('#again').addEventListener('click', () => this.lobby());
+    $('#toSum').addEventListener('click', () => showView('summary'));
+  }
+};
+
+document.addEventListener('keydown', e => {
+  if (game.phase !== 'ask' || $('#view-quiz').hidden) return;
+  if (e.target && e.target.tagName === 'INPUT') return;
+  const k = e.key.toLowerCase();
+  const idx = ['1','2','3','4'].indexOf(k) >= 0 ? +k - 1 : ['a','b','c','d'].indexOf(k);
+  if (idx >= 0) game.pick(idx);
+});
+
+
+/* ============ Kalkulator ukuran berkas ============ */
+(function(){
+  const W = $('#cW'), Hh = $('#cH'), M = $('#cMode'), Lv = $('#cLv'), LvW = $('#cLvWrap');
+  const fmtSize = b => b >= 1048576 ? idn(b/1048576, 2) + ' MB' : (b >= 1024 ? idn(b/1024, 2) + ' KB' : idn(b, 2) + ' byte');
+  function swatch(mode, k){
+    const el = $('#cSw');
+    if (mode === 'rgb' || mode === 'rgba'){
+      const hue = 'linear-gradient(180deg,#ff0000,#ffff00,#00ff00,#00ffff,#0000ff,#ff00ff,#ff0000)';
+      el.style.background = mode === 'rgba'
+        ? hue.replace('180deg', '180deg') + ', ' + 'repeating-conic-gradient(#bbb 0 25%,#fff 0 50%) 0 0/16px 16px'
+        : hue;
+      if (mode === 'rgba') el.style.background = 'linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.85)),' + hue;
+      return;
+    }
+    if (mode === 'idx'){
+      const pal = ['#46178F','#E21B3C','#F5B301','#26890C','#1368CE','#ffffff','#000000','#8a5a2b'];
+      el.style.background = 'linear-gradient(180deg,' + pal.map((c, i) => `${c} ${i*12.5}% ${(i+1)*12.5}%`).join(',') + ')';
+      return;
+    }
+    const L = Math.min(Math.pow(2, k), 256), st = [];
+    for (let i = 0; i < L; i++){
+      const v = L === 1 ? 0 : Math.round(i * 255 / (L - 1));
+      st.push(`rgb(${v},${v},${v}) ${(i/L*100).toFixed(3)}% ${((i+1)/L*100).toFixed(3)}%`);
+    }
+    el.style.background = 'linear-gradient(180deg,' + st.join(',') + ')';
+  }
+  function calc(){
+    const w = Math.max(1, Math.floor(+W.value || 1)), h = Math.max(1, Math.floor(+Hh.value || 1)), mode = M.value;
+    const isGray = mode === 'gray';
+    LvW.classList.toggle('dim', !isGray); Lv.disabled = !isGray;
+    let k = {bin:1, idx:8, rgb:24, rgba:32}[mode];
+    if (isGray) k = Math.round(Math.log2(+Lv.value));
+    const px = w * h, bits = px * k, bytes = bits / 8;
+    const bmpBits = k <= 1 ? 1 : k <= 4 ? 4 : k <= 8 ? 8 : (mode === 'rgba' ? 32 : 24);
+    const palette = bmpBits <= 8 ? Math.pow(2, bmpBits) * 4 : 0;
+    const header = mode === 'rgba' ? 138 : 54;
+    const rowRaw = w * bmpBits / 8, row = Math.ceil(w * bmpBits / 32) * 4;
+    const real = header + palette + row * h;
+    $('#oPx').textContent = idn(px) + ' piksel' + (px >= 1e6 ? ` (${idn(px/1e6, 1)} MP)` : '');
+    $('#oK').textContent = k + ' bit';
+    $('#oCol').textContent = idn(Math.pow(2, k));
+    $('#oBit').textContent = idn(bits) + ' bit';
+    $('#oByte').textContent = idn(bytes, 3) + ' byte (' + fmtSize(bytes) + ')';
+    $('#oHdr').textContent = palette ? `${header} + ${idn(palette)} = ${idn(header + palette)} byte` : `${header} byte (tanpa palet)`;
+    $('#oReal').textContent = idn(real) + ' byte (' + fmtSize(real) + ')';
+    $('#oRealBit').textContent = idn(real * 8) + ' bit';
+    $('#oDiff').textContent = '+' + idn(real - bytes, 3) + ' byte';
+    const parts = [];
+    parts.push(`${idn(w)} × ${idn(h)} = ${idn(px)} piksel, dikali ${k} bit = ${idn(bits)} bit.`);
+    if (bmpBits !== k) parts.push(`BMP tidak menyimpan ${k} bit per piksel, jadi berkasnya memakai ${bmpBits} bit per piksel; ukuran nyatanya jadi lebih besar dari ukuran teoretis.`);
+    if (palette) parts.push(`Karena ${bmpBits} bit ≤ 8, BMP menyertakan palet ${Math.pow(2, bmpBits)} entri × 4 byte = ${idn(palette)} byte selain header ${header} byte.`);
+    else if (mode === 'rgba') parts.push('BMP beralfa memakai info header V5 (124 byte), sehingga header totalnya 14 + 124 = 138 byte.');
+    else parts.push('RGB 24 bit tidak memakai palet: cukup header 54 byte.');
+    if (row !== rowRaw) parts.push(`Tiap baris ${idn(rowRaw, 3)} byte dibulatkan ke kelipatan 4 menjadi ${idn(row)} byte (padding).`);
+    $('#cV').textContent = parts.join(' ');
+    swatch(mode, k);
+  }
+  [W, Hh, M, Lv].forEach(el => el.addEventListener('input', calc));
+  M.addEventListener('change', calc); Lv.addEventListener('change', calc);
+  $('#cPresets').addEventListener('click', e => {
+    const b = e.target.closest('button[data-p]'); if (!b) return;
+    const [w, h, m, l] = b.dataset.p.split(',');
+    W.value = w; Hh.value = h; M.value = m; Lv.value = l; calc();
+  });
+  calc();
+})();
+
+/* ============ Lab: sampling & kuantisasi ============ */
+(function(){
+  const ref = $('#sqRef'), out = $('#sqOut'); if (!ref) return;
+  const N = 256, img = new Float32Array(N*N);
+  for (let y = 0; y < N; y++) for (let x = 0; x < N; x++){
+    let v = 25 + 200 * (y / (N-1)) * (0.55 + 0.45 * x / (N-1));
+    const dx = x - 165, dy = y - 95, d = Math.sqrt(dx*dx + dy*dy);
+    if (d < 62){ const lx = (x - 140), ly = (y - 72); v = 250 - 1.9 * Math.sqrt(lx*lx + ly*ly); }
+    if (x > 18 && x < 112 && y > 150 && y < 236) v = 128 + 110 * Math.sin((x + y) * 0.42);
+    img[y*N + x] = Math.max(0, Math.min(255, v));
+  }
+  const cr = ref.getContext('2d'), co = out.getContext('2d');
+  const id0 = cr.createImageData(N, N);
+  for (let i = 0; i < N*N; i++){ const v = Math.round(img[i]); id0.data[i*4] = id0.data[i*4+1] = id0.data[i*4+2] = v; id0.data[i*4+3] = 255; }
+  cr.putImageData(id0, 0, 0);
+  const SIZES = [8, 16, 32, 64, 128, 256];
+  const q = (v, L) => { const D = 256 / L; return Math.min(255, Math.floor(Math.floor(v / D) * D + D / 2)); };
+  function draw(){
+    const n = SIZES[+$('#sqS').value], b = +$('#sqQ').value, L = Math.pow(2, b), B = N / n;
+    const id = co.createImageData(N, N);
+    for (let by = 0; by < n; by++) for (let bx = 0; bx < n; bx++){
+      const sx = Math.min(N-1, Math.floor(bx*B + B/2)), sy = Math.min(N-1, Math.floor(by*B + B/2));
+      const v = L >= 256 ? Math.round(img[sy*N + sx]) : q(img[sy*N + sx], L);
+      for (let y = by*B; y < (by+1)*B; y++) for (let x = bx*B; x < (bx+1)*B; x++){
+        const i = (y*N + x) * 4; id.data[i] = id.data[i+1] = id.data[i+2] = v; id.data[i+3] = 255;
+      }
+    }
+    co.putImageData(id, 0, 0);
+    $('#sqSv').textContent = `${n} × ${n}`;
+    $('#sqQv').textContent = `${b} bit (${L} level)`;
+    $('#sqCap').textContent = `Hasil: ${n} × ${n}, ${L} level`;
+    const bar = [];
+    for (let i = 0; i < L; i++){ const v = L >= 256 ? i : q(i * 256 / L, L); bar.push(`<i style="background:rgb(${v},${v},${v})"></i>`); }
+    $('#sqBar').innerHTML = bar.join('');
+    const bits = n*n*b, full = N*N*8;
+    let t = `Ukuran data: ${idn(n)} × ${idn(n)} × ${b} bit = ${idn(bits)} bit (${idn(bits/8)} byte), atau ${idn(bits/full*100, 2)}% dari citra acuan. `;
+    if (n <= 16) t += 'Sampling terlalu jarang: citra menjadi kotak-kotak dan pola garis di kiri bawah hilang atau berubah menjadi pola palsu (aliasing). ';
+    else if (n <= 64) t += 'Bentuk besar masih terbaca, tetapi tepi lingkaran bergerigi dan pola garis halus mulai rusak. ';
+    else t += 'Sampling cukup rapat: detail halus masih terlihat. ';
+    if (b <= 3) t += 'Level terlalu sedikit: gradasi langit dan bola patah menjadi pita-pita (false contouring).';
+    else if (b <= 5) t += 'Pita halus mulai tampak pada gradasi yang lebar.';
+    else t += 'Gradasi tampak mulus bagi mata.';
+    $('#sqNote').textContent = t;
+  }
+  $('#sqS').addEventListener('input', draw); $('#sqQ').addEventListener('input', draw); draw();
+})();
+
+/* ============ Lab: RGB → grayscale → biner ============ */
+(function(){
+  const r = $('#gR'); if (!r) return;
+  function draw(){
+    const R = +$('#gR').value, G = +$('#gG').value, B = +$('#gB').value, T = +$('#gT').value;
+    $('#gRv').textContent = R; $('#gGv').textContent = G; $('#gBv').textContent = B; $('#gTv').textContent = T;
+    const avg = Math.round((R + G + B) / 3), lum = Math.round(0.299*R + 0.587*G + 0.114*B), bin = lum >= T ? 1 : 0;
+    const cell = (bg, name, a, b) => `<div class="mat"><div class="sw" style="background:${bg}"></div><b>${name}</b><span>${a}</span><span>${b}</span></div>`;
+    $('#gMats').innerHTML =
+      cell(`rgb(${R},${G},${B})`, 'Warna asli', `(${R}, ${G}, ${B})`, '24 bit') +
+      cell(`rgb(${avg},${avg},${avg})`, 'Rata-rata', `(${R} + ${G} + ${B}) / 3`, `= ${avg}`) +
+      cell(`rgb(${lum},${lum},${lum})`, 'Luminositas', `0,299·${R} + 0,587·${G} + 0,114·${B}`, `= ${lum}`) +
+      cell(bin ? '#fff' : '#000', 'Biner (dari luminositas)', `${lum} ${bin ? '≥' : '<'} ${T}`, `= ${bin} (${bin ? 'putih' : 'hitam'})`);
+    const d = lum - avg;
+    let t = d === 0 ? 'Kedua metode memberi nilai yang sama untuk warna ini.' :
+      `Selisih kedua metode ${d > 0 ? '+' : ''}${d}. ` + (Math.abs(d) >= 20 ? (G > B ? 'Warna ini banyak mengandung hijau sehingga luminositas lebih terang daripada rata-rata.' : 'Warna ini banyak mengandung biru sehingga luminositas lebih gelap daripada rata-rata; mata memang kurang peka terhadap biru.') : 'Perbedaannya kecil untuk warna ini.');
+    $('#gNote').textContent = t + ' Nilai biner hanya menyisakan 1 bit dari 24 bit semula.';
+  }
+  ['#gR','#gG','#gB','#gT'].forEach(s => $(s).addEventListener('input', draw)); draw();
+})();
+
+/* ============ Contoh citra terindeks ============ */
+(function(){
+  const el = $('#idxCol'); if (!el) return;
+  const lut = [[70,23,143],[226,27,60],[245,179,1],[38,137,12]];
+  const m = [0,0,1,1,0,2,2,1,3,2,2,3,3,3,0,0];
+  el.innerHTML = m.map(i => `<span style="background:rgb(${lut[i].join(',')})">${i}</span>`).join('');
+})();
+
+/* ============ Lab: ketetanggaan & jarak ============ */
+(function(){
+  const g = $('#nGrid'); if (!g) return;
+  const S = 7; let px = 3, py = 3, mode = 'n4';
+  const NAMES = {n4:'N₄', nd:'N_D', n8:'N₈', de:'Euclidean', d4:'city-block', d8:'chessboard'};
+  function draw(){
+    const cells = []; let cnt = 0;
+    for (let y = 0; y < S; y++) for (let x = 0; x < S; x++){
+      const dx = Math.abs(x - px), dy = Math.abs(y - py);
+      const isP = dx === 0 && dy === 0;
+      let hit = false, txt = '';
+      if (mode === 'n4') hit = dx + dy === 1;
+      else if (mode === 'nd') hit = dx === 1 && dy === 1;
+      else if (mode === 'n8') hit = !isP && dx <= 1 && dy <= 1;
+      if (mode === 'de'){ const d = Math.sqrt(dx*dx + dy*dy); txt = d % 1 ? idn(d, 1) : String(d); hit = !isP && d <= 1; }
+      else if (mode === 'd4'){ txt = String(dx + dy); hit = !isP && dx + dy === 1; }
+      else if (mode === 'd8'){ txt = String(Math.max(dx, dy)); hit = !isP && Math.max(dx, dy) === 1; }
+      else if (hit) txt = `${x},${y}`;
+      if (isP) txt = 'p';
+      if (hit) cnt++;
+      cells.push(`<button class="${isP ? 'p' : (hit ? 'n' : '')}" data-x="${x}" data-y="${y}" aria-label="Piksel (${x}, ${y})${isP ? ', piksel p' : ''}${txt && !isP ? ', ' + txt : ''}">${txt}</button>`);
+    }
+    g.innerHTML = cells.join('');
+    let t;
+    if (mode.startsWith('n')) t = `p = (${px}, ${py}). ${NAMES[mode]}(p) berisi ${cnt} piksel.` + (cnt < ({n4:4, nd:4, n8:8})[mode] ? ' Jumlahnya berkurang karena p berada di tepi grid.' : '');
+    else t = `Angka pada sel = jarak ${NAMES[mode]} dari p = (${px}, ${py}). Sel kuning adalah yang berjarak 1` + (mode === 'd4' ? ', persis sama dengan N₄.' : mode === 'd8' ? ', persis sama dengan N₈.' : '; hanya empat, karena tetangga diagonal berjarak √2 ≈ 1,4.') + ' Pola angkanya membentuk ' + ({de:'lingkaran', d4:'belah ketupat', d8:'persegi'})[mode] + '.';
+    $('#nNote').textContent = t;
+  }
+  g.addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; px = +b.dataset.x; py = +b.dataset.y; draw(); const nb = g.querySelector(`[data-x="${px}"][data-y="${py}"]`); if (nb) nb.focus(); });
+  $('#nMode').addEventListener('click', e => {
+    const b = e.target.closest('button[data-m]'); if (!b) return; mode = b.dataset.m;
+    document.querySelectorAll('#nMode button').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+    draw();
+  });
+  draw();
+})();
+
+/* Tampilan awal dari hash (opsional) */
+try { if (location.hash === '#quiz') showView('quiz'); } catch(e){}
+</script>
+</body>
+</html>

@@ -1,0 +1,1317 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>PCD dan Computer Vision: Rangkuman dan Kuis Kahoot</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&family=Source+Serif+4:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F4F5FA; --surface:#FFFFFF; --ink:#161A3C; --muted:#5B6285; --line:#D9DCEC;
+  --accent:#46178F; --accent-ink:#FFFFFF; --soft:#EEE8FA; --warn:#FBF3D9; --warn-line:#C99A1B;
+  --font-head:'Montserrat',system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+  --font-body:'Source Serif 4',Georgia,'Times New Roman',serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1024; --surface:#171A38; --ink:#EDEFFC; --muted:#A5ABCF; --line:#2B2F5C;
+    --accent:#B99CF2; --accent-ink:#1A0B3B; --soft:#261E52; --warn:#2E2810; --warn-line:#8C7326;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1024; --surface:#171A38; --ink:#EDEFFC; --muted:#A5ABCF; --line:#2B2F5C;
+  --accent:#B99CF2; --accent-ink:#1A0B3B; --soft:#261E52; --warn:#2E2810; --warn-line:#8C7326;
+}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 76px);scroll-behavior:smooth}
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:18px;line-height:1.72;-webkit-text-size-adjust:100%}
+h1,h2,h3,h4{font-family:var(--font-head);line-height:1.2;margin:0}
+p{margin:0 0 1em}
+a{color:var(--accent)}
+:focus-visible{outline:3px solid #F5B301;outline-offset:2px}
+
+/* ---------- Header ---------- */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:var(--bg);border-bottom:1px solid var(--line)}
+.top-in{max-width:1120px;margin:0 auto;padding:10px 20px;display:flex;align-items:center;gap:16px;justify-content:space-between}
+.brand{font-family:var(--font-head);font-weight:800;font-size:.95rem;letter-spacing:.01em}
+.tabs{flex:none;display:flex;gap:6px;background:var(--soft);padding:4px;border-radius:999px}
+.tab{white-space:nowrap;font:700 .82rem var(--font-head);border:0;background:transparent;color:var(--ink);padding:8px 16px;border-radius:999px;cursor:pointer}
+.tab[aria-selected="true"]{background:var(--accent);color:var(--accent-ink)}
+
+/* ---------- Ringkasan ---------- */
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+.hero{padding:44px 0 28px}
+.hero h1{font-size:clamp(2rem,5.2vw,3.4rem);font-weight:800;letter-spacing:-.02em;max-width:18ch}
+.hero .lede{font-size:1.15rem;color:var(--muted);max-width:60ch;margin-top:16px}
+
+.explorer{border:1.5px solid var(--ink);border-radius:8px;padding:22px;margin:8px 0 12px;background:var(--surface)}
+.explorer h2{font-size:1.15rem;font-weight:800}
+.explorer p.sub{color:var(--muted);font-size:.95rem;margin:6px 0 18px}
+.spec{position:relative;height:54px;border-radius:6px;overflow:hidden;border:1px solid var(--line)}
+.spec input[type=range]{position:absolute;inset:0;width:100%;height:100%;margin:0;background:transparent;-webkit-appearance:none;appearance:none;cursor:ew-resize}
+.spec input[type=range]::-webkit-slider-runnable-track{background:transparent;height:54px}
+.spec input[type=range]::-moz-range-track{background:transparent;height:54px}
+.spec input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:8px;height:54px;background:#fff;border:2px solid #161A3C;border-radius:2px;box-shadow:0 0 0 2px rgba(255,255,255,.7)}
+.spec input[type=range]::-moz-range-thumb{width:6px;height:52px;background:#fff;border:2px solid #161A3C;border-radius:2px}
+.ticks{position:relative;height:34px;font:600 .74rem var(--font-head);color:var(--muted)}
+.ticks span{position:absolute;top:6px;transform:translateX(-50%);white-space:nowrap}
+.ticks span::before{content:"";position:absolute;left:50%;top:-6px;width:1px;height:6px;background:var(--muted)}
+.readout{display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:stretch;margin-top:6px}
+.swatch{width:96px;border-radius:6px;border:1px solid var(--line);min-height:96px}
+.rgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 22px}
+.rgrid dt{font:600 .74rem var(--font-head);color:var(--muted);margin:0}
+.rgrid dd{margin:0;font:700 1rem var(--font-head);word-break:break-word}
+.verdict{grid-column:1/-1;font-size:.98rem;line-height:1.5;margin:4px 0 0;padding:10px 14px;border-left:4px solid var(--accent);background:var(--soft);border-radius:0 6px 6px 0}
+.verdict.ion{border-left-color:#E21B3C}
+.presets{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;align-items:center}
+.presets button{font:600 .78rem var(--font-head);padding:7px 12px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;cursor:pointer}
+.presets button:hover{border-color:var(--accent)}
+.numin{display:flex;align-items:center;gap:8px;margin-left:auto;font:600 .8rem var(--font-head)}
+.numin input{width:120px;font:600 .9rem var(--font-head);padding:6px 8px;border:1.5px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink)}
+
+.doc{display:grid;grid-template-columns:220px minmax(0,1fr);gap:56px;padding:24px 0 80px}
+.toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 76px);align-self:start;font-family:var(--font-head);font-size:.84rem}
+.toc b{display:block;margin-bottom:10px;font-size:.9rem}
+.toc a{display:block;padding:7px 0 7px 14px;border-left:3px solid var(--line);color:var(--muted);text-decoration:none;font-weight:600;line-height:1.35}
+.toc a.on{border-left-color:var(--accent);color:var(--ink)}
+article section{margin-bottom:64px}
+article h2{font-size:clamp(1.5rem,3vw,2rem);font-weight:800;letter-spacing:-.01em;margin-bottom:18px;padding-top:6px}
+article h3{font-size:1.12rem;font-weight:700;margin:32px 0 10px}
+article ul,article ol{padding-left:1.25em;margin:0 0 1em}
+article li{margin-bottom:.4em}
+.tw{overflow-x:auto;margin:16px 0 22px;border:1px solid var(--line);border-radius:6px}
+table{border-collapse:collapse;width:100%;font-family:var(--font-head);font-size:.84rem;line-height:1.45;min-width:520px;background:var(--surface)}
+th,td{padding:10px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+th{background:var(--soft);font-weight:700}
+tr:last-child td{border-bottom:0}
+td:first-child{font-weight:700}
+.eq{font-style:italic;font-size:1.35rem;text-align:center;padding:14px 12px;margin:14px 0;background:var(--soft);border-radius:6px;overflow-x:auto;white-space:nowrap}
+.eq small{font-style:normal;font-family:var(--font-head);font-size:.78rem;color:var(--muted);display:block;margin-top:4px;white-space:normal}
+.note{border-left:4px solid var(--accent);background:var(--soft);padding:14px 18px;border-radius:0 6px 6px 0;margin:20px 0}
+.note.warn{border-left-color:var(--warn-line);background:var(--warn)}
+.note p:last-child{margin-bottom:0}
+.quote{font-family:var(--font-head);font-weight:700;font-size:1.25rem;line-height:1.4;border-left:5px solid var(--accent);padding:6px 0 6px 20px;margin:26px 0}
+.figure{margin:22px 0}
+.figure svg{width:100%;height:auto;display:block}
+.figure figcaption{font-family:var(--font-head);font-size:.78rem;color:var(--muted);margin-top:6px}
+svg text{font-family:var(--font-head);fill:var(--ink)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 18px}
+.chip{font:700 .78rem var(--font-head);padding:6px 10px;border-radius:5px;color:#111}
+
+.grp{border:1.5px dashed var(--muted);border-radius:8px;padding:12px;margin-bottom:10px}
+.grp-title{font:800 .85rem var(--font-head);margin-bottom:10px}
+.grp.cv{border-color:var(--accent)}
+.chain{display:flex;flex-wrap:wrap;align-items:stretch;gap:8px}
+.node{flex:1 1 150px;border:1.5px solid var(--line);background:var(--surface);padding:10px 12px;border-radius:6px;font-family:var(--font-head);font-size:.8rem;line-height:1.4}
+.node b{display:block;font-size:.88rem;margin-bottom:2px}
+.node span{color:var(--muted);font-family:var(--font-body);font-size:.88rem;line-height:1.4;display:block}
+.arrow{align-self:center;color:var(--accent);font:800 1.2rem var(--font-head)}
+.between{text-align:center;font:800 1.3rem var(--font-head);color:var(--accent);margin:2px 0 10px}
+
+details.bank-item{border-bottom:1px solid var(--line);padding:12px 0;font-family:var(--font-head);font-size:.9rem}
+details.bank-item summary{cursor:pointer;font-weight:700;line-height:1.45}
+details.bank-item ol{list-style:upper-alpha;margin:10px 0 8px;padding-left:1.6em;font-weight:500}
+details.bank-item li.key{font-weight:800;color:var(--accent)}
+details.bank-item p{font-family:var(--font-body);font-size:.95rem;color:var(--muted);margin:6px 0 0}
+
+@media (max-width:900px){
+  .doc{grid-template-columns:minmax(0,1fr);gap:0}
+  .toc{display:none}
+  .readout{grid-template-columns:1fr}
+  .swatch{width:100%;min-height:44px}
+  .numin{margin-left:0;width:100%}
+  .chain{flex-direction:column}
+  .arrow{transform:rotate(90deg)}
+}
+@media (max-width:520px){
+  body{font-size:17px}
+  .brand{font-size:.8rem}
+  .tab{padding:8px 12px}
+  .rgrid{grid-template-columns:1fr 1fr}
+  .ticks .edge{display:none}
+}
+
+
+/* ---------- Laboratorium mini & contoh ---------- */
+.lab{border:1.5px solid var(--ink);border-radius:8px;padding:18px 20px;margin:22px 0;background:var(--surface);font-family:var(--font-head)}
+.lab h4{font-size:1rem;font-weight:800;margin-bottom:4px}
+.lab .labp{font-size:.88rem;color:var(--muted);margin:0 0 12px;line-height:1.5}
+.lab .ctl{display:flex;flex-direction:column;gap:6px;font-size:.88rem;font-weight:600;margin-bottom:8px}
+.lab input[type=range]{width:100%;accent-color:var(--accent)}
+.lab .chk{display:flex;gap:8px;align-items:center;font-size:.85rem;font-weight:600;margin-bottom:12px}
+.mats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:10px}
+.mat{display:flex;flex-direction:column;gap:2px;font-size:.8rem;line-height:1.4}
+.mat .sw{height:64px;border-radius:6px;border:1px solid var(--line);margin-bottom:4px}
+.mat span{color:var(--muted);font-weight:600}
+.bs-stage{position:relative;height:96px;background:#fff;border:1px solid var(--line);border-radius:6px;overflow:hidden;margin:6px 0 10px}
+.bs-cross{position:absolute;left:40px;top:50%;transform:translate(-50%,-50%);font:700 30px/1 var(--font-head);color:#111}
+.bs-dot{position:absolute;top:50%;width:22px;height:22px;border-radius:50%;background:#d0021b;transform:translate(-50%,-50%);left:300px}
+.sc{display:flex;border-radius:6px;overflow:hidden;border:1px solid var(--line);margin:8px 0}
+.sc div{flex:1;height:130px;display:grid;place-items:center}
+.sc i{display:block;width:56px;height:56px;background:#808080}
+.hots-tag{display:inline-block;background:#F5B301;color:#3a2a00;font:800 .7rem var(--font-head);padding:2px 8px;border-radius:4px;margin-right:6px}
+.kq-hots{background:#F5B301;color:#3a2a00;font-weight:800;padding:6px 16px;border-radius:999px;font-size:.85rem}
+@media (max-width:520px){.mats{grid-template-columns:1fr}.mat{flex-direction:row;flex-wrap:wrap;gap:4px 12px;align-items:center}.mat .sw{width:100%;height:36px}}
+
+/* ---------- Kuis Kahoot ---------- */
+#view-quiz{background:#46178F;color:#fff;transition:background .35s;font-family:var(--font-head)}
+#view-quiz[data-mood="correct"]{background:#26890C}
+#view-quiz[data-mood="wrong"]{background:#C4162F}
+#view-quiz[data-mood="timeout"]{background:#1368CE}
+#view-quiz[data-mood="board"]{background:#2B0B5C}
+.kq-stage{max-width:1000px;margin:0 auto;padding:20px 20px 32px;min-height:640px;display:flex;flex-direction:column}
+.kq-bar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
+.kq-pill{background:rgba(0,0,0,.28);border-radius:6px;padding:7px 14px;font-weight:800;font-size:.9rem}
+.kq-mute{border:0;background:rgba(0,0,0,.28);color:#fff;font:700 .78rem var(--font-head);border-radius:6px;padding:7px 12px;cursor:pointer}
+.kq-center{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:14px;padding:14px 0}
+.kq-logo{font-weight:800;font-size:clamp(2.2rem,7vw,3.8rem);letter-spacing:-.02em}
+.kq-sub{opacity:.85;font-weight:600;max-width:46ch;line-height:1.5}
+.kq-pin{background:#fff;color:#46178F;border-radius:8px;padding:10px 26px;font-weight:800}
+.kq-pin small{display:block;font-size:.72rem;font-weight:700;color:#5b3d94}
+.kq-pin b{font-size:2rem;letter-spacing:.14em}
+.kq-form{background:#fff;border-radius:8px;padding:16px;width:min(360px,100%);display:flex;flex-direction:column;gap:10px;color:#222}
+.kq-form input[type=text]{font:700 1.1rem var(--font-head);padding:13px 14px;border:2px solid #c9c9d6;border-radius:6px;text-align:center;color:#222;background:#fff}
+.kq-form label.opt{display:flex;gap:8px;align-items:center;font:600 .82rem var(--font-head);color:#444;text-align:left}
+.kq-btn{font:800 1.05rem var(--font-head);border:0;border-radius:6px;padding:14px 26px;background:#333;color:#fff;cursor:pointer;box-shadow:0 4px 0 rgba(0,0,0,.35)}
+.kq-btn:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(0,0,0,.35)}
+.kq-btn.light{background:#fff;color:#46178F}
+.kq-btn.ghost{background:rgba(0,0,0,.28);box-shadow:none;font-size:.85rem;padding:10px 16px}
+.kq-count{font-weight:800;font-size:1.05rem;background:rgba(0,0,0,.28);padding:8px 18px;border-radius:999px}
+.kq-bigq{font-size:clamp(1.4rem,4vw,2.3rem);font-weight:800;line-height:1.3;max-width:26ch}
+.kq-bigq i,.kq-qbox i,.kq-exp i{font-family:var(--font-body);font-weight:600}
+.kq-introbar{width:min(420px,80%);height:10px;background:rgba(255,255,255,.25);border-radius:6px;overflow:hidden}
+.kq-introbar i{display:block;height:100%;background:#fff;width:0;animation:fill 3s linear forwards}
+@keyframes fill{to{width:100%}}
+.kq-qbox{background:#fff;color:#1c1c28;border-radius:8px;padding:18px 22px;font-weight:800;font-size:clamp(1.05rem,2.6vw,1.6rem);line-height:1.35;text-align:center;margin:6px 0 12px}
+.kq-timer{display:flex;align-items:center;gap:14px;margin-bottom:14px}
+.tnum{flex:none;width:56px;height:56px;border-radius:50%;background:#fff;color:#46178F;display:grid;place-items:center;font-weight:800;font-size:1.5rem}
+.tnum.low{background:#E21B3C;color:#fff;animation:pulse .5s ease-in-out infinite alternate}
+@keyframes pulse{to{transform:scale(1.12)}}
+.tbar{flex:1;height:14px;background:rgba(0,0,0,.3);border-radius:8px;overflow:hidden}
+.tbar i{display:block;height:100%;width:100%;background:#F5B301;transform-origin:left}
+.answers{display:grid;grid-template-columns:1fr 1fr;gap:12px;flex:1}
+.ans{display:flex;align-items:center;gap:16px;min-height:104px;border:0;border-radius:6px;color:#fff;font:700 clamp(1rem,2.4vw,1.35rem) var(--font-head);text-align:left;padding:14px 20px;cursor:pointer;box-shadow:0 5px 0 rgba(0,0,0,.3);line-height:1.3}
+.ans svg{flex:none;width:34px;height:34px;fill:#fff}
+.ans:active{transform:translateY(3px);box-shadow:0 2px 0 rgba(0,0,0,.3)}
+.ans.c0{background:#E21B3C}.ans.c1{background:#1368CE}.ans.c2{background:#B98400}.ans.c3{background:#26890C}
+.answers.locked .ans{pointer-events:none;opacity:.35}
+.answers.locked .ans.picked{opacity:1;outline:4px solid #fff}
+.kq-foot{display:flex;justify-content:space-between;margin-top:14px;background:rgba(0,0,0,.3);padding:10px 16px;border-radius:6px;font-weight:700;font-size:.9rem}
+.kq-verdict{font-weight:800;font-size:clamp(2rem,6vw,3.2rem)}
+.kq-pts{background:rgba(0,0,0,.3);padding:8px 28px;border-radius:999px;font-weight:800;font-size:1.6rem}
+.kq-streak{font-weight:700;background:#F5B301;color:#3a2a00;padding:6px 16px;border-radius:999px;font-size:.9rem}
+.kq-dist{display:flex;gap:12px;align-items:flex-end;height:120px;margin:4px 0}
+.kq-dist div{width:64px;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:4px;font-weight:800;font-size:.9rem}
+.kq-dist i{display:block;width:100%;min-height:6px;border-radius:4px 4px 0 0}
+.kq-dist svg{width:20px;height:20px;fill:#fff}
+.kq-dist .ok{outline:3px solid #fff;outline-offset:2px;border-radius:4px}
+.kq-dist .no{opacity:.45}
+.kq-exp{background:#fff;color:#1c1c28;border-radius:8px;padding:14px 18px;max-width:640px;text-align:left;font-size:.95rem;line-height:1.5}
+.kq-exp b{display:block;margin-bottom:4px;font-size:1rem}
+.kq-exp p{margin:0;font-family:var(--font-body);font-size:1rem;color:#333}
+.kq-rank{font-weight:700;opacity:.92}
+.lb{width:min(620px,100%);display:flex;flex-direction:column;gap:8px;text-align:left}
+.lb-row{display:grid;grid-template-columns:34px 1fr auto;gap:10px;align-items:center;background:rgba(255,255,255,.1);border-radius:6px;padding:8px 12px;position:relative;overflow:hidden}
+.lb-row.me{outline:3px solid #F5B301}
+.lb-fill{position:absolute;inset:0 auto 0 0;background:rgba(255,255,255,.16);width:0;transition:width 1s cubic-bezier(.2,.7,.2,1)}
+.lb-row>:not(.lb-fill){position:relative}
+.lb-rank{font-weight:800;opacity:.8}
+.lb-name{font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lb-score{font-weight:800}
+.podium{display:flex;align-items:flex-end;justify-content:center;gap:10px;height:230px;margin:6px 0 4px;width:min(560px,100%)}
+.pod{flex:1 1 0;min-width:0;max-width:180px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:4px;text-align:center;font-weight:700}
+.pod .nm{font-size:.9rem;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pod .bl{width:100%;border-radius:6px 6px 0 0;background:linear-gradient(#ffd75e,#F5B301);color:#3a2a00;display:grid;place-items:start center;padding-top:10px;font-weight:800;font-size:1.6rem;transform-origin:bottom;animation:rise .9s cubic-bezier(.2,.7,.2,1) both}
+.pod.p1 .bl{height:150px;animation-delay:.5s}.pod.p2 .bl{height:110px;animation-delay:.25s;background:linear-gradient(#e2e6ee,#a9b0c0)}.pod.p3 .bl{height:80px;background:linear-gradient(#e9b98a,#b9783f)}
+@keyframes rise{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;width:min(720px,100%)}
+.stats div{background:rgba(0,0,0,.28);border-radius:6px;padding:12px 8px}
+.stats b{display:block;font-size:1.4rem}
+.stats span{font-size:.74rem;opacity:.85;font-weight:600}
+.review{width:min(720px,100%);text-align:left;display:flex;flex-direction:column;gap:6px}
+.review details{background:rgba(0,0,0,.25);border-radius:6px;padding:10px 14px;font-size:.9rem}
+.review summary{cursor:pointer;font-weight:700;line-height:1.4}
+.review p{margin:8px 0 0;font-family:var(--font-body);font-size:.98rem;opacity:.95}
+.review .tag{display:inline-block;font-weight:800;font-size:.72rem;padding:2px 8px;border-radius:4px;margin-right:6px;background:#26890C}
+.review .tag.x{background:#E21B3C}.review .tag.t{background:#1368CE}
+.btnrow{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+@media (max-width:640px){
+  .ans{min-height:84px;padding:12px 14px;gap:10px}
+  .ans svg{width:26px;height:26px}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .kq-dist div{width:52px}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.01ms!important;animation-delay:0s!important;transition-duration:.01ms!important}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="top-in">
+    <div class="brand">Pengolahan Citra Digital</div>
+    <div class="tabs" role="tablist" aria-label="Pilih tampilan">
+      <button class="tab" role="tab" data-view="summary" aria-selected="true">Rangkuman</button>
+      <button class="tab" role="tab" data-view="quiz" aria-selected="false">Kuis Kahoot</button>
+    </div>
+  </div>
+</header>
+
+<!-- =================== RANGKUMAN =================== -->
+<main id="view-summary">
+  <div class="wrap">
+    <div class="hero">
+      <h1>Dari cahaya menjadi piksel, dari piksel menjadi makna</h1>
+      <p class="lede">Rangkuman Pengolahan Citra Digital (PCD) dan Computer Vision: taksonomi domain visual, warisan optik Ibnu Al-Haytham, fisika pembentukan citra, dan biologi mata manusia. Di bagian akhir ada kuis gaya Kahoot untuk menguji pemahaman.</p>
+    </div>
+
+    <section class="explorer" aria-labelledby="ex-h">
+      <h2 id="ex-h">Jelajahi spektrum elektromagnetik</h2>
+      <p class="sub">Geser penanda atau ketik panjang gelombang. Mata manusia hanya melihat pita sempit 380–780 nm; lihat bagaimana energi foton naik saat λ mengecil.</p>
+      <div class="spec" id="spec"><input type="range" id="wlRange" min="300" max="900" step="1" value="550" aria-label="Panjang gelombang dalam nanometer"></div>
+      <div class="ticks" aria-hidden="true">
+        <span class="edge" style="left:0;transform:none">UV</span>
+        <span style="left:13.33%">380 nm</span>
+        <span style="left:50%">550 nm</span>
+        <span style="left:80%">780 nm</span>
+        <span class="edge" style="left:auto;right:0;transform:none">IR</span>
+      </div>
+      <div class="readout">
+        <div class="swatch" id="swatch"></div>
+        <dl class="rgrid">
+          <div><dt>Wilayah</dt><dd id="oRegion"></dd></div>
+          <div><dt>Warna yang terlihat</dt><dd id="oColor"></dd></div>
+          <div><dt>Panjang gelombang (λ)</dt><dd id="oL"></dd></div>
+          <div><dt>Frekuensi (f = c / λ)</dt><dd id="oF"></dd></div>
+          <div><dt>Energi foton (E = h·f)</dt><dd id="oE"></dd></div>
+        </dl>
+        <p class="verdict" id="oV"></p>
+      </div>
+      <div class="presets" id="presets">
+        <button data-nm="0.005">Sinar gamma</button>
+        <button data-nm="0.1">Sinar-X</button>
+        <button data-nm="254">UV-C 254 nm</button>
+        <button data-nm="550">Hijau 550 nm</button>
+        <button data-nm="700">Merah 700 nm</button>
+        <button data-nm="1000">Inframerah 1000 nm</button>
+        <button data-nm="122000000">Wi-Fi (12,2 cm)</button>
+        <label class="numin">λ (nm) <input type="number" id="wlNum" step="any" min="0.0001" value="550"></label>
+      </div>
+    </section>
+
+    <div class="doc">
+      <nav class="toc" aria-label="Daftar isi">
+        <b>Daftar isi</b>
+        <a href="#s1">1. Taksonomi dan domain</a>
+        <a href="#s2">2. Ibnu Al-Haytham</a>
+        <a href="#s3">3. Model matematika dan fisika</a>
+        <a href="#s4">4. Mata vs sensor</a>
+        <a href="#sk">Studi kasus</a>
+        <a href="#s5">Ringkasan rumus</a>
+        <a href="#s6">Bank soal dan kunci</a>
+      </nav>
+
+      <article>
+<!-- ---------------- 1 ---------------- -->
+<section id="s1">
+  <h2>1. Taksonomi dan domain pemrosesan visual</h2>
+  <p>Citra dan deskripsi adalah dua "bahasa" untuk menyatakan informasi visual. Citra menyimpan intensitas cahaya per titik; deskripsi menyimpan makna dalam bentuk simbol, angka, label, atau kalimat. Tiga bidang utama dibedakan oleh apa yang menjadi <em>input</em> dan <em>output</em>-nya.</p>
+
+  <div class="tw"><table>
+    <thead><tr><th></th><th>Output: Citra</th><th>Output: Deskripsi</th></tr></thead>
+    <tbody>
+      <tr><td>Input: Deskripsi</td><td>Komputer Grafik (rendering, sintesis citra)</td><td>Pengolahan data simbolik (misalnya analisis teks)</td></tr>
+      <tr><td>Input: Citra</td><td>Pengolahan Citra Digital (PCD)</td><td>Pengenalan Pola dan Computer Vision</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Deskripsi → Citra: Komputer Grafik</h3>
+  <p>Model, koordinat, tekstur, atau parameter pencahayaan diubah menjadi gambar. Contohnya render adegan 3D pada game, animasi film, dan visualisasi ilmiah. Model generatif teks-ke-gambar modern juga termasuk arah ini, sebab masukannya berupa deskripsi teks.</p>
+
+  <h3>Citra → Citra: Pengolahan Citra Digital</h3>
+  <p>Masukan dan keluarannya sama-sama citra. Tujuannya memperbaiki kualitas visual atau menyiapkan citra untuk analisis berikutnya: peningkatan kontras, pengurangan noise, penajaman, restorasi citra buram, kompresi, dan transformasi geometri.</p>
+
+  <h3>Citra → Deskripsi: Pengenalan Pola dan Computer Vision</h3>
+  <p>Citra dianalisis untuk mengekstrak makna: kelas objek, lokasi, jumlah, ukuran, atau identitas. Contohnya pengenalan wajah, pembaca pelat nomor, deteksi nodul pada foto rontgen, dan kendaraan otonom. Pengenalan pola berfokus pada klasifikasi fitur; Computer Vision lebih luas karena mencakup pemahaman adegan, gerak, dan geometri 3D.</p>
+
+  <h3>Alur dari citra mentah hingga deskripsi</h3>
+  <div class="figure" role="group" aria-label="Diagram alur PCD ke Computer Vision">
+    <div class="grp">
+      <div class="grp-title">Domain PCD: citra → citra</div>
+      <div class="chain">
+        <div class="node"><b>Citra mentah (raw)</b><span>Keluaran sensor apa adanya: noise, kontras rendah, pencahayaan tidak merata.</span></div>
+        <div class="arrow">→</div>
+        <div class="node"><b>Pra-pemrosesan</b><span>Pengurangan noise, koreksi pencahayaan, histogram equalization, penajaman.</span></div>
+        <div class="arrow">→</div>
+        <div class="node"><b>Citra olahan</b><span>Citra yang lebih bersih dan siap dianalisis, misalnya hasil thresholding atau segmentasi.</span></div>
+      </div>
+    </div>
+    <div class="between" aria-hidden="true">↓</div>
+    <div class="grp cv">
+      <div class="grp-title">Domain Pengenalan Pola / Computer Vision: citra → deskripsi</div>
+      <div class="chain">
+        <div class="node"><b>Ekstraksi fitur</b><span>Tepi, sudut, tekstur, bentuk, atau representasi yang dipelajari jaringan saraf (angka, bukan gambar).</span></div>
+        <div class="arrow">→</div>
+        <div class="node"><b>Klasifikasi / pengenalan</b><span>Model membandingkan fitur dengan kelas yang dikenal dan memberi keputusan.</span></div>
+        <div class="arrow">→</div>
+        <div class="node"><b>Deskripsi</b><span>Label atau kalimat: "3 mobil", "nodul 8 mm", "wajah: Dina".</span></div>
+      </div>
+    </div>
+    <figcaption>Segmentasi berada di perbatasan: hasilnya masih berupa citra (wilayah), tetapi tujuannya menyiapkan fitur untuk pengenalan.</figcaption>
+  </div>
+
+  <div class="note">
+    <p><b>Contoh utuh.</b> Foto rontgen dada mentah dicerahkan dan dikurangi noise-nya (PCD, citra → citra). Lalu algoritma menandai area mencurigakan dan menyimpulkan "ada nodul berdiameter sekitar 8 mm" (Computer Vision, citra → deskripsi).</p>
+  </div>
+
+  <h3>Contoh aplikasi nyata dan domainnya</h3>
+  <div class="tw"><table>
+    <thead><tr><th>Aplikasi</th><th>Input → Output</th><th>Domain</th></tr></thead>
+    <tbody>
+      <tr><td>Render adegan di Blender atau game 3D</td><td>Model 3D, tekstur, posisi lampu → gambar</td><td>Komputer Grafik</td></tr>
+      <tr><td>Generator gambar dari teks</td><td>Kalimat → gambar</td><td>Deskripsi → citra (generatif)</td></tr>
+      <tr><td>Filter perbaikan foto (HDR, hapus kabut)</td><td>Foto → foto yang lebih baik</td><td>Pengolahan Citra Digital</td></tr>
+      <tr><td>Kompresi JPEG</td><td>Foto → berkas lebih kecil yang dapat didekode menjadi foto lagi</td><td>Pengolahan Citra Digital (kompresi)</td></tr>
+      <tr><td>Rekonstruksi irisan CT scan</td><td>Data proyeksi sinar-X → citra irisan tubuh</td><td>Pengolahan Citra Digital (rekonstruksi)</td></tr>
+      <tr><td>Face ID membuka ponsel</td><td>Citra wajah → identitas cocok atau tidak</td><td>Pengenalan Pola</td></tr>
+      <tr><td>Google Lens membaca papan nama</td><td>Foto → teks (OCR)</td><td>Computer Vision</td></tr>
+      <tr><td>Keterangan foto otomatis</td><td>Foto → kalimat "dua anak bermain layang-layang"</td><td>Computer Vision</td></tr>
+      <tr><td>Mobil otonom</td><td>Video kamera → posisi pejalan kaki, rambu, dan jalur</td><td>Computer Vision</td></tr>
+    </tbody>
+  </table></div>
+  <div class="note">
+    <p><b>Cara cepat menentukan domain.</b> Lihat <em>output</em>-nya dulu. Bila keluarannya gambar, itu Komputer Grafik (input berupa model atau teks) atau PCD (input berupa foto). Bila keluarannya label, angka, atau teks, itu Pengenalan Pola atau Computer Vision.</p>
+  </div>
+</section>
+
+<!-- ---------------- 2 ---------------- -->
+<section id="s2">
+  <h2>2. Sejarah dan dasar optik: Ibnu Al-Haytham</h2>
+  <p>Abu Ali al-Hasan Ibnu al-Haytham (dikenal di Barat sebagai Alhazen, sekitar 965–1040 M) lahir di Basra dan berkarya terutama di Kairo. Karya optiknya, <em>Kitab al-Manazir</em> (<em>Book of Optics</em>, tujuh jilid, disusun kira-kira 1011–1021 M), dianggap tonggak lahirnya optik modern dan salah satu contoh awal metode ilmiah yang bertumpu pada eksperimen.</p>
+
+  <h3>Dua teori penglihatan yang bersaing</h3>
+  <div class="tw"><table>
+    <thead><tr><th>Teori</th><th>Klaim</th><th>Pendukung</th></tr></thead>
+    <tbody>
+      <tr><td>Emisi (ekstromisi)</td><td>Mata memancarkan "sinar visual" yang menyentuh objek, lalu kita melihat.</td><td>Euclid, Ptolemeus (dengan pendekatan geometri sinar)</td></tr>
+      <tr><td>Intromisi</td><td>Sesuatu dari objek (cahaya) masuk ke mata; mata menerima, bukan memancarkan.</td><td>Aristoteles, kaum atomis; disempurnakan dan dibuktikan oleh Ibnu Al-Haytham</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Mengapa Ibnu Al-Haytham menolak teori emisi</h3>
+  <ul>
+    <li><b>Silau dan bayangan sisa.</b> Menatap matahari atau cahaya terang membuat mata sakit dan meninggalkan bayangan sisa. Artinya ada sesuatu yang datang dan menimpa mata.</li>
+    <li><b>Tanpa cahaya, tidak ada penglihatan.</b> Di ruang gelap, mata yang terbuka tetap tidak melihat apa pun. Jika mata cukup memancarkan sinar, ruang gelap semestinya tidak menjadi masalah.</li>
+    <li><b>Jarak bintang.</b> Membuka mata langsung "menjangkau" bintang jauh sulit dijelaskan oleh sinar yang keluar dari mata.</li>
+    <li><b>Sintesis.</b> Ia menggabungkan geometri sinar ala Euclid dengan fisika intromisi: tiap titik pada objek yang bercahaya memancarkan cahaya ke segala arah, dan mata menangkap sinar-sinar itu.</li>
+  </ul>
+
+  <h3>Kamera obscura</h3>
+  <p>Kamera obscura adalah ruang gelap dengan satu lubang kecil pada salah satu dindingnya. Cahaya dari pemandangan luar melewati lubang dan membentuk gambar <em>terbalik</em> di dinding seberang. Ibnu Al-Haytham mempelajarinya secara sistematis: ia menaruh beberapa lampu di depan lubang dan menunjukkan bahwa tiap lampu membentuk titik cahayanya sendiri; menutup satu lampu hanya melenyapkan titik yang bersesuaian. Itu bukti bahwa cahaya merambat lurus dan bahwa gambar tersusun dari titik-titik yang berkorespondensi satu-satu.</p>
+
+  <div class="figure">
+    <svg viewBox="0 0 660 262" role="img" aria-label="Diagram kamera obscura: sinar dari objek melewati lubang kecil dan membentuk citra terbalik di layar">
+      <rect x="300" y="30" width="300" height="200" fill="var(--soft)" stroke="var(--ink)" stroke-width="2"/>
+      <rect x="296" y="124" width="8" height="12" fill="var(--bg)"/>
+      <line x1="90" y1="180" x2="90" y2="84" stroke="var(--ink)" stroke-width="4"/>
+      <polygon points="82,94 90,76 98,94" fill="var(--ink)"/>
+      <line x1="70" y1="182" x2="110" y2="182" stroke="var(--muted)" stroke-width="2"/>
+      <line x1="90" y1="80" x2="590" y2="199" stroke="var(--accent)" stroke-width="2" stroke-dasharray="6 4"/>
+      <line x1="90" y1="180" x2="590" y2="61" stroke="var(--accent)" stroke-width="2" stroke-dasharray="6 4"/>
+      <line x1="590" y1="61" x2="590" y2="195" stroke="var(--ink)" stroke-width="4"/>
+      <polygon points="582,185 590,203 598,185" fill="var(--ink)"/>
+      <text x="90" y="210" text-anchor="middle" font-size="13" font-weight="700">Objek</text>
+      <text x="300" y="20" text-anchor="middle" font-size="13" font-weight="700">Lubang kecil (pinhole)</text>
+      <text x="450" y="48" text-anchor="middle" font-size="12" fill="var(--muted)" style="fill:var(--muted)">Ruang gelap</text>
+      <text x="600" y="252" text-anchor="end" font-size="13" font-weight="700">Layar: citra terbalik</text>
+      <text x="200" y="236" text-anchor="middle" font-size="12" style="fill:var(--muted)">sinar cahaya merambat lurus</text>
+    </svg>
+    <figcaption>Sinar dari ujung atas objek jatuh di bagian bawah layar, dan sebaliknya, sehingga citra terbalik.</figcaption>
+  </div>
+
+  <h3>Signifikansi</h3>
+  <ul>
+    <li><b>Dasar kamera dan model pinhole.</b> Persamaan proyeksi kamera pada Computer Vision (koordinat 3D dipetakan ke bidang citra) adalah turunan langsung dari gagasan kamera obscura.</li>
+    <li><b>Metode ilmiah.</b> Hipotesis diuji dengan eksperimen terkontrol, bukan hanya argumen filosofis.</li>
+    <li><b>Pengaruh lintas zaman.</b> <em>Kitab al-Manazir</em> diterjemahkan ke bahasa Latin sekitar akhir abad ke-12 hingga awal abad ke-13 dan memengaruhi Roger Bacon, Kepler, serta perkembangan optik Eropa. Kisahnya juga dipopulerkan lewat proyek <em>1001 Inventions</em>.</li>
+  </ul>
+
+  <h3>Contoh hitung: berapa besar bayangan pinhole?</h3>
+  <p>Dengan segitiga sebangun, tinggi bayangan bergantung pada perbandingan jarak layar dari lubang dan jarak objek dari lubang.</p>
+  <div class="eq">tinggi citra = tinggi objek × (jarak lubang–layar / jarak objek–lubang)
+    <small>tanda terbalik: citra berada di sisi berlawanan dari objek</small>
+  </div>
+  <div class="note">
+    <p><b>Contoh.</b> Sebuah pohon setinggi 6 m berdiri 30 m dari lubang dan layar berada 0,15 m di belakang lubang. Tinggi citra = 6 × 0,15 / 30 = 0,03 m, yaitu 3 cm dan terbalik. Bila layar dijauhkan menjadi 0,30 m, citra membesar menjadi 6 cm, tetapi lebih redup karena cahaya yang sama tersebar di area lebih luas. Dalam Computer Vision, hubungan yang sama ditulis <i>x</i> = <i>f</i>·<i>X</i>/<i>Z</i> dengan <i>f</i> jarak lubang ke bidang citra dan <i>Z</i> jarak objek.</p>
+  </div>
+  <h3>Praktik di rumah: kamera obscura dari kardus</h3>
+  <ol>
+    <li>Siapkan kotak sepatu atau kardus yang bisa ditutup rapat. Buat satu lubang persegi sekitar 2 cm di salah satu sisi sempitnya.</li>
+    <li>Tempel selembar aluminium foil di atas lubang itu, lalu tusuk foil dengan jarum sehingga terbentuk lubang kecil sekitar 1 mm.</li>
+    <li>Pada sisi seberangnya, buat jendela lalu tutup dengan kertas kalkir atau baking paper sebagai layar.</li>
+    <li>Gelapkan ruangan atau selubungi kepala dengan kain, lalu arahkan lubang ke jendela atau lampu yang terang.</li>
+    <li>Amati bayangan terbalik di layar. Perbesar lubang untuk melihat kompromi klasik: makin besar lubang, makin terang tetapi makin buram.</li>
+    <li>Ulangi percobaan Ibnu Al-Haytham: letakkan dua lampu LED kecil di depan lubang. Kamu akan melihat dua titik terpisah; tutup satu lampu, dan hanya titik yang bersesuaian yang hilang.</li>
+  </ol>
+</section>
+
+<!-- ---------------- 3 ---------------- -->
+<section id="s3">
+  <h2>3. Model matematika dan fisika pembentukan citra</h2>
+
+  <h3>Model interaksi</h3>
+  <div class="figure" role="group" aria-label="Rantai pembentukan citra">
+    <div class="chain">
+      <div class="node"><b>Sumber cahaya</b><span>Matahari, lampu, LED. Menentukan iluminasi <i>i</i>(<i>x</i>,<i>y</i>).</span></div>
+      <div class="arrow">→</div>
+      <div class="node"><b>Objek</b><span>Memantulkan, menyerap, atau meneruskan cahaya. Ditandai reflektansi <i>r</i>(<i>x</i>,<i>y</i>).</span></div>
+      <div class="arrow">→</div>
+      <div class="node"><b>Sensor / mata</b><span>Mengukur cahaya yang tiba dan menghasilkan intensitas <i>f</i>(<i>x</i>,<i>y</i>).</span></div>
+    </div>
+  </div>
+
+  <h3>Fungsi citra kontinu</h3>
+  <div class="eq">f(x, y) = i(x, y) · r(x, y)
+    <small>0 &lt; i(x, y) &lt; ∞ &nbsp;&nbsp;|&nbsp;&nbsp; 0 ≤ r(x, y) ≤ 1 &nbsp;&nbsp;|&nbsp;&nbsp; 0 ≤ f(x, y) &lt; ∞</small>
+  </div>
+  <ul>
+    <li><b><i>i</i>(<i>x</i>,<i>y</i>): iluminasi</b>, jumlah cahaya yang datang ke objek (satuan lm/m²). Nilainya positif dan ditentukan sumber cahaya, bukan objek.</li>
+    <li><b><i>r</i>(<i>x</i>,<i>y</i>): reflektansi</b>, fraksi cahaya yang dipantulkan. Nilai 0 berarti menyerap sepenuhnya (tampak hitam), nilai 1 berarti memantulkan sepenuhnya (tampak putih).</li>
+    <li><b><i>f</i>(<i>x</i>,<i>y</i>): intensitas</b> yang terekam pada titik (<i>x</i>,<i>y</i>). Karena hasil kali, menggandakan iluminasi menggandakan intensitas.</li>
+  </ul>
+
+  <div class="tw"><table>
+    <thead><tr><th>Iluminasi tipikal <i>i</i></th><th>Nilai (lm/m²)</th><th>Reflektansi tipikal <i>r</i></th><th>Nilai</th></tr></thead>
+    <tbody>
+      <tr><td>Matahari cerah</td><td>sekitar 90.000</td><td>Beludru hitam</td><td>0,01</td></tr>
+      <tr><td>Langit berawan</td><td>sekitar 10.000</td><td>Baja tahan karat</td><td>0,65</td></tr>
+      <tr><td>Ruang kantor</td><td>sekitar 1.000</td><td>Dinding putih rata</td><td>0,80</td></tr>
+      <tr><td>Bulan purnama</td><td>sekitar 0,1</td><td>Salju</td><td>0,93</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="note">
+    <p><b>Contoh hitung.</b> Dinding putih (<i>r</i> = 0,80) di ruang kantor (<i>i</i> = 1.000) menghasilkan <i>f</i> = 800. Beludru hitam (<i>r</i> = 0,01) di ruangan yang sama hanya <i>f</i> = 10. Pada objek yang sama, mengganti lampu 1.000 menjadi 2.000 membuat <i>f</i> ikut menjadi dua kali lipat.</p>
+  </div>
+
+  <div class="lab" id="labIR">
+    <h4>Coba sendiri: satu adegan, tiga bahan</h4>
+    <p class="labp">Geser iluminasi dari cahaya bulan sampai matahari terik. Amati nilai <i>f</i> dan nilai piksel yang direkam kamera.</p>
+    <div class="ctl"><label for="irRange">Iluminasi <i>i</i> = <output id="irVal">1.000</output> lm/m²</label><input type="range" id="irRange" min="-1" max="5" step="0.05" value="3"></div>
+    <label class="chk"><input type="checkbox" id="irAuto"> Eksposur otomatis kamera</label>
+    <div class="mats" id="irMats"></div>
+    <p class="verdict" id="irNote"></p>
+  </div>
+  <div class="note">
+    <p><b>Contoh konkret: bayangan tangan di atas kertas putih.</b> Kertas putih (<i>r</i> = 0,80) di bawah lampu meja (<i>i</i> = 1.000) menghasilkan <i>f</i> = 800. Di area yang tertutup bayangan tangan iluminasi turun menjadi 200, jadi <i>f</i> = 160, padahal kertasnya sama. Algoritma <em>thresholding</em> dengan satu ambang bisa menganggap bayangan itu sebagai tulisan atau objek gelap. Itulah alasan pengolahan citra sering memisahkan iluminasi dari reflektansi (<em>homomorphic filtering</em>) atau memakai ambang adaptif.</p>
+  </div>
+  <p>Untuk citra digital, fungsi kontinu ini disampel (dibagi menjadi grid piksel) dan dikuantisasi menjadi <i>L</i> = 2<sup><i>k</i></sup> level keabuan. Citra 8-bit punya 256 level, 0 untuk hitam dan 255 untuk putih. Karena <i>f</i> adalah hasil kali, mengambil logaritma memisahkan komponen pencahayaan dan objek: ln <i>f</i> = ln <i>i</i> + ln <i>r</i>. Itulah dasar <em>homomorphic filtering</em>.</p>
+
+  <h3>Batas biologis: spektrum cahaya tampak</h3>
+  <p>Mata manusia hanya peka terhadap gelombang elektromagnetik sekitar <b>380–780 nm</b> (sering disederhanakan menjadi 400–700 nm). Di luar pita itu, informasi tetap ada tetapi tak terlihat: ultraviolet di bawah 380 nm, inframerah di atas 780 nm.</p>
+  <div class="chips" aria-label="Warna dan rentang panjang gelombang">
+    <span class="chip" style="background:#9b6bff">Ungu 380–450 nm</span>
+    <span class="chip" style="background:#4b8bff">Biru 450–495 nm</span>
+    <span class="chip" style="background:#3ed16b">Hijau 495–570 nm</span>
+    <span class="chip" style="background:#f4e04d">Kuning 570–590 nm</span>
+    <span class="chip" style="background:#ffa53d">Jingga 590–620 nm</span>
+    <span class="chip" style="background:#ff5a4d">Merah 620–780 nm</span>
+  </div>
+  <p>Sensor buatan tidak dibatasi oleh mata. Kamera inframerah, sensor UV, detektor sinar-X, dan radar memperluas penglihatan mesin ke seluruh spektrum, sehingga citra tidak selalu berarti "gambar yang bisa dilihat mata".</p>
+
+  <h3>Gelombang, frekuensi, dan energi foton</h3>
+  <div class="eq">c = λ · f &nbsp;&nbsp;&nbsp; E = h · f = h · c / λ
+    <small>c ≈ 3 × 10⁸ m/s &nbsp;|&nbsp; h ≈ 6,626 × 10⁻³⁴ J·s &nbsp;|&nbsp; jalan pintas: E (eV) ≈ 1240 / λ (nm)</small>
+  </div>
+  <p>Panjang gelombang dan frekuensi berbanding terbalik. Energi foton sebanding dengan frekuensi, sehingga makin pendek λ, makin besar energi tiap foton. Yang menentukan efek pada materi adalah <em>energi per foton</em>, bukan seberapa terang berkasnya.</p>
+
+  <div class="tw"><table>
+    <thead><tr><th>Wilayah</th><th>Panjang gelombang</th><th>Energi foton</th><th>Contoh pencitraan / efek</th></tr></thead>
+    <tbody>
+      <tr><td>Radio</td><td>&gt; 1 m</td><td>&lt; 1,2 µeV</td><td>MRI (gelombang radio dalam medan magnet), komunikasi</td></tr>
+      <tr><td>Gelombang mikro</td><td>1 mm – 1 m</td><td>1,2 µeV – 1,2 meV</td><td>Radar, pemanas microwave</td></tr>
+      <tr><td>Inframerah</td><td>780 nm – 1 mm</td><td>1,2 meV – 1,6 eV</td><td>Termografi, night vision</td></tr>
+      <tr><td>Cahaya tampak</td><td>380 – 780 nm</td><td>1,6 – 3,3 eV</td><td>Kamera dan mata</td></tr>
+      <tr><td>Ultraviolet</td><td>10 – 380 nm</td><td>3,3 – 124 eV</td><td>Mikroskop fluoresensi; bisa membakar kulit</td></tr>
+      <tr><td>Sinar-X</td><td>0,01 – 10 nm</td><td>124 eV – 124 keV</td><td>Rontgen, CT scan; pengion</td></tr>
+      <tr><td>Sinar gamma</td><td>&lt; 0,01 nm</td><td>&gt; 124 keV</td><td>PET, kedokteran nuklir; pengion</td></tr>
+    </tbody>
+  </table></div>
+
+
+  <h3>Contoh hitung energi foton pada benda sehari-hari</h3>
+  <div class="tw"><table>
+    <thead><tr><th>Sumber</th><th>Panjang gelombang atau frekuensi</th><th>Frekuensi / λ</th><th>Energi foton</th><th>Pengion?</th></tr></thead>
+    <tbody>
+      <tr><td>Laser pointer merah</td><td>650 nm</td><td>4,6 × 10¹⁴ Hz</td><td>1,91 eV</td><td>Tidak</td></tr>
+      <tr><td>LED biru</td><td>450 nm</td><td>6,7 × 10¹⁴ Hz</td><td>2,76 eV</td><td>Tidak</td></tr>
+      <tr><td>Lampu germisida UV-C</td><td>254 nm</td><td>1,18 × 10¹⁵ Hz</td><td>4,88 eV</td><td>Tidak, tetapi merusak DNA</td></tr>
+      <tr><td>Wi-Fi 2,4 GHz</td><td>2,4 × 10⁹ Hz</td><td>λ ≈ 12,5 cm</td><td>9,9 µeV</td><td>Tidak</td></tr>
+      <tr><td>Rontgen gigi</td><td>sekitar 0,1 nm</td><td>3 × 10¹⁸ Hz</td><td>sekitar 12,4 keV</td><td>Ya</td></tr>
+      <tr><td>Sinar gamma Cs-137</td><td>energi 662 keV</td><td>λ ≈ 1,9 pm</td><td>662 keV</td><td>Ya</td></tr>
+    </tbody>
+  </table></div>
+  <div class="note">
+    <p><b>Daya berbeda dengan energi per foton.</b> Oven microwave berdaya 1.000 W tidak mengionisasi molekul, sedangkan sinar-X diagnostik berdaya sangat kecil bisa. Bayangkan sejuta bola pingpong dilempar ke dinding: total energinya besar, tetapi satu bola tidak pernah cukup untuk menembusnya. Satu peluru kecil, meski hanya satu, bisa. Foton radio dan gelombang mikro adalah bola pingpong; foton sinar-X adalah peluru.</p>
+  </div>
+  <h3>Mengapa frekuensi tinggi bersifat destruktif pada jaringan hidup</h3>
+  <p>Ikatan kimia pada molekul biologis punya energi dalam orde beberapa elektronvolt, dan melepas elektron dari atom atau molekul (ionisasi) membutuhkan sekitar 10 eV atau lebih. Foton cahaya tampak hanya membawa 1,6–3,3 eV, jadi tidak cukup untuk memutus ikatan kimia pada kondisi normal. Foton sinar-X dan gamma membawa ribuan hingga jutaan eV: satu foton saja cukup untuk mengionisasi molekul, memutus untai DNA, dan membentuk radikal bebas. Akibatnya bisa berupa mutasi atau kematian sel.</p>
+  <div class="note warn">
+    <p><b>Dua catatan.</b> (1) Radiasi UV berada di bawah ambang ionisasi ini, tetapi energinya sudah cukup merusak DNA kulit, karena itu UV menimbulkan sunburn. (2) Sifat inilah yang membuat sinar-X berguna untuk pencitraan medis: energinya cukup tinggi untuk menembus jaringan, sehingga dosisnya dikendalikan ketat.</p>
+  </div>
+</section>
+
+<!-- ---------------- 4 ---------------- -->
+<section id="s4">
+  <h2>4. Sistem penglihatan biologis dan sensor komputer</h2>
+  <div class="quote">"Memahami biologi visi manusia adalah langkah pertama menguasai Computer Vision."</div>
+
+  <div class="figure">
+    <svg viewBox="0 0 680 330" role="img" aria-label="Penampang mata manusia dengan label kornea, iris, lensa, vitreous humor, retina, fovea, dan saraf optik">
+      <circle cx="320" cy="170" r="120" fill="var(--soft)" stroke="var(--ink)" stroke-width="2"/>
+      <path d="M207.6 128 Q172 170 207.6 212" fill="var(--surface)" stroke="var(--ink)" stroke-width="2"/>
+      <path d="M388.8 71.7 A120 120 0 0 1 388.8 268.3" fill="none" stroke="var(--accent)" stroke-width="7" stroke-linecap="round"/>
+      <line x1="238" y1="130" x2="238" y2="152" stroke="var(--ink)" stroke-width="6" stroke-linecap="round"/>
+      <line x1="238" y1="188" x2="238" y2="210" stroke="var(--ink)" stroke-width="6" stroke-linecap="round"/>
+      <ellipse cx="252" cy="170" rx="13" ry="32" fill="var(--surface)" stroke="var(--ink)" stroke-width="2"/>
+      <line x1="432.8" y1="211" x2="525" y2="247" stroke="var(--ink)" stroke-width="12" stroke-linecap="round" opacity=".45"/>
+      <circle cx="433" cy="211" r="5" fill="var(--surface)" stroke="var(--ink)" stroke-width="1.5"/>
+      <g fill="none" stroke="var(--accent)" stroke-width="2" stroke-dasharray="6 4">
+        <polyline points="30,118 206,146 262,158 440,170"/>
+        <polyline points="30,222 206,194 262,182 440,170"/>
+        <polyline points="30,170 440,170"/>
+      </g>
+      <circle cx="440" cy="170" r="7" fill="#F5B301" stroke="var(--ink)" stroke-width="1.5"/>
+      <g stroke="var(--muted)" stroke-width="1" fill="none">
+        <line x1="165" y1="60" x2="186" y2="152"/>
+        <line x1="262" y1="46" x2="240" y2="128"/>
+        <line x1="292" y1="292" x2="256" y2="204"/>
+        <line x1="468" y1="64" x2="419" y2="98"/>
+        <line x1="496" y1="171" x2="449" y2="170"/>
+        <line x1="528" y1="258" x2="512" y2="246"/>
+        <line x1="452" y1="298" x2="435" y2="217"/>
+      </g>
+      <g font-size="13" font-weight="700">
+        <text x="150" y="52" text-anchor="middle">Kornea</text>
+        <text x="262" y="38" text-anchor="middle">Iris dan pupil</text>
+        <text x="292" y="310" text-anchor="middle">Lensa</text>
+        <text x="320" y="112" text-anchor="middle" font-weight="600" style="fill:var(--muted)">Vitreous humor</text>
+        <text x="472" y="62">Retina (rods dan cones)</text>
+        <text x="502" y="176">Fovea (cones padat)</text>
+        <text x="532" y="262">Saraf optik</text>
+        <text x="456" y="312">Titik buta (blind spot)</text>
+        <text x="24" y="106">Cahaya</text>
+      </g>
+    </svg>
+    <figcaption>Penampang skematis mata. Sinar dibiaskan kornea dan lensa lalu difokuskan ke fovea di retina.</figcaption>
+  </div>
+
+  <h3>Komponen utama mata</h3>
+  <ul>
+    <li><b>Kornea.</b> Lapisan bening di depan mata; penyumbang terbesar daya bias (sekitar dua pertiga total).</li>
+    <li><b>Iris dan pupil.</b> Iris mengatur diameter pupil (kira-kira 2–8 mm) sehingga jumlah cahaya yang masuk terkendali. Fungsinya seperti diafragma.</li>
+    <li><b>Lensa.</b> Mengubah bentuknya (akomodasi) untuk memfokuskan objek dekat atau jauh.</li>
+    <li><b>Retina.</b> Lapisan sel fotoreseptor yang mengubah cahaya menjadi sinyal saraf.</li>
+    <li><b>Fovea.</b> Cekungan kecil (sekitar 1,5 mm) di pusat retina dengan kepadatan cones tertinggi; tempat ketajaman terbesar.</li>
+    <li><b>Saraf optik.</b> Membawa sinyal ke otak. Titik keluarnya (blind spot) tidak punya fotoreseptor.</li>
+  </ul>
+
+  <h3>Fotoreseptor: rods dan cones</h3>
+  <div class="tw"><table>
+    <thead><tr><th>Aspek</th><th>Rods (batang)</th><th>Cones (kerucut)</th></tr></thead>
+    <tbody>
+      <tr><td>Jumlah</td><td>Sekitar 75–150 juta</td><td>Sekitar 6–7 juta</td></tr>
+      <tr><td>Lokasi</td><td>Tersebar, terutama di tepi retina; tidak ada di fovea</td><td>Terpusat di fovea</td></tr>
+      <tr><td>Kepekaan cahaya</td><td>Sangat tinggi: berfungsi pada cahaya redup (skotopik)</td><td>Lebih rendah: butuh cahaya terang (fotopik)</td></tr>
+      <tr><td>Warna</td><td>Tidak membedakan warna (satu jenis pigmen)</td><td>Tiga jenis: S (biru), M (hijau), L (merah)</td></tr>
+      <tr><td>Ketajaman detail</td><td>Rendah</td><td>Tinggi</td></tr>
+      <tr><td>Peran</td><td>Penglihatan malam dan tepi</td><td>Penglihatan warna dan detail</td></tr>
+    </tbody>
+  </table></div>
+  <p>Karena hanya ada tiga jenis cones, penglihatan warna manusia bersifat <em>trikromatik</em>. Itulah alasan layar dan kamera cukup memakai tiga kanal RGB.</p>
+
+
+  <h3>Contoh konkret dari kehidupan sehari-hari</h3>
+  <ul>
+    <li><b>Masuk bioskop yang gelap.</b> Awalnya hampir tidak melihat apa pun. Adaptasi gelap membutuhkan sekitar 20–30 menit karena rods perlu memulihkan pigmen penangkap cahayanya (rodopsin).</li>
+    <li><b>Melihat bintang redup.</b> Bintang justru lebih jelas bila kamu melirik sedikit ke sampingnya (<em>averted vision</em>), sebab fovea tidak punya rods dan area di sekelilingnya punya.</li>
+    <li><b>Senter merah untuk astronom dan pilot.</b> Rods hampir tidak peka pada cahaya merah dalam, sehingga adaptasi gelap tidak rusak saat membaca peta.</li>
+    <li><b>Buta warna merah-hijau.</b> Sekitar 8% pria dan 0,5% wanita (bervariasi menurut populasi) memiliki salah satu jenis cones M atau L yang tidak normal. Karena itu grafik dan antarmuka sebaiknya tidak hanya membedakan status dengan merah dan hijau.</li>
+    <li><b>Kamera pengawas malam.</b> Sensor monokrom tanpa filter warna menangkap lebih banyak foton per piksel dibanding sensor berwarna, mirip strategi rods.</li>
+  </ul>
+
+  <div class="lab" id="labBS">
+    <h4>Coba sendiri: uji titik buta</h4>
+    <p class="labp">Tutup mata kiri. Dengan mata kanan, tatap tanda + dan jangan pindahkan pandangan. Mulai dari jarak sekitar 30–40 cm dari layar, dekatkan atau jauhkan wajah perlahan sampai bulatan merah menghilang. Bila tidak berhasil, geser jarak antara tanda dan bulatan.</p>
+    <div class="bs-stage" id="bsStage"><span class="bs-cross" aria-hidden="true">+</span><span class="bs-dot" id="bsDot" aria-hidden="true"></span></div>
+    <div class="ctl"><label for="bsRange">Jarak tanda ke bulatan</label><input type="range" id="bsRange" min="120" max="420" value="260"></div>
+    <p class="verdict">Bulatan menghilang karena cahayanya jatuh tepat di titik keluar saraf optik, yang tidak punya fotoreseptor. Otak menambal kekosongan itu dengan isi latar sekitarnya, sehingga kamu tidak melihat "lubang" hitam.</p>
+  </div>
+
+  <div class="lab" id="labSC">
+    <h4>Coba sendiri: kontras simultan</h4>
+    <p class="labp">Kedua kotak abu-abu kecil punya nilai piksel yang persis sama (128), tetapi tampak berbeda karena latarnya.</p>
+    <div class="sc" aria-label="Dua kotak abu-abu identik pada latar gelap dan terang"><div style="background:#1c1c1c"><i></i></div><div style="background:#e6e6e6"><i></i></div></div>
+    <p class="verdict">Yang tampak oleh manusia bukan sama dengan yang terukur oleh sensor. Karena itu pengolahan citra untuk manusia (peningkatan kontras, koreksi gamma) memperhitungkan persepsi, sedangkan analisis mesin bekerja pada nilai piksel yang sebenarnya.</p>
+  </div>
+
+  <h3>Analogi mata dengan kamera</h3>
+  <div class="tw"><table>
+    <thead><tr><th>Mata</th><th>Kamera / sistem CV</th></tr></thead>
+    <tbody>
+      <tr><td>Kornea dan lensa</td><td>Lensa objektif (fokus)</td></tr>
+      <tr><td>Iris dan pupil</td><td>Diafragma (aperture)</td></tr>
+      <tr><td>Retina</td><td>Sensor CCD/CMOS</td></tr>
+      <tr><td>Rods dan cones</td><td>Fotodioda (piksel), dengan filter warna</td></tr>
+      <tr><td>Saraf optik</td><td>Kabel / bus data</td></tr>
+      <tr><td>Korteks visual</td><td>Algoritma pengolahan dan pengenalan</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Mengapa biologi visi penting bagi Computer Vision</h3>
+  <ul>
+    <li><b>Model warna RGB</b> mengikuti tiga jenis cones. Filter warna Bayer pada sensor kamera bahkan memakai dua piksel hijau per satu merah dan satu biru, meniru kepekaan mata terhadap hijau.</li>
+    <li><b>Persepsi kecerahan</b> bersifat logaritmik, dengan rentang adaptasi sangat lebar (sekitar 10¹⁰). Ini mendasari koreksi gamma dan transformasi logaritmik.</li>
+    <li><b>Ilusi optik</b> seperti kontras simultan dan pita Mach menunjukkan bahwa "yang terlihat" bukan sama dengan "yang terukur"; pengolahan citra sering perlu mempertimbangkan persepsi manusia.</li>
+    <li><b>Kompresi JPEG</b> membuang detail yang paling sulit dilihat mata, yaitu frekuensi spasial tinggi dan resolusi warna.</li>
+    <li><b>CNN</b> terinspirasi organisasi korteks visual: sel yang peka pada tepi dan pola sederhana di lapisan awal, lalu digabung menjadi pola yang lebih kompleks.</li>
+  </ul>
+</section>
+
+<!-- ---------------- studi kasus ---------------- -->
+<section id="sk">
+  <h2>Studi kasus terpadu: tiga aplikasi melewati alur yang sama</h2>
+  <p>Tiga contoh berikut (ilustratif) memakai alur yang sama: citra mentah, pra-pemrosesan (PCD), ekstraksi fitur, pengenalan, lalu deskripsi.</p>
+  <div class="tw"><table>
+    <thead><tr><th>Tahap</th><th>Rontgen dada</th><th>Pembaca pelat nomor</th><th>Drone pertanian</th></tr></thead>
+    <tbody>
+      <tr><td>Citra mentah</td><td>Rontgen berkontras rendah; tulang menutupi sebagian paru</td><td>Foto mobil malam hari, pelat miring dan silau lampu</td><td>Foto udara pita merah dan inframerah dekat</td></tr>
+      <tr><td>Pra-pemrosesan (PCD)</td><td>Peningkatan kontras lokal, pengurangan noise</td><td>Koreksi perspektif, normalisasi kecerahan, binarisasi</td><td>Koreksi iluminasi antar-foto, penjajaran pita</td></tr>
+      <tr><td>Ekstraksi fitur</td><td>Tekstur dan bentuk area paru</td><td>Bentuk tiap karakter setelah dipisahkan</td><td>Nilai NDVI per piksel</td></tr>
+      <tr><td>Pengenalan</td><td>Model mengklasifikasi area mencurigakan</td><td>OCR mencocokkan karakter dengan huruf dan angka</td><td>Ambang NDVI memisahkan tanaman sehat dan stres</td></tr>
+      <tr><td>Deskripsi (output)</td><td>"Ada nodul sekitar 8 mm di paru kanan atas"</td><td>"B 1234 XY"</td><td>"Petak C: 18% area stres, perlu irigasi"</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Contoh hitung: NDVI dan spektrum di luar penglihatan manusia</h3>
+  <p>Daun sehat menyerap cahaya merah untuk fotosintesis (<i>r</i> merah kecil) dan memantulkan inframerah dekat kuat (<i>r</i> NIR besar). Indeks vegetasi NDVI memanfaatkan perbedaan itu, dan mata tidak bisa melihat pita NIR.</p>
+  <div class="eq">NDVI = (NIR − Merah) / (NIR + Merah)</div>
+  <div class="tw"><table>
+    <thead><tr><th>Petak</th><th><i>r</i> NIR</th><th><i>r</i> merah</th><th>Perhitungan</th><th>NDVI</th></tr></thead>
+    <tbody>
+      <tr><td>Daun sehat</td><td>0,50</td><td>0,08</td><td>(0,50 − 0,08) / (0,50 + 0,08)</td><td>0,72</td></tr>
+      <tr><td>Lahan kering</td><td>0,30</td><td>0,25</td><td>(0,30 − 0,25) / (0,30 + 0,25)</td><td>0,09</td></tr>
+    </tbody>
+  </table></div>
+  <p>Kedua petak bisa tampak sama-sama "kehijauan" bagi mata, tetapi NDVI memisahkan keduanya dengan jelas. Inilah contoh nyata citra → deskripsi (status kesehatan lahan) yang memanfaatkan gelombang di luar spektrum tampak.</p>
+</section>
+
+<!-- ---------------- ringkasan ---------------- -->
+<section id="s5">
+  <h2>Ringkasan rumus dan angka penting</h2>
+  <div class="tw"><table>
+    <thead><tr><th>Konsep</th><th>Nilai / rumus</th></tr></thead>
+    <tbody>
+      <tr><td>Deskripsi → Citra</td><td>Komputer Grafik</td></tr>
+      <tr><td>Citra → Citra</td><td>Pengolahan Citra Digital</td></tr>
+      <tr><td>Citra → Deskripsi</td><td>Pengenalan Pola / Computer Vision</td></tr>
+      <tr><td>Model citra</td><td>f(x,y) = i(x,y) · r(x,y); 0 &lt; i &lt; ∞; 0 ≤ r ≤ 1</td></tr>
+      <tr><td>Cahaya tampak</td><td>380–780 nm (atau 400–700 nm)</td></tr>
+      <tr><td>Gelombang</td><td>c = λ · f</td></tr>
+      <tr><td>Energi foton</td><td>E = h · f = h · c / λ ≈ 1240 / λ(nm) eV</td></tr>
+      <tr><td>Radiasi pengion</td><td>Sinar-X, gamma (dan UV berenergi tertinggi): E ≳ 10 eV</td></tr>
+      <tr><td>Bayangan pinhole</td><td>tinggi citra = tinggi objek × (jarak lubang–layar / jarak objek–lubang), terbalik</td></tr>
+      <tr><td>NDVI</td><td>(NIR − Merah) / (NIR + Merah); tanaman sehat kira-kira 0,6 ke atas</td></tr>
+      <tr><td>Rods vs cones</td><td>Rods: cahaya redup, tanpa warna. Cones: warna dan detail, terpusat di fovea.</td></tr>
+    </tbody>
+  </table></div>
+  <p style="font-size:.9rem;color:var(--muted)">Angka pada tabel iluminasi dan reflektansi serta jumlah fotoreseptor mengikuti nilai yang lazim dikutip dalam buku ajar seperti <em>Digital Image Processing</em> (Gonzalez dan Woods). Nilai sebenarnya bervariasi antar-individu dan kondisi.</p>
+</section>
+
+<section id="s6">
+  <h2>Bank soal Kahoot beserta kunci</h2>
+  <p>Ada 35 soal: 30 soal reguler dan 5 soal HOTS (berpikir tingkat tinggi) di ronde akhir, dengan poin ganda. Semuanya dipakai pada kuis interaktif. Ketuk sebuah soal untuk melihat kunci dan pembahasan kilat, atau buka tab <b>Kuis Kahoot</b> untuk memainkannya.</p>
+  <div id="bank"></div>
+  <p style="margin-top:22px"><button class="kq-btn" style="background:#46178F" id="goQuiz">Main kuis sekarang</button></p>
+</section>
+      </article>
+    </div>
+  </div>
+</main>
+
+<!-- =================== KUIS =================== -->
+<section id="view-quiz" hidden aria-label="Kuis Kahoot">
+  <div class="kq-stage">
+    <div class="kq-bar">
+      <span class="kq-pill" id="kqTitle">Kuis PCD</span>
+      <button class="kq-mute" id="muteBtn" aria-pressed="false">Suara: nyala</button>
+    </div>
+    <div id="kq-root" style="flex:1;display:flex;flex-direction:column" aria-live="polite"></div>
+  </div>
+</section>
+
+<script>
+/* ============ Data soal ============ */
+const Q = [
+ {topic:"Domain input-output", time:20,
+  q:"Proses mengubah input <b>Citra</b> menjadi output berupa <b>Deskripsi/Label</b> objek disebut...",
+  o:["Komputer Grafik","Pengolahan Citra Digital","Pengenalan Pola","Kompresi Citra"], a:2,
+  e:"Pengenalan Pola (Pattern Recognition) mengambil citra dan mengekstrak makna atau fitur deskriptif dari objek di dalamnya."},
+ {topic:"Teori Intromisi", time:20,
+  q:"Siapakah ilmuwan yang membuktikan bahwa penglihatan terjadi karena cahaya merambat masuk ke mata (Teori Intromisi)?",
+  o:["Isaac Newton","Ibnu Al-Haytham","Thomas Young","Rene Descartes"], a:1,
+  e:"Ibnu Al-Haytham mematahkan teori emisi Yunani kuno melalui eksperimen optik dalam bukunya <i>Kitab al-Manazir</i>."},
+ {topic:"Model iluminasi × reflektansi", time:25,
+  q:"Pada model <i>f</i>(<i>x</i>,<i>y</i>) = <i>i</i>(<i>x</i>,<i>y</i>) · <i>r</i>(<i>x</i>,<i>y</i>), nilai reflektansi <i>r</i>(<i>x</i>,<i>y</i>) berada pada rentang...",
+  o:["0 sampai ∞","0 sampai 1","0 sampai 255","−1 sampai +1"], a:1,
+  e:"Iluminasi <i>i</i> bernilai positif tanpa batas atas tetap, sedangkan reflektansi <i>r</i> selalu 0 (menyerap penuh, tampak hitam) hingga 1 (memantulkan penuh)."},
+ {topic:"Spektrum cahaya tampak", time:20,
+  q:"Mata manusia umumnya hanya mampu menangkap gelombang elektromagnetik pada kisaran panjang gelombang...",
+  o:["10 – 100 nm","380 – 780 nm","800 – 1200 nm","1 – 10 µm"], a:1,
+  e:"Cahaya tampak berada pada pita sempit sekitar 380–780 nm (kadang disederhanakan 400–700 nm atau 0,4–0,7 µm)."},
+ {topic:"Frekuensi, λ, dan energi", time:25,
+  q:"Mengapa radiasi sinar Gamma dan X-ray bersifat destruktif terhadap jaringan hidup?",
+  o:["Panjang gelombangnya sangat besar","Frekuensi dan energinya sangat tinggi","Menghasilkan intensitas cahaya tampak","Tidak memiliki foton"], a:1,
+  e:"Sesuai rumus Planck <i>E</i> = <i>h</i>·<i>f</i>, makin tinggi frekuensi, makin besar energi foton, sehingga mampu memutus ikatan molekul biologis."},
+ {topic:"Domain input-output", time:20,
+  q:"Memperjelas foto rontgen yang buram, dengan input citra dan output tetap berupa citra, termasuk bidang...",
+  o:["Komputer Grafik","Pengenalan Pola","Kriptografi","Pengolahan Citra Digital"], a:3,
+  e:"Input dan output sama-sama citra adalah ciri Pengolahan Citra Digital, misalnya perbaikan kontras, penajaman, atau restorasi."},
+ {topic:"Ibnu Al-Haytham", time:20,
+  q:"Ruang gelap berlubang kecil yang memproyeksikan bayangan terbalik, dan dipelajari sistematis oleh Ibnu Al-Haytham, disebut...",
+  o:["Periskop","Teleskop Galileo","Kamera Obscura","Prisma Newton"], a:2,
+  e:"Kamera obscura membuktikan cahaya merambat lurus: lubang kecil menghasilkan bayangan terbalik. Ini cikal bakal kamera dan model pinhole di Computer Vision."},
+ {topic:"Fotoreseptor", time:20,
+  q:"Sel fotoreseptor untuk penglihatan warna dan detail tajam, yang terpusat di fovea, adalah...",
+  o:["Rods (batang)","Sel ganglion","Sel epitel pigmen","Cones (kerucut)"], a:3,
+  e:"Cones (sekitar 6–7 juta sel) bekerja pada cahaya terang, membedakan warna, dan sangat padat di fovea sehingga detail tampak tajam."},
+ {topic:"Fotoreseptor", time:20,
+  q:"Di ruangan sangat redup dunia tampak keabu-abuan karena yang terutama aktif adalah...",
+  o:["Iris","Cones (kerucut)","Rods (batang)","Lensa"], a:2,
+  e:"Rods (sekitar 75–150 juta sel) sangat peka pada cahaya redup tetapi tidak membedakan warna."},
+ {topic:"Frekuensi, λ, dan energi", time:25,
+  q:"Jika panjang gelombang λ suatu radiasi diperkecil, maka frekuensi dan energi fotonnya...",
+  o:["Sama-sama meningkat","Frekuensi naik, energi turun","Sama-sama menurun","Tetap karena c konstan"], a:0,
+  e:"Dari <i>c</i> = λ·<i>f</i>, λ lebih kecil berarti <i>f</i> lebih besar; lalu <i>E</i> = <i>h</i>·<i>f</i> ikut naik. Energi foton berbanding terbalik dengan λ."},
+ {topic:"Domain input-output", time:20,
+  q:"Game 3D menampilkan adegan dari model, koordinat objek, dan tekstur. Proses deskripsi → citra ini adalah bidang...",
+  o:["Komputer Grafik","Pengolahan Citra Digital","Pengenalan Pola","Kompresi Citra"], a:0,
+  e:"Komputer Grafik mengubah deskripsi (model, koordinat, tekstur) menjadi citra lewat proses rendering."},
+ {topic:"Domain input-output", time:25,
+  q:"Sistem yang membaca pelat nomor dari foto dan menghasilkan teks \"B 1234 XY\" termasuk bidang...",
+  o:["Komputer Grafik","Restorasi citra","Pengenalan Pola / Computer Vision","Kompresi citra"], a:2,
+  e:"Inputnya citra dan outputnya deskripsi (teks), itulah ciri Pengenalan Pola dan Computer Vision."},
+ {topic:"Alur citra mentah → deskripsi", time:25,
+  q:"Urutan tahap yang paling tepat dari citra mentah hingga deskripsi adalah...",
+  o:["Klasifikasi → ekstraksi fitur → pra-pemrosesan","Ekstraksi fitur → pra-pemrosesan → klasifikasi","Klasifikasi → pra-pemrosesan → ekstraksi fitur","Pra-pemrosesan → ekstraksi fitur → klasifikasi"], a:3,
+  e:"Citra dibersihkan dulu (PCD), fitur diekstrak, baru dikenali dan diberi label (Computer Vision)."},
+ {topic:"Ibnu Al-Haytham", time:20,
+  q:"Dalam bahasa Inggris, <i>Kitab al-Manazir</i> karya Ibnu Al-Haytham dikenal sebagai...",
+  o:["Book of Optics","Book of Healing","Principia Mathematica","Almagest"], a:0,
+  e:"<i>Book of Optics</i> (tujuh jilid, disusun sekitar 1011–1021 M) dianggap tonggak optik modern."},
+ {topic:"Teori Emisi vs Intromisi", time:20,
+  q:"Menurut teori emisi (Euclid dan Ptolemeus), penglihatan terjadi karena...",
+  o:["Cahaya dari objek masuk ke mata","Otak memancarkan gelombang ke objek","Objek memancarkan bunyi ke mata","Mata memancarkan sinar visual ke objek"], a:3,
+  e:"Teori emisi menganggap mata memancarkan sinar visual. Ibnu Al-Haytham menolaknya dan membuktikan intromisi."},
+ {topic:"Teori Emisi vs Intromisi", time:25,
+  q:"Pengamatan mana yang dipakai Ibnu Al-Haytham untuk menolak teori emisi?",
+  o:["Mata dapat melihat jelas di ruang gelap gulita","Warna objek berubah saat mata ditutup","Menatap matahari membuat silau dan meninggalkan bayangan sisa","Mata dapat melihat tanpa adanya objek"], a:2,
+  e:"Silau dan bayangan sisa menunjukkan ada sesuatu (cahaya) yang datang dan menimpa mata, bukan mata yang memancarkan sinar."},
+ {topic:"Kamera obscura", time:20,
+  q:"Pada kamera obscura, bayangan di layar tampak terbalik karena...",
+  o:["Lensa cembung membalik gambar","Sinar merambat lurus dan bersilangan di lubang kecil","Dinding belakang memantulkan secara terbalik","Cahaya dibelokkan oleh udara"], a:1,
+  e:"Sinar dari bagian atas objek melewati lubang lalu jatuh di bagian bawah layar, dan sebaliknya."},
+ {topic:"Model iluminasi × reflektansi", time:20,
+  q:"Jika iluminasi <i>i</i> digandakan dan reflektansi <i>r</i> tetap, intensitas <i>f</i> akan...",
+  o:["Menjadi dua kali lipat","Menjadi setengah","Tetap","Menjadi empat kali lipat"], a:0,
+  e:"Karena <i>f</i> = <i>i</i>·<i>r</i>, hubungannya linear: iluminasi dua kali lipat membuat intensitas dua kali lipat."},
+ {topic:"Model iluminasi × reflektansi", time:20,
+  q:"Jika reflektansi <i>r</i>(<i>x</i>,<i>y</i>) = 0, intensitas <i>f</i>(<i>x</i>,<i>y</i>) yang direkam sensor bernilai...",
+  o:["Sama dengan <i>i</i>","Tak hingga","Nol (tampak hitam)","Satu"], a:2,
+  e:"Objek menyerap seluruh cahaya sehingga tidak ada yang dipantulkan: <i>f</i> = <i>i</i>·0 = 0."},
+ {topic:"Citra digital", time:20,
+  q:"Citra digital diperoleh dari fungsi kontinu <i>f</i>(<i>x</i>,<i>y</i>) melalui dua proses, yaitu...",
+  o:["Konvolusi dan korelasi","Segmentasi dan klasifikasi","Enkripsi dan kompresi","Sampling dan kuantisasi"], a:3,
+  e:"Sampling membagi citra menjadi grid piksel; kuantisasi membulatkan nilai intensitas menjadi level diskret."},
+ {topic:"Citra digital", time:20,
+  q:"Citra grayscale 8-bit memiliki berapa level keabuan?",
+  o:["128","256","512","65.536"], a:1,
+  e:"2<sup>8</sup> = 256 level, bernilai 0 (hitam) sampai 255 (putih)."},
+ {topic:"Spektrum cahaya tampak", time:20,
+  q:"Cahaya dengan panjang gelombang sekitar 450–495 nm tampak berwarna...",
+  o:["Biru","Hijau","Kuning","Merah"], a:0,
+  e:"Ungu sekitar 380–450 nm, biru 450–495 nm, hijau 495–570 nm; merah berada di ujung 620–780 nm."},
+ {topic:"Frekuensi, λ, dan energi", time:20,
+  q:"Hubungan kecepatan cahaya <i>c</i>, panjang gelombang λ, dan frekuensi <i>f</i> adalah...",
+  o:["<i>c</i> = λ / <i>f</i>","<i>c</i> = <i>f</i> / λ","<i>c</i> = λ · <i>f</i>","<i>c</i> = λ + <i>f</i>"], a:2,
+  e:"Gelombang menempuh satu panjang gelombang tiap periode, sehingga <i>c</i> = λ·<i>f</i>. Maka λ dan <i>f</i> berbanding terbalik."},
+ {topic:"Frekuensi, λ, dan energi", time:30,
+  q:"Foton cahaya 550 nm memiliki energi sekitar (gunakan <i>E</i> ≈ 1240/λ eV, λ dalam nm)...",
+  o:["0,45 eV","22,5 eV","225 eV","2,25 eV"], a:3,
+  e:"1240 / 550 ≈ 2,25 eV, berada dalam kisaran energi cahaya tampak (sekitar 1,6–3,3 eV)."},
+ {topic:"Frekuensi, λ, dan energi", time:30,
+  q:"Urutan radiasi elektromagnetik dari energi foton terendah ke tertinggi adalah...",
+  o:["Radio, inframerah, tampak, ultraviolet, sinar-X, gamma","Gamma, sinar-X, ultraviolet, tampak, inframerah, radio","Radio, ultraviolet, tampak, inframerah, sinar-X, gamma","Tampak, radio, inframerah, gamma, sinar-X, ultraviolet"], a:0,
+  e:"Makin ke kanan spektrum, λ makin pendek, frekuensi makin tinggi, dan energi foton makin besar."},
+ {topic:"Radiasi pengion", time:25,
+  q:"Mengapa cahaya tampak yang sangat terang tetap tidak bersifat pengion?",
+  o:["Frekuensinya nol","Energi per fotonnya terlalu rendah untuk mengionisasi","Panjang gelombangnya sangat pendek","Cahaya tidak terdiri dari foton"], a:1,
+  e:"Efek ionisasi ditentukan oleh energi per foton, bukan kecerahan. Foton tampak hanya 1,6–3,3 eV, di bawah ambang ionisasi (sekitar 10 eV)."},
+ {topic:"Struktur mata", time:20,
+  q:"Bagian mata yang mengatur jumlah cahaya masuk, seperti diafragma kamera, adalah...",
+  o:["Iris dan pupil","Kornea","Lensa","Fovea"], a:0,
+  e:"Iris mengatur diameter pupil (sekitar 2–8 mm) sehingga cahaya yang masuk terkendali."},
+ {topic:"Struktur mata", time:20,
+  q:"Bagian retina dengan ketajaman penglihatan tertinggi karena cones sangat padat adalah...",
+  o:["Titik buta","Sklera","Fovea","Pupil"], a:2,
+  e:"Fovea (sekitar 1,5 mm) di pusat retina padat cones dan tempat detail tertajam."},
+ {topic:"Fotoreseptor", time:20,
+  q:"Penglihatan warna manusia bersifat trikromatik karena ada tiga jenis cones yang peka terhadap...",
+  o:["Merah, kuning, biru","Biru, hijau, merah (S, M, L)","Cyan, magenta, kuning","Hitam, putih, abu-abu"], a:1,
+  e:"Cones S, M, dan L peka pada panjang gelombang pendek, sedang, dan panjang. Inilah dasar model warna RGB."},
+ {topic:"Struktur mata", time:20,
+  q:"Titik buta (blind spot) terjadi karena di titik keluar saraf optik tidak ada...",
+  o:["Kornea","Cairan vitreous","Otot iris","Fotoreseptor"], a:3,
+  e:"Di optic disc tidak terdapat rods maupun cones, sehingga cahaya yang jatuh di sana tidak terdeteksi."},
+ {topic:"HOTS: analisis iluminasi", time:40, hots:true,
+  q:"Sebuah dinding putih (<i>r</i> = 0,8) sebagian tertutup bayangan sehingga iluminasi di sana hanya 10% dari area terang. Area terang bernilai <i>f</i> = 800. Nilai <i>f</i> di area bayangan dan dampaknya pada thresholding global adalah...",
+  o:["8, karena <i>r</i> ikut turun sepuluh kali","800, karena <i>r</i> dinding tetap sehingga <i>f</i> tetap","80; ambang global bisa keliru menganggap bayangan sebagai objek gelap","720, karena iluminasi hanya dikurangi 10%"], a:2,
+  e:"<i>i</i> turun menjadi 10% sehingga <i>f</i> = 0,1 × 800 = 80, sedangkan <i>r</i> dinding tidak berubah. Satu ambang global bisa salah menandai bayangan sebagai objek gelap; solusinya ambang adaptif atau homomorphic filtering."},
+ {topic:"HOTS: daya vs energi foton", time:40, hots:true,
+  q:"Pemancar radio berdaya 1.000 W tidak mengionisasi jaringan tubuh, sedangkan sinar-X berdaya beberapa watt bisa. Penjelasan terbaik adalah...",
+  o:["Ionisasi ditentukan energi per foton; foton radio jauh di bawah ambang, jadi menambah jumlah foton (daya) tidak mengubahnya","Radio berpanjang gelombang lebih pendek sehingga kurang menembus jaringan","Yang menentukan ionisasi adalah daya total, dan 1.000 W radio terserap habis oleh udara","Gelombang radio bukan gelombang elektromagnetik sehingga tidak punya foton"], a:0,
+  e:"Foton radio hanya membawa sekitar µeV, jauh di bawah ambang ionisasi (sekitar 10 eV). Foton sinar-X membawa puluhan keV. Banyaknya foton (daya) tidak dapat menggantikan energi per foton."},
+ {topic:"HOTS: perhitungan energi foton", time:45, hots:true,
+  q:"Foton A berpanjang gelombang 400 nm dan foton B 700 nm. Pernyataan yang benar (gunakan <i>E</i> ≈ 1240/λ eV) adalah...",
+  o:["Foton B berenergi lebih besar karena panjang gelombangnya lebih besar","Keduanya berenergi sama karena sama-sama cahaya tampak","Foton A berfrekuensi lebih rendah karena panjang gelombangnya lebih pendek","Foton A ≈ 3,1 eV dan foton B ≈ 1,77 eV; foton A membawa energi sekitar 1,75× lebih besar"], a:3,
+  e:"E = 1240/λ: 400 nm → 3,1 eV dan 700 nm → 1,77 eV. Rasionya 700/400 = 1,75. λ lebih pendek berarti frekuensi dan energi lebih tinggi."},
+ {topic:"HOTS: rancangan sensor malam", time:40, hots:true,
+  q:"Tim merancang kamera pengawas untuk cahaya sangat redup yang hanya butuh gambar abu-abu. Fotoreseptor mana yang ditiru dan rancangan apa yang masuk akal?",
+  o:["Cones: sensor berwarna dengan filter RGB rapat agar warna akurat","Rods: sensor monokrom tanpa filter warna sehingga tiap piksel menangkap lebih banyak foton","Fovea: piksel dibuat sangat kecil dan beresolusi sangat tinggi","Iris: aperture dikecilkan sebisa mungkin agar gambar tajam"], a:1,
+  e:"Rods peka pada cahaya redup dan tidak membedakan warna. Filter warna (misalnya Bayer) membuang sebagian foton, jadi sensor monokrom lebih sensitif; aperture kecil justru mengurangi cahaya."},
+ {topic:"HOTS: NDVI dan spektrum tak tampak", time:45, hots:true,
+  q:"Drone memotret dua petak. Petak 1: <i>r</i> NIR = 0,45 dan <i>r</i> merah = 0,05. Petak 2: <i>r</i> NIR = 0,35 dan <i>r</i> merah = 0,20. Dengan NDVI = (NIR − Merah)/(NIR + Merah), kesimpulan yang tepat adalah...",
+  o:["Petak 2 lebih sehat karena NDVI-nya lebih tinggi","NDVI tidak bisa dihitung karena inframerah dekat tidak terlihat mata","Petak 1 NDVI = 0,80 dan petak 2 ≈ 0,27; petak 1 lebih sehat, dan hasilnya berupa deskripsi kondisi lahan dari citra","Kedua petak sama karena keduanya tampak hijau"], a:2,
+  e:"Petak 1: 0,40/0,50 = 0,80. Petak 2: 0,15/0,55 ≈ 0,27. Tanaman sehat menyerap merah dan memantulkan NIR kuat; sensor dapat memakai pita yang tak terlihat mata."}
+];
+
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const idn = (n, d=0) => Number(n).toLocaleString('id-ID', {maximumFractionDigits:d});
+const LET = ['A','B','C','D'];
+const MOODS = {'':'#46178F', correct:'#26890C', wrong:'#C4162F', timeout:'#1368CE', board:'#2B0B5C'};
+
+/* ============ Tab / tampilan ============ */
+function showView(v){
+  document.querySelectorAll('.tab').forEach(t => t.setAttribute('aria-selected', String(t.dataset.view === v)));
+  $('#view-summary').hidden = (v !== 'summary');
+  $('#view-quiz').hidden = (v !== 'quiz');
+  if (v === 'quiz') { if (game.phase === 'idle') game.lobby(); }
+  else { game.abort(); document.body.style.background = ''; }
+  window.scrollTo(0, 0);
+}
+document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => showView(t.dataset.view)));
+$('#goQuiz').addEventListener('click', () => showView('quiz'));
+
+/* ============ Penjelajah spektrum ============ */
+const H = 6.62607015e-34, C = 299792458, EVJ = 1.602176634e-19;
+function wl2rgb(w){
+  let r=0,g=0,b=0;
+  if (w>=380 && w<440){ r=-(w-440)/60; b=1; }
+  else if (w>=440 && w<490){ g=(w-440)/50; b=1; }
+  else if (w>=490 && w<510){ g=1; b=-(w-510)/20; }
+  else if (w>=510 && w<580){ r=(w-510)/70; g=1; }
+  else if (w>=580 && w<645){ r=1; g=-(w-645)/65; }
+  else if (w>=645 && w<=780){ r=1; }
+  else return null;
+  let f = w<420 ? 0.3+0.7*(w-380)/40 : (w>700 ? 0.3+0.7*(780-w)/80 : 1);
+  return [r,g,b].map(x => Math.round(255*Math.pow(Math.max(0,x*f),0.8)));
+}
+(function paintSpectrum(){
+  const stops = [];
+  for (let w=300; w<=900; w+=5){
+    const c = wl2rgb(w); const p = ((w-300)/600*100).toFixed(2);
+    stops.push((c ? `rgb(${c[0]},${c[1]},${c[2]})` : 'rgba(128,132,170,.30)') + ' ' + p + '%');
+  }
+  $('#spec').style.background = 'linear-gradient(90deg,' + stops.join(',') + ')';
+})();
+const nf = x => Number(x).toLocaleString('id-ID', {maximumSignificantDigits:3});
+function sci(x){
+  let e = Math.floor(Math.log10(x)); let m = x/Math.pow(10,e);
+  if (m.toFixed(2) === '10.00'){ m = 1; e += 1; }
+  const sup = {'-':'⁻','0':'⁰','1':'¹','2':'²','3':'³','4':'⁴','5':'⁵','6':'⁶','7':'⁷','8':'⁸','9':'⁹'};
+  return m.toFixed(2).replace('.',',') + ' × 10' + String(e).split('').map(c => sup[c]).join('');
+}
+function fmtL(nm){
+  if (nm >= 1e9) return nf(nm/1e9) + ' m';
+  if (nm >= 1e7) return nf(nm/1e7) + ' cm';
+  if (nm >= 1e6) return nf(nm/1e6) + ' mm';
+  if (nm >= 1e3) return nf(nm/1e3) + ' µm';
+  return nf(nm) + ' nm';
+}
+function fmtE(e){
+  if (e >= 1e6) return nf(e/1e6) + ' MeV';
+  if (e >= 1e3) return nf(e/1e3) + ' keV';
+  if (e >= 0.1) return nf(e) + ' eV';
+  if (e >= 1e-4) return nf(e*1e3) + ' meV';
+  return nf(e*1e6) + ' µeV';
+}
+function region(nm){
+  if (nm < 0.01) return 'Sinar gamma';
+  if (nm < 10) return 'Sinar-X';
+  if (nm < 380) return 'Ultraviolet';
+  if (nm <= 780) return 'Cahaya tampak';
+  if (nm < 1e6) return 'Inframerah';
+  if (nm < 1e9) return 'Gelombang mikro';
+  return 'Gelombang radio';
+}
+function colorName(nm){
+  if (nm < 380 || nm > 780) return 'Tidak terlihat';
+  if (nm < 450) return 'Ungu'; if (nm < 495) return 'Biru'; if (nm < 570) return 'Hijau';
+  if (nm < 590) return 'Kuning'; if (nm < 620) return 'Jingga'; return 'Merah';
+}
+function updateExplorer(nm){
+  const f = C/(nm*1e-9), eV = H*f/EVJ;
+  const rgb = wl2rgb(nm);
+  $('#swatch').style.background = rgb ? `rgb(${rgb[0]},${rgb[1]},${rgb[2]})` : 'repeating-linear-gradient(45deg,rgba(128,132,170,.25) 0 8px,rgba(128,132,170,.1) 8px 16px)';
+  $('#oRegion').textContent = region(nm);
+  $('#oColor').textContent = colorName(nm);
+  $('#oL').textContent = fmtL(nm);
+  $('#oF').textContent = sci(f) + ' Hz';
+  $('#oE').textContent = fmtE(eV);
+  const v = $('#oV'); let txt, ion = false;
+  if (eV >= 10){ ion = true; txt = 'Radiasi pengion: satu foton cukup untuk melepas elektron dari atom atau molekul, memutus ikatan kimia dan DNA. Inilah alasan sinar-X dan gamma destruktif pada jaringan hidup.'; }
+  else if (eV >= 3.3){ txt = 'Ultraviolet: di bawah ambang ionisasi, tetapi energinya sudah cukup merusak DNA kulit (sunburn).'; }
+  else if (eV >= 1.6){ txt = 'Cahaya tampak: energi foton 1,6–3,3 eV. Terlihat oleh mata dan tidak memutus ikatan molekul pada intensitas normal.'; }
+  else { txt = 'Foton berenergi rendah: tidak terlihat mata. Inframerah terasa sebagai panas; gelombang mikro dan radio dipakai untuk radar dan komunikasi.'; }
+  v.textContent = txt; v.className = 'verdict' + (ion ? ' ion' : '');
+}
+const rng = $('#wlRange'), num = $('#wlNum');
+rng.addEventListener('input', () => { num.value = rng.value; updateExplorer(+rng.value); });
+num.addEventListener('input', () => {
+  const nm = parseFloat(String(num.value).replace(',','.'));
+  if (!(nm > 0)) return;
+  rng.value = Math.min(900, Math.max(300, nm));
+  updateExplorer(nm);
+});
+$('#presets').addEventListener('click', e => {
+  const b = e.target.closest('button[data-nm]'); if (!b) return;
+  const nm = parseFloat(b.dataset.nm);
+  num.value = nm; rng.value = Math.min(900, Math.max(300, nm)); updateExplorer(nm);
+});
+updateExplorer(550);
+
+/* ============ TOC aktif ============ */
+(function(){
+  const links = [...document.querySelectorAll('.toc a')];
+  const map = new Map(links.map(a => [a.getAttribute('href').slice(1), a]));
+  if (!('IntersectionObserver' in window)) return;
+  const io = new IntersectionObserver(es => {
+    es.forEach(en => { if (en.isIntersecting){ links.forEach(l => l.classList.remove('on')); const a = map.get(en.target.id); if (a) a.classList.add('on'); } });
+  }, {rootMargin:'-20% 0px -70% 0px'});
+  map.forEach((_, id) => { const el = document.getElementById(id); if (el) io.observe(el); });
+})();
+
+/* ============ Bank soal ============ */
+$('#bank').innerHTML = Q.map((q, i) => `
+  <details class="bank-item"><summary>${q.hots?'<span class="hots-tag">HOTS</span>':''}Soal ${i+1}. ${q.q}</summary>
+    <ol>${q.o.map((t, k) => `<li class="${k===q.a?'key':''}">${esc(t)}${k===q.a?' (Kunci)':''}</li>`).join('')}</ol>
+    <p><b>Pembahasan:</b> ${q.e}</p>
+  </details>`).join('');
+
+/* ============ Suara ============ */
+let actx = null, soundOn = true;
+function tone(freq, dur=.12, type='sine', vol=.07, delay=0){
+  if (!soundOn) return;
+  try{
+    actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+    const t = actx.currentTime + delay, o = actx.createOscillator(), g = actx.createGain();
+    o.type = type; o.frequency.value = freq;
+    g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(g); g.connect(actx.destination); o.start(t); o.stop(t + dur + .02);
+  }catch(e){}
+}
+const sfx = {
+  tick: () => tone(880, .05, 'square', .03),
+  start: () => { tone(523,.12,'triangle',.08,0); tone(659,.12,'triangle',.08,.12); tone(784,.2,'triangle',.08,.24); },
+  ok: () => { tone(660,.12,'sine',.09,0); tone(880,.22,'sine',.09,.12); },
+  no: () => tone(150,.4,'sawtooth',.05),
+  late: () => tone(300,.3,'triangle',.06),
+  end: () => { [523,659,784,1047].forEach((f,i) => tone(f,.22,'triangle',.08,i*.14)); }
+};
+$('#muteBtn').addEventListener('click', e => {
+  soundOn = !soundOn;
+  e.currentTarget.textContent = 'Suara: ' + (soundOn ? 'nyala' : 'mati');
+  e.currentTarget.setAttribute('aria-pressed', String(!soundOn));
+});
+
+/* ============ Mesin kuis ============ */
+const SHAPES = [
+  '<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3 30 28H2z"/></svg>',
+  '<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 2 30 16 16 30 2 16z"/></svg>',
+  '<svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="13"/></svg>',
+  '<svg viewBox="0 0 32 32" aria-hidden="true"><rect x="4" y="4" width="24" height="24"/></svg>'
+];
+const SHAPE_NAME = ['Segitiga merah','Belah ketupat biru','Lingkaran kuning','Persegi hijau'];
+const BOTS = ['Ayu_PCD','Bima88','NoraPixel','RGB_Rafi','Sinta.Gray','KernelKing','DimasCV','LenaLux','Citra_Dewi','Fajar404','Wulan_Rods','Kucing_Cones','AlHaytham_fan','Piksel_Pagi','ConvNet_Kevin'];
+
+const game = {
+  phase:'idle', i:0, name:'Pemain', shuffle:true, perm:[], bots:[], me:null, timer:null, intro:null, t0:0, T:20, locked:false, lastSec:0, last:null,
+
+  clear(){ clearInterval(this.timer); clearTimeout(this.intro); this.timer = null; this.intro = null; },
+  abort(){ if (this.phase !== 'idle' && this.phase !== 'lobby' && this.phase !== 'final'){ this.clear(); this.phase = 'idle'; } else if (this.phase==='lobby'||this.phase==='final'){ this.phase = 'idle'; } },
+  draw(html, mood, title){
+    $('#kq-root').innerHTML = html;
+    $('#view-quiz').dataset.mood = mood || '';
+    document.body.style.background = MOODS[mood || ''];
+    $('#kqTitle').textContent = title || 'Kuis PCD';
+    const f = $('#kq-root [data-focus]'); if (f) f.focus({preventScroll:true});
+  },
+
+  lobby(){
+    this.clear(); this.phase = 'lobby';
+    const pin = String(Math.floor(100000 + Math.random()*900000));
+    this.draw(`
+      <div class="kq-center">
+        <div class="kq-logo">Kuis PCD</div>
+        <div class="kq-pin"><small>Game PIN</small><b>${pin}</b></div>
+        <p class="kq-sub">${Q.length} soal pilihan ganda: ${Q.length - Q.filter(x => x.hots).length} soal reguler (20–30 detik) dan ${Q.filter(x => x.hots).length} soal HOTS di ronde akhir (40–45 detik, poin ganda). Makin cepat menjawab, makin besar poin. Jawab benar berturut-turut untuk bonus beruntun. Di keyboard, tekan 1–4 atau A–D sesuai urutan warna.</p>
+        <div class="kq-form">
+          <input type="text" id="nick" maxlength="16" placeholder="Nama panggilan" value="${esc(this.name === 'Pemain' ? '' : this.name)}" aria-label="Nama panggilan" autocomplete="off">
+          <label class="opt"><input type="checkbox" id="optShuffle" ${this.shuffle?'checked':''}> Acak posisi jawaban tiap soal</label>
+          <button class="kq-btn" id="startBtn" data-focus>Mulai</button>
+        </div>
+      </div>`, '', 'Kuis PCD');
+    $('#startBtn').addEventListener('click', () => this.start());
+    $('#nick').addEventListener('keydown', e => { if (e.key === 'Enter') this.start(); });
+  },
+
+  start(){
+    const nick = ($('#nick').value || '').trim();
+    this.name = nick || 'Pemain';
+    this.shuffle = $('#optShuffle').checked;
+    this.perm = Q.map(() => {
+      const p = [0,1,2,3];
+      if (this.shuffle) for (let k=3;k>0;k--){ const j = Math.floor(Math.random()*(k+1)); [p[k],p[j]] = [p[j],p[k]]; }
+      return p;
+    });
+    const pool = BOTS.slice().sort(() => Math.random()-.5).slice(0, 12);
+    this.bots = pool.map(n => ({name:n, skill:.4+Math.random()*.5, speed:.12+Math.random()*.5, score:0, streak:0}));
+    this.me = {name:this.name, score:0, streak:0, best:0, correct:0, time:0, answered:0, log:[]};
+    this.i = 0;
+    sfx.start();
+    this.intro_();
+  },
+
+  intro_(){
+    const q = Q[this.i]; this.T = q.time; this.phase = 'intro';
+    this.draw(`
+      <div class="kq-center">
+        <div class="kq-count">Soal ${this.i+1} dari ${Q.length}</div>
+        ${q.hots ? '<div class="kq-hots">Soal HOTS: poin ganda</div>' : ''}
+        <h2 class="kq-bigq">${q.q}</h2>
+        <div class="kq-sub">Waktu menjawab: ${q.time} detik</div>
+        <div class="kq-introbar" aria-hidden="true"><i></i></div>
+        <button class="kq-btn ghost" id="skipIntro" data-focus>Langsung jawab</button>
+      </div>`, '', `Soal ${this.i+1}/${Q.length}`);
+    $('#skipIntro').addEventListener('click', () => { this.clear(); this.ask(); });
+    this.intro = setTimeout(() => this.ask(), 3000);
+  },
+
+  ask(){
+    const q = Q[this.i], p = this.perm[this.i];
+    this.clear(); this.phase = 'ask'; this.locked = false; this.lastSec = this.T;
+    this.draw(`
+      <div class="kq-qbox">${q.q}</div>
+      <div class="kq-timer"><div class="tnum" id="tnum" aria-label="Sisa waktu">${this.T}</div><div class="tbar"><i id="tbar"></i></div></div>
+      <div class="answers" id="answers">
+        ${p.map((orig, d) => `<button class="ans c${d}" data-d="${d}" aria-label="${SHAPE_NAME[d]}: ${esc(q.o[orig])}">${SHAPES[d]}<span>${esc(q.o[orig])}</span></button>`).join('')}
+      </div>
+      <div class="kq-foot"><span>${esc(this.me.name)}</span><span>Skor ${idn(this.me.score)}${this.me.streak>1?' | Beruntun ×'+this.me.streak:''}</span></div>`,
+      '', `Soal ${this.i+1}/${Q.length}`);
+    document.querySelectorAll('.ans').forEach(b => b.addEventListener('click', () => this.pick(+b.dataset.d)));
+    this.t0 = performance.now();
+    this.timer = setInterval(() => this.tickTimer(), 100);
+  },
+
+  tickTimer(){
+    const el = (performance.now() - this.t0) / 1000;
+    const left = Math.max(0, this.T - el);
+    const bar = $('#tbar'), num = $('#tnum'); if (!bar) return;
+    bar.style.transform = `scaleX(${left / this.T})`;
+    const sec = Math.ceil(left);
+    num.textContent = sec;
+    if (sec <= 5){ num.classList.add('low'); if (sec !== this.lastSec && sec > 0) sfx.tick(); }
+    this.lastSec = sec;
+    if (left <= 0) this.finish(null, this.T);
+  },
+
+  pick(d){
+    if (this.locked || this.phase !== 'ask') return;
+    const dt = Math.min(this.T, (performance.now() - this.t0) / 1000);
+    this.locked = true; clearInterval(this.timer);
+    const ans = $('#answers'); ans.classList.add('locked');
+    ans.querySelector(`[data-d="${d}"]`).classList.add('picked');
+    setTimeout(() => this.finish(d, dt), 650);
+  },
+
+  finish(d, dt){
+    this.clear(); this.phase = 'result';
+    const q = Q[this.i], p = this.perm[this.i], me = this.me;
+    const picked = d === null ? -1 : p[d];
+    const ok = picked === q.a;
+    const mult = q.hots ? 2 : 1;
+    const pts = k => Math.round((1 - (k/this.T)/2) * 1000) * mult;
+    let base = 0, bonus = 0;
+    if (ok){ me.streak++; me.correct++; base = pts(dt); bonus = me.streak > 1 ? Math.min(me.streak-1, 5) * 100 : 0; me.best = Math.max(me.best, me.streak); }
+    else me.streak = 0;
+    if (d !== null){ me.time += dt; me.answered++; }
+    me.score += base + bonus;
+    // bot
+    const counts = [0,0,0,0]; if (picked >= 0) counts[picked]++;
+    this.bots.forEach(b => {
+      const right = Math.random() < b.skill * (q.hots ? .75 : 1);
+      const rt = Math.min(.97, Math.max(.06, b.speed + (Math.random()-.5)*.4)) * this.T;
+      b.prev = b.score;
+      if (right){ b.streak++; b.score += pts(rt) + (b.streak>1 ? Math.min(b.streak-1,5)*100 : 0); counts[q.a]++; }
+      else { b.streak = 0; const wrong = [0,1,2,3].filter(x => x !== q.a); counts[wrong[Math.floor(Math.random()*3)]]++; }
+    });
+    me.prev = me.score - base - bonus;
+    me.log.push({i:this.i, picked, ok, timeout: d === null, pts: base + bonus});
+    this.last = {ok, timeout: d === null, base, bonus, counts, picked};
+
+    const mood = d === null ? 'timeout' : (ok ? 'correct' : 'wrong');
+    d === null ? sfx.late() : (ok ? sfx.ok() : sfx.no());
+    const verdict = d === null ? 'Waktu habis' : (ok ? 'Benar!' : 'Kurang tepat');
+    const rank = this.ranking().findIndex(x => x.me) + 1;
+    const mx = Math.max(...counts, 1);
+    const dist = p.map((orig, disp) => `
+      <div class="${orig===q.a?'ok':'no'}">
+        <span>${counts[orig]}</span>
+        <i style="height:${Math.max(6, counts[orig]/mx*80)}px;background:${['#E21B3C','#1368CE','#D89E00','#26890C'][disp]}"></i>
+        ${SHAPES[disp]}
+      </div>`).join('');
+    const last = this.i === Q.length - 1;
+    this.draw(`
+      <div class="kq-center">
+        <div class="kq-verdict">${verdict}</div>
+        ${ok ? `<div class="kq-pts">+${idn(base + bonus)}</div>` : ''}
+        ${ok && me.streak > 1 ? `<div class="kq-streak">Beruntun ×${me.streak}${bonus ? ` (bonus +${bonus})` : ''}</div>` : ''}
+        <div class="kq-dist" aria-label="Sebaran jawaban pemain">${dist}</div>
+        <div class="kq-exp"><b>Jawaban: ${esc(q.o[q.a])}</b><p>${q.e}</p></div>
+        <div class="kq-rank">Skor ${idn(me.score)} | Peringkat ${rank} dari ${this.bots.length + 1}</div>
+        <button class="kq-btn light" id="toBoard" data-focus>Papan skor</button>
+      </div>`, mood, `Soal ${this.i+1}/${Q.length}`);
+    $('#toBoard').addEventListener('click', () => this.board());
+  },
+
+  ranking(){
+    const all = this.bots.map(b => ({name:b.name, score:b.score, prev:b.prev ?? 0, me:false}));
+    all.push({name:this.me.name, score:this.me.score, prev:this.me.prev ?? 0, me:true});
+    return all.sort((a, b) => b.score - a.score || (a.me ? -1 : 1));
+  },
+
+  board(){
+    this.phase = 'board';
+    const r = this.ranking(), mx = Math.max(...r.map(x => x.score), 1);
+    const shown = r.slice(0, 5);
+    const meIdx = r.findIndex(x => x.me);
+    if (meIdx >= 5) shown.push(r[meIdx]);
+    const last = this.i === Q.length - 1;
+    const prevMax = Math.max(...r.map(x => x.prev), 1);
+    this.draw(`
+      <div class="kq-center">
+        <h2 class="kq-verdict" style="font-size:2rem">Papan skor</h2>
+        <div class="lb">
+          ${shown.map(x => `<div class="lb-row ${x.me?'me':''}"><div class="lb-fill" data-w="${Math.max(4, x.score/mx*100)}" style="width:${Math.max(4, x.prev/mx*100)}%"></div><span class="lb-rank">${r.indexOf(x)+1}</span><span class="lb-name">${esc(x.name)}${x.me?' (kamu)':''}</span><span class="lb-score">${idn(x.score)}</span></div>`).join('')}
+        </div>
+        <button class="kq-btn light" id="nextQ" data-focus>${last ? 'Lihat hasil akhir' : 'Soal berikutnya'}</button>
+      </div>`, 'board', `Soal ${this.i+1}/${Q.length}`);
+    requestAnimationFrame(() => requestAnimationFrame(() => document.querySelectorAll('.lb-fill').forEach(el => el.style.width = el.dataset.w + '%')));
+    $('#nextQ').addEventListener('click', () => { if (last) this.final(); else { this.i++; this.intro_(); } });
+  },
+
+  final(){
+    this.phase = 'final'; sfx.end();
+    const r = this.ranking(), me = this.me, myRank = r.findIndex(x => x.me) + 1;
+    const top = [r[1], r[0], r[2]], cls = ['p2','p1','p3'], pos = [2,1,3];
+    const acc = Math.round(me.correct / Q.length * 100);
+    const avg = me.answered ? (me.time / me.answered).toFixed(1).replace('.', ',') : '-';
+    const msg = myRank === 1 ? 'Juara 1! Pemahamanmu sudah kuat.' : (myRank <= 3 ? 'Masuk podium, tinggal sedikit lagi ke puncak.' : (acc >= 70 ? 'Pemahaman bagus; percepat lagi jawabanmu.' : 'Baca kembali rangkuman lalu coba lagi.'));
+    this.draw(`
+      <div class="kq-center">
+        <div class="kq-verdict" style="font-size:2rem">Hasil akhir</div>
+        <div class="podium">
+          ${top.map((x, k) => `<div class="pod ${cls[k]}"><span class="nm">${esc(x.name)}${x.me?' (kamu)':''}</span><span>${idn(x.score)}</span><div class="bl">${pos[k]}</div></div>`).join('')}
+        </div>
+        <p class="kq-sub"><b>Peringkatmu: ${myRank} dari ${r.length}.</b> ${msg}</p>
+        <div class="stats">
+          <div><b>${idn(me.score)}</b><span>Skor total</span></div>
+          <div><b>${me.correct}/${Q.length}</b><span>Jawaban benar (${acc}%)</span></div>
+          <div><b>×${me.best}</b><span>Beruntun terbaik</span></div>
+          <div><b>${avg}${avg==='-'?'':' dtk'}</b><span>Rata-rata waktu</span></div>
+        </div>
+        <div class="review">
+          ${me.log.map(l => { const q = Q[l.i]; const t = l.timeout ? '<span class="tag t">Waktu habis</span>' : (l.ok ? '<span class="tag">Benar</span>' : '<span class="tag x">Salah</span>');
+            return `<details><summary>${t}${q.hots?'<span class="tag" style="background:#F5B301;color:#3a2a00">HOTS</span>':''}Soal ${l.i+1}: ${q.q}</summary><p><b>Kunci: ${esc(q.o[q.a])}.</b>${l.ok||l.timeout?'':' Jawabanmu: '+esc(q.o[l.picked])+'.'} ${q.e}</p></details>`; }).join('')}
+        </div>
+        <div class="btnrow">
+          <button class="kq-btn light" id="again" data-focus>Main lagi</button>
+          <button class="kq-btn ghost" id="toSum">Kembali ke rangkuman</button>
+        </div>
+      </div>`, 'board', 'Hasil akhir');
+    $('#again').addEventListener('click', () => this.lobby());
+    $('#toSum').addEventListener('click', () => showView('summary'));
+  }
+};
+
+document.addEventListener('keydown', e => {
+  if (game.phase !== 'ask' || $('#view-quiz').hidden) return;
+  if (e.target && e.target.tagName === 'INPUT') return;
+  const k = e.key.toLowerCase();
+  const idx = ['1','2','3','4'].indexOf(k) >= 0 ? +k - 1 : ['a','b','c','d'].indexOf(k);
+  if (idx >= 0) game.pick(idx);
+});
+
+/* ============ Lab mini: iluminasi × reflektansi ============ */
+(function(){
+  const r = $('#irRange'); if (!r) return;
+  const mats = [['Salju', .93], ['Baja tahan karat', .65], ['Beludru hitam', .01]];
+  function draw(){
+    const i = Math.pow(10, +r.value), auto = $('#irAuto').checked;
+    $('#irVal').textContent = idn(i, i < 10 ? 1 : 0);
+    const g = auto ? 255 / (i * .93) : 255 / 2000;
+    const rows = mats.map(([n, rr]) => { const f = i * rr; return {n, rr, f, px: Math.min(255, Math.round(f * g))}; });
+    $('#irMats').innerHTML = rows.map(x => `<div class="mat"><div class="sw" style="background:rgb(${x.px},${x.px},${x.px})"></div><b>${x.n}</b><span>r = ${String(x.rr).replace('.', ',')}</span><span>f = ${idn(x.f, x.f < 10 ? 2 : 0)}</span><span>piksel = ${x.px}</span></div>`).join('');
+    let t;
+    if (auto) t = 'Eksposur otomatis menyesuaikan penguatan sensor, sehingga perbandingan salju : beludru tetap 93 : 1 berapa pun iluminasinya. Kontras antarbahan ditentukan oleh r, bukan oleh i.';
+    else if (rows[0].px >= 255 && rows[1].px >= 255) t = 'Overeksposur: salju dan baja sama-sama mencapai 255 sehingga perbedaan keduanya hilang. Sensor punya rentang dinamis terbatas.';
+    else if (rows[0].px < 25) t = 'Terlalu gelap: nilai piksel hampir semuanya mendekati 0 dan detail tenggelam dalam noise. Coba naikkan iluminasi atau nyalakan eksposur otomatis.';
+    else t = 'Eksposur cukup: ketiga bahan terekam pada nilai piksel yang berbeda dan masih tercatat detailnya.';
+    $('#irNote').textContent = t;
+  }
+  r.addEventListener('input', draw); $('#irAuto').addEventListener('change', draw); draw();
+})();
+
+/* ============ Lab mini: titik buta ============ */
+(function(){
+  const st = $('#bsStage'), rg = $('#bsRange'), dot = $('#bsDot'); if (!st) return;
+  const place = () => { dot.style.left = (40 + Number(rg.value)) + 'px'; };
+  const fit = () => { const w = st.clientWidth; if (!w) return; rg.max = Math.max(140, Math.floor(w - 70)); if (+rg.value > +rg.max) rg.value = rg.max; place(); };
+  rg.addEventListener('input', place); window.addEventListener('resize', fit); fit();
+})();
+
+/* Tampilan awal dari hash (opsional) */
+try { if (location.hash === '#quiz') showView('quiz'); } catch(e){}
+</script>
+</body>
+</html>
