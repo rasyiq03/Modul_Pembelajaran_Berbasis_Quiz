@@ -10,7 +10,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&family=Source+Serif+4:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
 <!-- KUISKELAS:ENGINE-CSS -->
 <style>
-/*! KuisKelas engine CSS v1.0.0 — jangan diubah per materi */
+/*! KuisKelas engine CSS v2.0.0 (offline) — jangan diubah per materi; sumber: engine/kuiskelas.css */
 :root{
   --bg:#F4F5FA; --surface:#FFFFFF; --ink:#161A3C; --muted:#5B6285; --line:#D9DCEC;
   --accent:#46178F; --accent-ink:#FFFFFF; --soft:#EEE8FA; --warn:#FBF3D9; --warn-line:#C99A1B;
@@ -256,7 +256,7 @@ details.bank-item p{font-family:var(--font-body);font-size:.95rem;color:var(--mu
 }
 
 /* =====================================================================
-   KuisKelas engine: tambahan untuk profil, gamifikasi, dan mode online
+   KuisKelas engine: tambahan untuk profil dan gamifikasi
    ===================================================================== */
 .top-in{gap:12px}
 .brand{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -328,13 +328,9 @@ details.bank-item p{font-family:var(--font-body);font-size:.95rem;color:var(--mu
 .btn-s{font:800 .86rem var(--font-head);border:0;border-radius:6px;padding:11px 18px;background:var(--accent);color:var(--accent-ink);cursor:pointer}
 .btn-s.alt{background:var(--soft);color:var(--ink)}
 .btn-s.danger{background:transparent;color:#C4162F;padding-left:0}
-.lbc{display:flex;flex-direction:column;gap:4px;font-size:.84rem}
-.lbc div{display:grid;grid-template-columns:28px 30px 1fr auto;gap:8px;align-items:center;padding:6px 8px;border-radius:6px}
-.lbc div.me{background:var(--soft)}
-.lbc .muted{display:block;color:var(--muted);font-weight:600}
 .err{color:#C4162F;font-size:.8rem;font-weight:700;min-height:1em}
 
-/* Layar kuis: mode, profil ringkas, host, peserta */
+/* Layar kuis: mode dan profil ringkas */
 .modes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;width:min(640px,100%)}
 .mode{display:flex;flex-direction:column;gap:6px;text-align:left;border:0;border-radius:10px;padding:18px;background:#fff;color:#1c1c28;cursor:pointer;box-shadow:0 5px 0 rgba(0,0,0,.3);font-family:var(--font-head)}
 .mode:active{transform:translateY(3px);box-shadow:0 2px 0 rgba(0,0,0,.3)}
@@ -342,12 +338,12 @@ details.bank-item p{font-family:var(--font-body);font-size:.95rem;color:var(--mu
 .mode span{font-size:.84rem;color:#555;font-weight:600;line-height:1.4}
 .mode .shape{width:30px;height:30px;fill:#46178F;margin-bottom:4px}
 .mode.c0 .shape{fill:#E21B3C}.mode.c1 .shape{fill:#1368CE}.mode.c2 .shape{fill:#B98400}.mode.c3 .shape{fill:#26890C}
+.modes.one{grid-template-columns:1fr;width:min(440px,100%)}
 .mode[disabled]{opacity:.55;cursor:not-allowed;transform:none;box-shadow:0 5px 0 rgba(0,0,0,.3)}
 .whoami{display:flex;align-items:center;gap:12px;background:rgba(0,0,0,.25);border-radius:999px;padding:6px 16px 6px 6px;font-weight:700;border:0;color:#fff;cursor:pointer;font-family:var(--font-head)}
 .whoami .me-av{background:#fff;width:40px;height:40px;font-size:1.4rem}
 .whoami small{display:block;font-size:.72rem;opacity:.85;font-weight:600}
 .whoami .me-bar{display:block;margin-top:5px;background:rgba(255,255,255,.25);width:140px}
-.kq-form input[type=text].pin-in{font-size:1.8rem;letter-spacing:.2em}
 .kq-form .row2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px}
 .kq-form .row2 input{min-width:0;width:100%;font-size:1rem}
 .kq-form .avs{justify-content:center}
@@ -355,27 +351,6 @@ details.bank-item p{font-family:var(--font-body);font-size:.95rem;color:var(--mu
 .kq-form .avs button[aria-pressed="true"]{border-color:#46178F;background:#fff}
 .kq-form .err{text-align:center}
 .kq-form small.help{font-size:.76rem;color:#666;font-weight:600;line-height:1.4}
-.kq-bigpin{background:#fff;color:#46178F;border-radius:10px;padding:14px 36px;font-weight:800;text-align:center}
-.kq-bigpin small{display:block;font-size:.8rem;color:#5b3d94}
-.kq-bigpin b{font-size:clamp(2.6rem,9vw,4.4rem);letter-spacing:.12em;line-height:1.1}
-.joinlink{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:center;font-size:.84rem;font-weight:600;opacity:.95;max-width:100%}
-.joinlink code{background:rgba(0,0,0,.28);padding:6px 10px;border-radius:6px;font-family:var(--font-head);word-break:break-all}
-.tiles{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;width:min(820px,100%);max-height:320px;overflow:auto}
-.tile{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.14);border-radius:999px;padding:6px 14px 6px 6px;font-weight:700;font-size:.9rem;animation:tin .35s both}
-.tile .me-av{background:#fff;width:30px;height:30px}
-.kq-counter{display:flex;gap:18px;justify-content:center;font-weight:800}
-.kq-counter div{background:rgba(0,0,0,.28);border-radius:8px;padding:10px 18px;text-align:center}
-.kq-counter b{display:block;font-size:1.8rem;line-height:1.1}
-.kq-counter span{font-size:.74rem;opacity:.85}
-.host-opts{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:0 0 12px}
-.host-opts div{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.12);border-radius:6px;padding:10px;font-weight:700;font-size:.9rem;line-height:1.3}
-.host-opts svg{flex:none;width:22px;height:22px;fill:#fff}
-.host-opts .c0{background:#E21B3C}.host-opts .c1{background:#1368CE}.host-opts .c2{background:#B98400}.host-opts .c3{background:#26890C}
-.wait-dots{display:flex;gap:8px}
-.wait-dots i{width:12px;height:12px;border-radius:50%;background:#fff;animation:dot 1s ease-in-out infinite alternate}
-.wait-dots i:nth-child(2){animation-delay:.2s}.wait-dots i:nth-child(3){animation-delay:.4s}
-@keyframes dot{from{opacity:.25;transform:translateY(0)}to{opacity:1;transform:translateY(-6px)}}
-.answers.shapes-only .ans{justify-content:center}
 .xpbox{display:flex;flex-direction:column;gap:8px;background:#fff;color:#1c1c28;border-radius:10px;padding:14px 18px;width:min(520px,100%);text-align:left}
 .xpbox .row{display:flex;justify-content:space-between;font-weight:700;font-size:.9rem}
 .xpbox .row.tot{border-top:1.5px solid #e4e0ef;padding-top:8px;font-size:1.05rem;font-weight:800}
@@ -389,14 +364,6 @@ details.bank-item p{font-family:var(--font-body);font-size:.95rem;color:var(--mu
 .mastery .m i b{display:block;height:100%;background:#F5B301}
 .mastery .m.weak i b{background:#ff7a8a}
 .mastery a{color:#ffe28a;font-size:.78rem;display:block;font-weight:700}
-.rk-table{width:min(820px,100%);background:#fff;color:#1c1c28;border-radius:8px;overflow:auto}
-.rk-table table{min-width:560px}
-.rk-table th{background:#EEE8FA;color:#1c1c28}
-.rk-table td,.rk-table th{border-bottom:1px solid #e4e0ef}
-.rk-list{width:min(720px,100%);display:flex;flex-direction:column;gap:8px}
-.rk-list button{display:grid;grid-template-columns:1fr auto;gap:4px 12px;text-align:left;background:#fff;color:#1c1c28;border:0;border-radius:8px;padding:12px 16px;font-family:var(--font-head);cursor:pointer}
-.rk-list button b{font-size:.95rem}
-.rk-list button span{font-size:.78rem;color:#555;font-weight:600}
 .lvup{position:fixed;inset:0;z-index:250;display:grid;place-items:center;background:rgba(20,6,50,.72);font-family:var(--font-head);color:#fff;text-align:center;animation:tin .3s both}
 .lvup div{display:flex;flex-direction:column;align-items:center;gap:10px;padding:24px}
 .lvup .big{font-size:clamp(3rem,12vw,6rem);font-weight:800;line-height:1;background:#F5B301;color:#3a2a00;border-radius:24px;padding:14px 34px;animation:pop .6s cubic-bezier(.2,1.6,.4,1) both .1s}
@@ -413,7 +380,6 @@ details.bank-item p{font-family:var(--font-body);font-size:.95rem;color:var(--mu
   .modes{grid-template-columns:1fr}
   .dstats{grid-template-columns:repeat(2,1fr)}
   .pform{grid-template-columns:1fr}
-  .host-opts{grid-template-columns:1fr 1fr}
   .mastery .m{grid-template-columns:1fr 70px 40px}
 }
 @media (max-width:420px){
@@ -572,7 +538,6 @@ svg[data-draw].in [stroke]{stroke-dashoffset:0}
 
 /* Kode sebaris tidak boleh mendorong lebar halaman di layar kecil */
 code{overflow-wrap:anywhere}
-
 </style>
 <style>.mat b{font-size:1rem}</style>
 </head>
@@ -844,10 +809,12 @@ window.COURSE = {
 <!-- KUISKELAS:ENGINE-JS -->
 <script>
 /*!
- * KuisKelas engine v1.0.0
- * Mesin tampilan materi + kuis gaya Kahoot + profil, XP, lencana, dan room online (Supabase).
+ * KuisKelas engine v2.0.0 (offline)
+ * Mesin tampilan materi + kuis gaya Kahoot + profil, XP, dan lencana. Berjalan penuh tanpa internet.
  * Materi cukup menyediakan: window.KQ_CONFIG, window.COURSE, dan <main id="view-summary">.
- * Jangan ubah file ini per materi; semua materi memakai mesin yang sama.
+ * Mode online (room PIN, peringkat kelas, rekap nilai) ada di KuisKelas Online (index.html di
+ * root repo), yang membaca soal langsung dari file materi ini tanpa mengubahnya.
+ * Sumber: engine/kuiskelas.js. Jangan ubah per materi; sebarkan dengan tools/kuiskelas.py sync.
  */
 (function () {
 'use strict';
@@ -855,22 +822,15 @@ window.COURSE = {
 /* =====================================================================
    0. Konfigurasi & data
    ===================================================================== */
-const VERSION = '1.0.0';
+const VERSION = '2.0.0';
 const CFG = Object.assign({
-  supabaseUrl: '',
-  supabaseAnonKey: '',
   defaultClass: '',
-  supabaseJs: 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/dist/umd/supabase.js',
   bots: 12
 }, window.KQ_CONFIG || {});
 const C = window.COURSE || {};
 const Q = (Array.isArray(C.questions) ? C.questions : []).map(q => Object.assign({ time: q.hots ? 40 : 20 }, q));
 const MID = String(C.id || document.title || 'materi').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60) || 'materi';
 const TITLE = C.short || C.title || document.title || 'Materi';
-/* ONLINE = kredensial terisi. netOK() = kredensial terisi DAN perangkat sedang tersambung internet.
-   Tanpa internet, file tetap berjalan penuh untuk mode solo di komputer sendiri. */
-const ONLINE = !!(CFG.supabaseUrl && CFG.supabaseAnonKey && !/your-project|xxxx|GANTI/i.test(CFG.supabaseUrl + CFG.supabaseAnonKey));
-const netOK = () => ONLINE && navigator.onLine !== false;
 const CLASS_RE = /^[A-Z0-9-]{2,16}$/;
 
 /* =====================================================================
@@ -885,10 +845,7 @@ const rich = s => esc(s)
   .replace(/&lt;br\s*\/?&gt;/g, '<br>');
 const plain = s => String(s == null ? '' : s).replace(/<[^>]*>/g, '');
 const idn = (n, d = 0) => Number(n || 0).toLocaleString('id-ID', { maximumFractionDigits: d });
-const sleep = ms => new Promise(r => setTimeout(r, ms));
 const shuffle4 = () => { const p = [0, 1, 2, 3]; for (let k = 3; k > 0; k--) { const j = Math.floor(Math.random() * (k + 1)); [p[k], p[j]] = [p[j], p[k]]; } return p; };
-/* Parser waktu Postgres yang aman untuk Safari (pecahan detik dipangkas ke milidetik) */
-const parseTs = t => Date.parse(String(t).replace(' ', 'T').replace(/(\.\d{3})\d+/, '$1').replace(/([+-]\d{2})$/, '$1:00'));
 const today = (d = new Date()) => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
 const reduceMotion = () => window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -897,14 +854,6 @@ const LS = {
   set(k, v) { try { localStorage.setItem('kq:' + k, JSON.stringify(v)); } catch (e) { } },
   del(k) { try { localStorage.removeItem('kq:' + k); } catch (e) { } }
 };
-
-function loadScript(src) {
-  return new Promise((res, rej) => {
-    const s = document.createElement('script');
-    s.src = src; s.async = true; s.onload = res; s.onerror = () => rej(new Error('Gagal memuat ' + src + ' (network)'));
-    document.head.appendChild(s);
-  });
-}
 
 const SHAPES = [
   '<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3 30 28H2z"/></svg>',
@@ -918,32 +867,7 @@ const MOODS = { '': '#46178F', correct: '#26890C', wrong: '#C4162F', timeout: '#
 const AVATARS = ['🦊', '🐼', '🐯', '🐸', '🐙', '🦉', '🐧', '🦄', '🐝', '🐳', '🦖', '🐱', '🤖', '👾', '🚀', '🌵'];
 const BOT_NAMES = ['Ayu', 'Bima88', 'Nora', 'Rafi_R', 'Sinta', 'Dimas', 'Lena', 'Citra', 'Fajar404', 'Wulan', 'Gilang', 'Putri.K', 'Bayu_B', 'Rina', 'Kevin', 'Salsa', 'Yoga', 'Tiara'];
 
-/* Pesan galat dari server → kalimat yang bisa ditindaklanjuti */
-const ERR = {
-  ROOM_NOT_FOUND: 'PIN tidak ditemukan. Periksa lagi 6 angka di layar pengajar.',
-  ROOM_CLOSED: 'Room ini sudah selesai. Minta PIN baru ke pengajar.',
-  ROOM_FULL: 'Room sudah penuh (maksimal 200 peserta).',
-  NOT_ACCEPTING: 'Waktu menjawab soal ini sudah ditutup.',
-  TIME_UP: 'Jawaban sampai setelah waktu habis.',
-  ALREADY_ANSWERED: 'Jawaban untuk soal ini sudah terkirim.',
-  NOT_JOINED: 'Kamu belum masuk room ini. Gabung ulang dengan PIN.',
-  NOT_HOST: 'Hanya perangkat pembuat room yang bisa mengatur permainan.',
-  RATE_LIMIT: 'Terlalu banyak room dibuat dalam satu jam. Coba lagi nanti.',
-  BAD_CLASS: 'Kode kelas hanya boleh huruf kapital, angka, dan tanda minus (2–16 karakter).',
-  BAD_QUIZ: 'Data soal di file materi tidak valid.',
-  AUTH_REQUIRED: 'Belum tersambung ke server. Muat ulang halaman lalu coba lagi.',
-  OFFLINE: 'Mode online belum aktif di file ini: kredensial Supabase belum diisi.',
-  NO_NET: 'Perangkat ini sedang tanpa internet. Mode online butuh koneksi; latihan solo tetap bisa dimainkan.'
-};
-function errMsg(e) {
-  const m = String((e && (e.message || e.error_description || e.msg)) || e || '');
-  for (const k in ERR) if (m.includes(k)) return ERR[k];
-  if (/anonymous/i.test(m)) return 'Login anonim belum aktif di Supabase (Authentication > Sign In / Providers > Anonymous sign-ins).';
-  if (/rate limit/i.test(m)) return 'Server menolak karena batas login anonim tercapai. Naikkan batasnya di Supabase (Authentication > Rate Limits).';
-  if (/does not exist|schema cache/i.test(m)) return 'Tabel atau fungsi belum ada. Jalankan schema.sql di Supabase SQL Editor.';
-  if (/fetch|network|Failed/i.test(m)) return 'Tidak ada koneksi ke server. Periksa internet lalu coba lagi.';
-  return 'Terjadi galat: ' + m;
-}
+const BAD_CLASS = 'Kode kelas hanya boleh huruf kapital, angka, dan tanda minus (2–16 karakter).';
 
 /* =====================================================================
    2. Suara (Web Audio, tanpa file eksternal)
@@ -977,7 +901,7 @@ const sfx = {
 const P0 = { nickname: '', studentId: '', classCode: CFG.defaultClass ? String(CFG.defaultClass).toUpperCase() : '', avatar: AVATARS[0], xp: 0, badges: [], awarded: {}, games: 0, bestScore: 0, dayStreak: 0, lastDay: '', read: {}, labs: {} };
 let P = Object.assign({}, P0, LS.get('profile', {}));
 P.read = P.read || {}; P.labs = P.labs || {}; P.awarded = P.awarded || {}; P.badges = P.badges || [];
-const saveP = () => { LS.set('profile', P); refreshChip(); queueSync(); };
+const saveP = () => { LS.set('profile', P); refreshChip(); };
 
 const need = n => 50 * (n - 1) * n;                 // XP minimum untuk level n: 0, 100, 300, 600, 1000, 1500 ...
 const levelOf = x => { let n = 1; while (x >= need(n + 1)) n++; return n; };
@@ -995,10 +919,10 @@ const BADGES = [
   ['comeback', '🚀', 'Bangkit', 'Dari luar lima besar menjadi juara 1'],
   ['reader', '📖', 'Pembaca tuntas', 'Tandai semua bab dalam satu materi'],
   ['labrat', '🧪', 'Tangan laboratorium', 'Coba semua lab dalam satu materi'],
-  ['online', '📡', 'Main bareng', 'Ikuti satu room online sampai selesai'],
-  ['podium', '🥉', 'Naik podium', 'Masuk tiga besar di room online'],
-  ['champ', '👑', 'Juara kelas', 'Peringkat 1 di room online'],
-  ['host', '🎤', 'Pemandu', 'Pandu satu room online sampai selesai'],
+  ['online', '📡', 'Main bareng', 'Ikuti satu room online sampai selesai (KuisKelas Online)'],
+  ['podium', '🥉', 'Naik podium', 'Masuk tiga besar di room online (KuisKelas Online)'],
+  ['champ', '👑', 'Juara kelas', 'Peringkat 1 di room online (KuisKelas Online)'],
+  ['host', '🎤', 'Pemandu', 'Pandu satu room online sampai selesai (KuisKelas Online)'],
   ['day3', '📅', 'Rajin', 'Belajar 3 hari berturut-turut'],
   ['day7', '🗓️', 'Seminggu penuh', 'Belajar 7 hari berturut-turut'],
   ['lv5', '🏅', 'Ahli', 'Capai level 5']
@@ -1028,10 +952,8 @@ function giveBadge(id) {
   setTimeout(() => { toast('Lencana baru: ' + b[2], b[3], 'lv', b[1]); sfx.xp(); }, 300);
   return true;
 }
-function profileReady(kind) {
-  if (!P.nickname) return false;
-  if (kind === 'online') return !!(P.studentId && CLASS_RE.test(P.classCode || ''));
-  return true;
+function profileReady() {
+  return !!P.nickname;
 }
 function dailyCheckIn() {
   const t = today();
@@ -1087,58 +1009,8 @@ function confetti() {
 }
 
 /* =====================================================================
-   5. Supabase (dimuat hanya jika mode online dipakai)
+   5. Unduhan CSV (dipakai tabel data)
    ===================================================================== */
-let sbP = null, UID = null;
-function sb() {
-  if (!ONLINE) return Promise.reject(new Error('OFFLINE'));
-  if (navigator.onLine === false) return Promise.reject(new Error('NO_NET'));
-  if (sbP) return sbP;
-  sbP = (window.supabase && window.supabase.createClient ? Promise.resolve() : loadScript(CFG.supabaseJs))
-    .then(async () => {
-      const cli = window.supabase.createClient(CFG.supabaseUrl, CFG.supabaseAnonKey, { auth: { persistSession: true, autoRefreshToken: true, storageKey: 'kq-auth' } });
-      let { data: { session } } = await cli.auth.getSession();
-      if (!session) {
-        const r = await cli.auth.signInAnonymously();
-        if (r.error) throw r.error;
-        session = r.data.session;
-      }
-      UID = session.user.id;
-      return cli;
-    })
-    .catch(e => { sbP = null; throw e; });
-  return sbP;
-}
-async function rpc(fn, args) {
-  const c = await sb();
-  const { data, error } = await c.rpc(fn, args || {});
-  if (error) throw error;
-  return data;
-}
-async function sel(table, build) {
-  const c = await sb();
-  let q = c.from(table).select('*');
-  if (build) q = build(q);
-  const { data, error } = await q;
-  if (error) throw error;
-  return data;
-}
-let syncT = null;
-function queueSync() {
-  if (!netOK() || !profileReady('online')) return;
-  clearTimeout(syncT);
-  syncT = setTimeout(async () => {
-    try {
-      const c = await sb();
-      const { error } = await c.from('profiles').upsert({
-        user_id: UID, student_id: P.studentId, nickname: P.nickname, class_code: P.classCode, avatar: P.avatar,
-        xp: P.xp, level: levelOf(P.xp), badges: P.badges, games: P.games, best_score: P.bestScore,
-        day_streak: P.dayStreak, updated_at: new Date().toISOString()
-      }, { onConflict: 'user_id' });
-      if (error) console.warn('[KuisKelas] sinkron profil:', error.message);
-    } catch (e) { console.warn('[KuisKelas] sinkron profil:', e.message || e); }
-  }, 1500);
-}
 function csvDownload(name, rows) {
   const s = rows.map(r => r.map(v => { v = String(v == null ? '' : v); return /[",;\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; }).join(',')).join('\n');
   const blob = new Blob(['\ufeff' + s], { type: 'text/csv;charset=utf-8' });
@@ -1400,7 +1272,6 @@ function openProfile() {
         <label>Kode kelas<input name="cls" maxlength="16" value="${esc(P.classCode)}" placeholder="misal TI-2A" autocomplete="off"></label>
       </div>
       <p class="err" id="dlgErr"></p>
-      ${netOK() ? `<p class="sec-t">Peringkat XP kelas${P.classCode ? ' ' + esc(P.classCode) : ''}</p><div class="lbc" id="dlgLb"><span class="muted">${profileReady('online') ? 'Memuat…' : 'Isi NIM dan kode kelas untuk masuk peringkat kelas.'}</span></div>` : ''}
       <div class="dlg-act">
         <button type="button" class="btn-s danger" id="dlgReset">Hapus profil di perangkat ini</button>
         <button type="button" class="btn-s" id="dlgSave">Simpan profil</button>
@@ -1410,7 +1281,7 @@ function openProfile() {
   $('#dlgSave').addEventListener('click', () => {
     const f = readProfileForm(d);
     if (!f.nickname) { $('#dlgErr').textContent = 'Isi nama panggilan terlebih dahulu.'; return; }
-    if (f.classCode && !CLASS_RE.test(f.classCode)) { $('#dlgErr').textContent = ERR.BAD_CLASS; return; }
+    if (f.classCode && !CLASS_RE.test(f.classCode)) { $('#dlgErr').textContent = BAD_CLASS; return; }
     Object.assign(P, f, { avatar: av }); saveP();
     d.close(); toast('Profil tersimpan', P.nickname + (P.classCode ? ' | ' + P.classCode : ''), '', P.avatar);
   });
@@ -1420,17 +1291,7 @@ function openProfile() {
     location.reload();
   });
   if (typeof d.showModal === 'function') d.showModal(); else d.setAttribute('open', '');
-  if (netOK() && profileReady('online')) loadClassBoard($('#dlgLb'), P.classCode, 10);
 }
-async function loadClassBoard(el, cls, limit) {
-  if (!el) return;
-  try {
-    const rows = await sel('profiles', q => q.eq('class_code', cls).order('xp', { ascending: false }).limit(limit));
-    if (!rows.length) { el.innerHTML = '<span class="muted">Belum ada anggota kelas ini di peringkat.</span>'; return; }
-    el.innerHTML = rows.map((r, i) => `<div class="${r.user_id === UID ? 'me' : ''}"><b>${i + 1}</b><span>${esc(r.avatar || '🙂')}</span><span>${esc(r.nickname)}${r.user_id === UID ? ' (kamu)' : ''}<span class="muted">Lv ${levelOf(r.xp)} | ${(r.badges || []).length} lencana</span></span><b>${idn(r.xp)} XP</b></div>`).join('');
-  } catch (e) { el.innerHTML = `<span class="muted">${esc(errMsg(e))}</span>`; }
-}
-
 /* =====================================================================
    9. Panggung kuis: layar awal, profil singkat
    ===================================================================== */
@@ -1445,11 +1306,6 @@ function draw(html, mood, title) {
   const f = $('#kq-root [data-focus]'); if (f && !q.hidden) f.focus({ preventScroll: true });
 }
 const on = (sel, fn, ev = 'click') => { const el = $(sel); if (el) el.addEventListener(ev, fn); return el; };
-const loading = (msg, title) => draw(`<div class="kq-center"><div class="wait-dots" aria-hidden="true"><i></i><i></i><i></i></div><p class="kq-sub">${esc(msg)}</p></div>`, '', title);
-const failScreen = (e, back) => {
-  draw(`<div class="kq-center"><div class="kq-verdict" style="font-size:1.8rem">Belum bisa tersambung</div><p class="kq-sub">${esc(errMsg(e))}</p><div class="btnrow"><button class="kq-btn light" id="fbBack" data-focus>Kembali</button></div></div>`, 'timeout');
-  on('#fbBack', back || (() => Quiz.home()));
-};
 function whoami() {
   const lp = lvProgress(P.xp);
   return `<button class="whoami" id="whoBtn" aria-label="Buka profil"><span class="me-av">${P.avatar}</span><span style="text-align:left">${esc(P.nickname)}<small>Lv ${lp.n} ${esc(lvName(lp.n))} | ${idn(P.xp)} XP</small><span class="me-bar"><i style="width:${lp.pct}%"></i></span></span></button>`;
@@ -1457,54 +1313,36 @@ function whoami() {
 
 const Quiz = {
   home() {
-    Solo.abort(); Host.stop(); Join.stop();
-    if (!profileReady('solo')) return this.gate('solo', () => this.home());
+    Solo.abort();
+    if (!profileReady()) return this.gate(() => this.home());
     const nH = Q.filter(x => x.hots).length;
-    const hosting = LS.get('hosting', null);
-    const canResume = netOK() && hosting && hosting.mid === MID && Date.now() - hosting.t < 6 * 3600e3;
-    const joined = LS.get('joined', null);
-    const net = netOK();
-    const canRejoin = netOK() && joined && joined.mid === MID && Date.now() - joined.t < 3 * 3600e3;
     draw(`
       <div class="kq-center">
         <div class="kq-logo">${esc(TITLE)}</div>
         ${whoami()}
         <p class="kq-sub">${Q.length} soal: ${Q.length - nH} reguler${nH ? ` dan ${nH} HOTS dengan poin ganda` : ''}. Makin cepat menjawab benar, makin besar poinnya. Setiap permainan menambah XP profilmu.</p>
-        <div class="modes">
-          <button class="mode c0" id="mSolo" data-focus>${SHAPES[0].replace('<svg', '<svg class="shape"')}<b>Latihan solo</b><span>Bertanding melawan ${CFG.bots} bot. Cocok untuk belajar mandiri kapan saja.</span></button>
-          <button class="mode c1" id="mJoin" ${net ? '' : 'disabled'}>${SHAPES[1].replace('<svg', '<svg class="shape"')}<b>Gabung room</b><span>Masukkan PIN dari layar pengajar, lalu jawab dari perangkatmu.</span></button>
-          <button class="mode c2" id="mHost" ${net ? '' : 'disabled'}>${SHAPES[2].replace('<svg', '<svg class="shape"')}<b>Buat room</b><span>Untuk pengajar: tampilkan soal di proyektor, peserta menjawab dari HP.</span></button>
-          <button class="mode c3" id="mRekap" ${net ? '' : 'disabled'}>${SHAPES[3].replace('<svg', '<svg class="shape"')}<b>Peringkat & rekap</b><span>Lihat peringkat XP kelas dan unduh nilai setiap sesi sebagai CSV.</span></button>
+        <div class="modes one">
+          <button class="mode c0" id="mSolo" data-focus>${SHAPES[0].replace('<svg', '<svg class="shape"')}<b>Latihan solo</b><span>Bertanding melawan ${CFG.bots} bot. Cocok untuk belajar mandiri kapan saja, juga tanpa internet.</span></button>
         </div>
-        ${canRejoin ? `<button class="kq-btn ghost" id="mRejoin">Kembali ke room ${esc(joined.pin)}</button>` : ''}
-        ${canResume ? `<button class="kq-btn ghost" id="mResume">Lanjutkan memandu room ${esc(hosting.pin)}</button>` : ''}
-        ${net ? '' : `<p class="offline-note">${ONLINE
-            ? 'Perangkat ini sedang tanpa internet, jadi mode room online dimatikan. Latihan solo, rangkuman, XP, dan lencana tetap berjalan penuh; nilai tersimpan di perangkat dan disinkronkan lagi saat kembali online.'
-            : 'Mode online belum aktif di file ini (kredensial Supabase belum diisi). Latihan solo dan seluruh materi tetap bisa dipakai.'}</p>`}
+        <p class="offline-note">Ingin main bareng satu kelas dengan PIN? Pengajar bisa membuka materi ini lewat KuisKelas Online; XP dan lencanamu tetap terhitung.</p>
       </div>`, '', TITLE);
     on('#whoBtn', openProfile);
     on('#mSolo', () => Solo.lobby());
-    on('#mJoin', () => Join.form());
-    on('#mHost', () => Host.setup());
-    on('#mRekap', () => Rekap.open());
-    on('#mResume', () => Host.resume(hosting.pin));
-    on('#mRejoin', () => Join.join(joined.pin));
   },
 
-  /* Formulir profil singkat di panggung kuis. kind: 'solo' | 'online' */
-  gate(kind, next) {
+  /* Formulir profil singkat di panggung kuis */
+  gate(next) {
     let av = P.avatar;
-    const online = kind === 'online';
     draw(`
       <div class="kq-center">
-        <div class="kq-logo" style="font-size:clamp(1.8rem,5vw,2.6rem)">${online ? 'Lengkapi profil kelas' : 'Buat profil'}</div>
-        <p class="kq-sub">${online ? 'Mode online butuh NIM dan kode kelas agar nilaimu tercatat untuk pengajar.' : 'Profil tersimpan di perangkat ini dan mengumpulkan XP, level, serta lencana dari semua materi.'}</p>
+        <div class="kq-logo" style="font-size:clamp(1.8rem,5vw,2.6rem)">Buat profil</div>
+        <p class="kq-sub">Profil tersimpan di perangkat ini dan mengumpulkan XP, level, serta lencana dari semua materi.</p>
         <div class="kq-form" id="gateForm">
           ${avatarPicker(av)}
           <input type="text" name="nick" maxlength="24" placeholder="Nama panggilan" value="${esc(P.nickname)}" aria-label="Nama panggilan" autocomplete="nickname" data-focus>
           <div class="row2">
-            <input type="text" name="nim" maxlength="24" placeholder="NIM${online ? '' : ' (opsional)'}" value="${esc(P.studentId)}" aria-label="NIM atau ID siswa" autocomplete="off">
-            <input type="text" name="cls" maxlength="16" placeholder="Kode kelas${online ? '' : ' (opsional)'}" value="${esc(P.classCode)}" aria-label="Kode kelas" autocomplete="off">
+            <input type="text" name="nim" maxlength="24" placeholder="NIM (opsional)" value="${esc(P.studentId)}" aria-label="NIM atau ID siswa" autocomplete="off">
+            <input type="text" name="cls" maxlength="16" placeholder="Kode kelas (opsional)" value="${esc(P.classCode)}" aria-label="Kode kelas" autocomplete="off">
           </div>
           <small class="help">Kode kelas diberikan pengajar, misalnya TI-2A. Huruf, angka, dan tanda minus.</small>
           <p class="err" id="gErr"></p>
@@ -1517,8 +1355,7 @@ const Quiz = {
       const f = readProfileForm(root);
       const err = $('#gErr');
       if (!f.nickname) return err.textContent = 'Isi nama panggilan terlebih dahulu.';
-      if (online && !f.studentId) return err.textContent = 'Isi NIM atau ID siswa untuk mode online.';
-      if ((online || f.classCode) && !CLASS_RE.test(f.classCode)) return err.textContent = ERR.BAD_CLASS;
+      if (f.classCode && !CLASS_RE.test(f.classCode)) return err.textContent = BAD_CLASS;
       Object.assign(P, f, { avatar: av }); saveP();
       next();
     };
@@ -1733,7 +1570,7 @@ const Solo = {
   }
 };
 
-/* ----- Potongan tampilan yang dipakai solo, host, dan peserta ----- */
+/* ----- Potongan tampilan hasil permainan ----- */
 function distHtml(perm, key, counts, mx) {
   return `<div class="kq-dist" aria-label="Sebaran jawaban">${perm.map((orig, disp) => `
     <div class="${orig === key ? 'ok' : 'no'}"><span>${counts[orig]}</span><i style="height:${Math.max(6, counts[orig] / mx * 80)}px;background:${SHAPE_COLOR[disp]}"></i>${SHAPES[disp]}</div>`).join('')}</div>`;
@@ -1800,599 +1637,6 @@ function reviewHtml(log) {
     return `<details><summary>${t}${q.hots ? '<span class="tag" style="background:#F5B301;color:#3a2a00">HOTS</span>' : ''}Soal ${l.i + 1}: ${rich(q.q)}</summary><p><b>Kunci: ${rich(q.o[q.a])}.</b>${l.ok || l.timeout || l.picked < 0 ? '' : ' Jawabanmu: ' + rich(q.o[l.picked]) + '.'} ${rich(q.e)}</p></details>`;
   }).join('')}</div>`;
 }
-
-/* =====================================================================
-   11. Mode online: pengajar (host)
-   ===================================================================== */
-const fmtPin = p => String(p).replace(/(\d{3})(\d{3})/, '$1 $2');
-async function removeCh(ch) { if (!ch) return; try { const c = await sb(); c.removeChannel(ch); } catch (e) { } }
-
-const Host = {
-  pin: null, perm: null, cls: '', qi: -1, players: [], answered: new Set(), lastPts: {}, phase: 'idle',
-  ch: null, poll: null, timer: null, introT: null, T: 20, t0: 0, closing: false, lastCount: 0,
-
-  stop() {
-    this.phase = 'idle';
-    clearInterval(this.poll); clearInterval(this.timer); clearTimeout(this.introT);
-    removeCh(this.ch); this.ch = null;
-  },
-  adv(status, q) { return rpc('kq_host_advance', { p_pin: this.pin, p_status: status, p_q: q }); },
-
-  setup() {
-    this.stop();
-    const shuffle = LS.get('shuffle', true);
-    draw(`
-      <div class="kq-center">
-        <div class="kq-logo" style="font-size:clamp(1.8rem,5vw,2.8rem)">Buat room kelas</div>
-        <p class="kq-sub">Tampilkan layar ini di proyektor. Peserta membuka file materi yang sama di HP, memilih Gabung room, lalu memasukkan PIN.</p>
-        <div class="kq-form">
-          <input type="text" id="hCls" maxlength="16" placeholder="Kode kelas, misal TI-2A" value="${esc(P.classCode || CFG.defaultClass || '')}" aria-label="Kode kelas" data-focus>
-          <label class="opt"><input type="checkbox" id="hShuffle" ${shuffle ? 'checked' : ''}> Acak posisi jawaban (sama untuk semua peserta)</label>
-          <p class="err" id="hErr"></p>
-          <button class="kq-btn" id="hCreate">Buat room</button>
-          <button class="kq-btn ghost" id="hBack" style="color:#46178F;background:#eee8fa">Kembali</button>
-        </div>
-      </div>`, '', 'Buat room');
-    on('#hBack', () => Quiz.home());
-    const go = () => {
-      const cls = $('#hCls').value.trim().toUpperCase().replace(/\s+/g, '-');
-      if (!CLASS_RE.test(cls)) return $('#hErr').textContent = ERR.BAD_CLASS;
-      LS.set('shuffle', $('#hShuffle').checked);
-      this.create(cls, $('#hShuffle').checked);
-    };
-    on('#hCreate', go);
-    on('#hCls', e => { if (e.key === 'Enter') go(); }, 'keydown');
-  },
-
-  async create(cls, sh) {
-    loading('Membuat room…', 'Buat room');
-    try {
-      const perm = Q.map(() => sh ? shuffle4() : [0, 1, 2, 3]);
-      const pin = await rpc('kq_create_room', {
-        p_class: cls, p_material: MID, p_title: C.title || TITLE,
-        p_key: Q.map(q => q.a), p_times: Q.map(q => q.time), p_hots: Q.map(q => !!q.hots), p_perm: perm
-      });
-      Object.assign(this, { pin: String(pin), perm, cls, qi: -1, players: [], lastPts: {}, lastCount: 0 });
-      LS.set('hosting', { pin: this.pin, mid: MID, t: Date.now() });
-      await this.connect();
-      this.lobby();
-    } catch (e) { failScreen(e, () => this.setup()); }
-  },
-
-  async resume(pin) {
-    loading('Menyambung ulang ke room ' + fmtPin(pin) + '…', 'Room ' + pin);
-    try {
-      const [room] = await sel('rooms', q => q.eq('pin', pin));
-      if (!room) throw new Error('ROOM_NOT_FOUND');
-      if (room.host_uid !== UID) throw new Error('NOT_HOST');
-      Object.assign(this, { pin, perm: room.perm || Q.map(() => [0, 1, 2, 3]), cls: room.class_code, qi: Math.max(0, room.q_index), lastPts: {}, lastCount: 0 });
-      await this.connect();
-      if (room.status === 'lobby') return this.lobby();
-      if (room.status === 'intro' || room.status === 'question') return this.intro();
-      if (room.status === 'result' || room.status === 'board') return this.board();
-      if (room.status === 'final') return this.final();
-      LS.del('hosting'); Quiz.home();
-    } catch (e) { LS.del('hosting'); failScreen(e); }
-  },
-
-  async connect() {
-    const c = await sb();
-    removeCh(this.ch);
-    this.ch = c.channel('kqh-' + this.pin + '-' + Math.random().toString(36).slice(2, 7))
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'room_players', filter: 'room_pin=eq.' + this.pin }, () => this.refreshPlayers())
-      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'answers', filter: 'room_pin=eq.' + this.pin }, p => this.onAnswer(p.new))
-      .subscribe();
-    clearInterval(this.poll);
-    this.poll = setInterval(() => this.pollTick(), 2500);   // cadangan bila realtime tidak aktif
-    await this.refreshPlayers();
-  },
-  async refreshPlayers() {
-    try { this.players = await sel('room_players', q => q.eq('room_pin', this.pin).order('score', { ascending: false })); } catch (e) { return; }
-    if (this.phase === 'lobby') this.paintTiles();
-    if (this.phase === 'question') { this.paintCounter(); this.checkAll(); }
-  },
-  async pollTick() {
-    await this.refreshPlayers();
-    if (this.phase !== 'question') return;
-    try {
-      const rows = await sel('answers', q => q.eq('room_pin', this.pin).eq('q_index', this.qi));
-      rows.forEach(r => this.answered.add(r.user_id));
-      this.paintCounter(); this.checkAll();
-    } catch (e) { }
-  },
-  onAnswer(a) {
-    if (!a || a.q_index !== this.qi) return;
-    this.answered.add(a.user_id); this.paintCounter(); this.checkAll();
-  },
-  checkAll() {
-    if (this.phase === 'question' && this.players.length && this.answered.size >= this.players.length && !this.closing) {
-      this.closing = true; setTimeout(() => this.close(), 700);
-    }
-  },
-
-  lobby() {
-    this.phase = 'lobby';
-    const link = location.href.split('#')[0] + '#join=' + this.pin;
-    const local = location.protocol === 'file:';
-    draw(`
-      <div class="kq-center">
-        <p class="kq-sub" style="margin:0">Buka materi ini di HP, pilih <b>Kuis</b>, lalu <b>Gabung room</b> dan masukkan PIN:</p>
-        <div class="kq-bigpin"><small>Game PIN</small><b>${fmtPin(this.pin)}</b></div>
-        ${local ? '<p class="offline-note">File ini dibuka dari komputer (file://). Agar peserta bisa membukanya, unggah file ke hosting seperti GitHub Pages lalu bagikan tautannya.</p>'
-                : `<div class="joinlink"><span>Tautan langsung:</span><code>${esc(link)}</code><button class="kq-btn ghost" id="copyL">Salin tautan</button></div>`}
-        <div class="kq-counter"><div><b id="pc">0</b><span>peserta</span></div><div><b>${Q.length}</b><span>soal</span></div><div><b>${esc(this.cls)}</b><span>kelas</span></div></div>
-        <div class="tiles" id="tiles"></div>
-        <div class="btnrow">
-          <button class="kq-btn light" id="hStart" data-focus disabled>Mulai permainan</button>
-          <button class="kq-btn ghost" id="hCancel">Tutup room</button>
-        </div>
-      </div>`, '', 'Room ' + fmtPin(this.pin));
-    on('#copyL', e => { try { navigator.clipboard.writeText(link); e.currentTarget.textContent = 'Tautan tersalin'; } catch (x) { } });
-    on('#hStart', () => { sfx.start(); this.qi = 0; this.intro(); });
-    on('#hCancel', async () => {
-      if (!confirm('Tutup room ini? Peserta akan dikeluarkan.')) return;
-      try { await this.adv('closed', -1); } catch (e) { }
-      LS.del('hosting'); Quiz.home();
-    });
-    this.paintTiles();
-  },
-  paintTiles() {
-    const t = $('#tiles'); if (!t) return;
-    const n = this.players.length;
-    t.innerHTML = this.players.map(p => `<span class="tile"><span class="me-av">${esc(p.avatar || '🙂')}</span>${esc(p.nickname)}</span>`).join('') || '<p class="kq-sub">Menunggu peserta bergabung…</p>';
-    $('#pc').textContent = n;
-    $('#hStart').disabled = n < 1;
-    if (n > this.lastCount) sfx.join();
-    this.lastCount = n;
-  },
-
-  async intro() {
-    this.phase = 'intro';
-    const q = Q[this.qi];
-    try { await this.adv('intro', this.qi); } catch (e) { return failScreen(e, () => this.intro()); }
-    draw(`
-      <div class="kq-center">
-        <div class="kq-count">Soal ${this.qi + 1} dari ${Q.length}</div>
-        ${q.hots ? '<div class="kq-hots">Soal HOTS: poin ganda</div>' : ''}
-        <h2 class="kq-bigq">${rich(q.q)}</h2>
-        <div class="kq-sub">Waktu menjawab: ${q.time} detik</div>
-        <div class="kq-introbar" aria-hidden="true"><i style="animation-duration:4s"></i></div>
-        <button class="kq-btn ghost" id="skipIntro" data-focus>Tampilkan pilihan sekarang</button>
-      </div>`, '', `Room ${fmtPin(this.pin)} | Soal ${this.qi + 1}/${Q.length}`);
-    on('#skipIntro', () => this.question());
-    this.introT = setTimeout(() => this.question(), 4000);
-  },
-
-  async question() {
-    clearTimeout(this.introT);
-    if (this.phase !== 'intro') return;
-    this.phase = 'opening';
-    const q = Q[this.qi], p = this.perm[this.qi] || [0, 1, 2, 3];
-    try { await this.adv('question', this.qi); } catch (e) { this.phase = 'intro'; return failScreen(e, () => this.intro()); }
-    this.phase = 'question'; this.answered = new Set(); this.closing = false; this.T = q.time; this.lastSec = q.time;
-    draw(`
-      <div class="kq-qbox">${rich(q.q)}</div>
-      <div class="kq-timer"><div class="tnum" id="tnum">${this.T}</div><div class="tbar"><i id="tbar"></i></div></div>
-      <div class="host-opts">${p.map((orig, d) => `<div class="c${d}">${SHAPES[d]}<span>${rich(q.o[orig])}</span></div>`).join('')}</div>
-      <div class="kq-center" style="flex:0;padding:6px 0">
-        <div class="kq-counter"><div><b id="ansN">0</b><span>sudah menjawab</span></div><div><b id="plN">${this.players.length}</b><span>peserta</span></div></div>
-        <button class="kq-btn ghost" id="hClose">Tutup soal sekarang</button>
-      </div>`, '', `Room ${fmtPin(this.pin)} | Soal ${this.qi + 1}/${Q.length}`);
-    on('#hClose', () => this.close());
-    this.t0 = performance.now();
-    this.timer = setInterval(() => this.tick(), 100);
-  },
-  paintCounter() {
-    const a = $('#ansN'), b = $('#plN');
-    if (a) a.textContent = this.answered.size;
-    if (b) b.textContent = this.players.length;
-  },
-  tick() {
-    const left = Math.max(0, this.T - (performance.now() - this.t0) / 1000);
-    const bar = $('#tbar'), num = $('#tnum'); if (!bar) return;
-    bar.style.transform = `scaleX(${left / this.T})`;
-    const sec = Math.ceil(left); num.textContent = sec;
-    if (sec <= 5) { num.classList.add('low'); if (sec !== this.lastSec && sec > 0) sfx.tick(); }
-    this.lastSec = sec;
-    if (left <= 0) this.close();
-  },
-
-  async close() {
-    if (this.phase !== 'question') return;
-    this.phase = 'closing'; clearInterval(this.timer);
-    await sleep(900);   // beri waktu jawaban detik terakhir tiba di server
-    try { await this.adv('result', this.qi); } catch (e) { this.phase = 'question'; toast('Gagal menutup soal', errMsg(e), '', '⚠️'); return; }
-    let rows = [];
-    try { rows = await sel('answers', q => q.eq('room_pin', this.pin).eq('q_index', this.qi)); } catch (e) { }
-    const q = Q[this.qi], p = this.perm[this.qi] || [0, 1, 2, 3];
-    const counts = [0, 0, 0, 0]; this.lastPts = {};
-    rows.forEach(r => { counts[r.choice]++; this.lastPts[r.user_id] = r.points; });
-    const nOk = rows.filter(r => r.is_correct).length;
-    this.phase = 'result'; sfx.ok();
-    draw(`
-      <div class="kq-center">
-        <div class="kq-verdict" style="font-size:clamp(1.6rem,5vw,2.4rem)">${nOk} dari ${this.players.length} menjawab benar</div>
-        ${distHtml(p, q.a, counts, Math.max(...counts, 1))}
-        <div class="kq-exp"><b>Jawaban: ${rich(q.o[q.a])}</b><p>${rich(q.e)}</p></div>
-        <button class="kq-btn light" id="toBoard" data-focus>Papan skor</button>
-      </div>`, 'board', `Room ${fmtPin(this.pin)} | Soal ${this.qi + 1}/${Q.length}`);
-    on('#toBoard', () => this.board());
-  },
-
-  async board() {
-    this.phase = 'board';
-    try { await this.adv('board', this.qi); } catch (e) { return failScreen(e, () => this.board()); }
-    await this.refreshPlayers();
-    const r = this.players.map(p => ({ name: (p.avatar || '') + ' ' + p.nickname, score: p.score, prev: p.score - (this.lastPts[p.user_id] || 0), me: false }));
-    const last = this.qi >= Q.length - 1;
-    draw(boardHtml(r, last), 'board', `Room ${fmtPin(this.pin)} | Soal ${this.qi + 1}/${Q.length}`);
-    animateBoard();
-    on('#nextQ', () => { if (last) this.final(); else { this.qi++; this.intro(); } });
-  },
-
-  async final() {
-    this.phase = 'final';
-    try { await this.adv('final', Math.min(this.qi, Q.length - 1)); } catch (e) { return failScreen(e, () => this.final()); }
-    await this.refreshPlayers();
-    clearInterval(this.poll);
-    sfx.end(); confetti();
-    const r = this.players.map(p => ({ name: (p.avatar || '') + ' ' + p.nickname, score: p.score, me: false }));
-    award('host:' + this.pin, 30, 'Memandu sesi kelas'); giveBadge('host');
-    LS.del('hosting');
-    draw(`
-      <div class="kq-center">
-        <div class="kq-verdict" style="font-size:2rem">Hasil akhir kelas ${esc(this.cls)}</div>
-        ${podiumHtml(r)}
-        <div class="rk-table tw"><table>
-          <thead><tr><th>#</th><th>Nama</th><th>NIM</th><th>Skor</th><th>Benar</th><th>Beruntun terbaik</th></tr></thead>
-          <tbody>${this.players.map((p, i) => `<tr><td>${i + 1}</td><td>${esc((p.avatar || '') + ' ' + p.nickname)}</td><td>${esc(p.student_id || '')}</td><td>${idn(p.score)}</td><td>${p.correct}/${Q.length}</td><td>×${p.best_streak}</td></tr>`).join('')}</tbody>
-        </table></div>
-        <div class="btnrow">
-          <button class="kq-btn light" id="hCsv" data-focus>Unduh nilai (CSV)</button>
-          <button class="kq-btn ghost" id="hDone">Selesai</button>
-        </div>
-      </div>`, 'board', `Room ${fmtPin(this.pin)} | Selesai`);
-    on('#hCsv', () => this.csv());
-    on('#hDone', () => Quiz.home());
-  },
-  csv() {
-    const rows = [['Peringkat', 'Nama', 'NIM', 'Kelas', 'Skor', 'Benar', 'Jumlah soal', 'Dijawab', 'Beruntun terbaik', 'PIN', 'Materi', 'Tanggal']];
-    const d = new Date().toLocaleString('id-ID');
-    this.players.forEach((p, i) => rows.push([i + 1, p.nickname, p.student_id, p.class_code || this.cls, p.score, p.correct, Q.length, p.answered, p.best_streak, this.pin, C.title || TITLE, d]));
-    csvDownload(`nilai-${this.cls}-${MID}-${this.pin}.csv`, rows);
-  }
-};
-
-/* =====================================================================
-   12. Mode online: peserta
-   ===================================================================== */
-const Join = {
-  pin: null, room: null, key: '', ch: null, poll: null, timer: null, off: 0, res: {}, pending: null, token: 0,
-
-  stop() {
-    clearInterval(this.poll); clearInterval(this.timer);
-    removeCh(this.ch); this.ch = null; this.pin = null; this.key = ''; this.token++;
-  },
-  now() { return Date.now() + this.off; },
-
-  form(pre) {
-    this.stop();
-    if (!profileReady('online')) return Quiz.gate('online', () => this.form(pre));
-    draw(`
-      <div class="kq-center">
-        <div class="kq-logo" style="font-size:clamp(1.8rem,5vw,2.8rem)">Gabung room</div>
-        ${whoami()}
-        <div class="kq-form">
-          <input type="text" class="pin-in" id="jPin" inputmode="numeric" maxlength="7" placeholder="PIN" value="${esc(pre || '')}" aria-label="PIN room 6 angka" autocomplete="off" data-focus>
-          <p class="err" id="jErr"></p>
-          <button class="kq-btn" id="jGo">Masuk</button>
-          <button class="kq-btn ghost" id="jBack" style="color:#46178F;background:#eee8fa">Kembali</button>
-        </div>
-      </div>`, '', 'Gabung room');
-    on('#whoBtn', openProfile);
-    on('#jBack', () => Quiz.home());
-    const go = () => {
-      const pin = $('#jPin').value.replace(/\D/g, '');
-      if (pin.length !== 6) return $('#jErr').textContent = 'PIN terdiri dari 6 angka.';
-      this.join(pin);
-    };
-    on('#jGo', go);
-    on('#jPin', e => { if (e.key === 'Enter') go(); }, 'keydown');
-  },
-
-  async join(pin) {
-    this.stop();
-    if (!profileReady('online')) return Quiz.gate('online', () => this.join(pin));
-    loading('Masuk ke room ' + fmtPin(pin) + '…', 'Gabung room');
-    try {
-      await sb();
-      const t0 = Date.now();
-      const info = await rpc('kq_join_room', { p_pin: pin, p_student_id: P.studentId, p_nickname: P.nickname, p_avatar: P.avatar, p_class: P.classCode });
-      const t1 = Date.now();
-      if (info.material_id && info.material_id !== MID) {
-        throw new Error('Room ' + pin + ' memakai materi lain ("' + (info.title || info.material_id) + '"). Buka file materi yang sama dengan pengajar, lalu gabung lagi.');
-      }
-      this.off = parseTs(info.server_now) - (t0 + t1) / 2;
-      this.pin = pin;
-      this.res = LS.get('jres:' + pin, {});
-      LS.set('joined', { pin, mid: MID, t: Date.now() });
-      sfx.join();
-      const c = await sb();
-      this.ch = c.channel('kqp-' + pin + '-' + Math.random().toString(36).slice(2, 7))
-        .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'rooms', filter: 'pin=eq.' + pin }, p => this.apply(p.new))
-        .subscribe();
-      this.poll = setInterval(() => this.fetchRoom(), 2000);   // cadangan bila realtime tidak aktif
-      await this.fetchRoom();
-    } catch (e) { failScreen(e, () => this.form(pin)); }
-  },
-  async fetchRoom() {
-    if (!this.pin) return;
-    try { const [r] = await sel('rooms', q => q.eq('pin', this.pin)); if (r) this.apply(r); } catch (e) { }
-  },
-  apply(room) {
-    if (!this.pin || !room || room.pin !== this.pin) return;
-    this.room = room;
-    const key = room.status + ':' + room.q_index;
-    if (key === this.key) return;
-    this.key = key; this.token++;
-    clearInterval(this.timer);
-    const f = { lobby: 'wait', intro: 'intro', question: 'ask', result: 'result', board: 'board', final: 'final', closed: 'closed' }[room.status];
-    if (f) this[f](this.token);
-  },
-  foot() {
-    return `<div class="kq-foot"><span>${esc(P.avatar + ' ' + P.nickname)}</span><span>Room ${fmtPin(this.pin)}</span></div>`;
-  },
-  title() { const r = this.room; return r && r.q_index >= 0 ? `Soal ${r.q_index + 1}/${r.q_count}` : 'Room ' + fmtPin(this.pin); },
-
-  wait() {
-    draw(`
-      <div class="kq-center">
-        <span class="me-av" style="width:84px;height:84px;font-size:2.8rem;background:#fff">${P.avatar}</span>
-        <div class="kq-verdict" style="font-size:2rem">Kamu sudah masuk!</div>
-        <p class="kq-sub">Namamu tampil di layar pengajar sebagai <b>${esc(P.nickname)}</b>. Permainan dimulai sebentar lagi.</p>
-        <div class="wait-dots" aria-hidden="true"><i></i><i></i><i></i></div>
-        <button class="kq-btn ghost" id="jLeave">Keluar room</button>
-      </div>${this.foot()}`, '', 'Room ' + fmtPin(this.pin));
-    on('#jLeave', () => { LS.del('joined'); Quiz.home(); });
-  },
-  intro() {
-    const r = this.room, q = Q[r.q_index];
-    if (!q) return this.mismatch();
-    draw(`
-      <div class="kq-center">
-        <div class="kq-count">Soal ${r.q_index + 1} dari ${r.q_count}</div>
-        ${q.hots ? '<div class="kq-hots">Soal HOTS: poin ganda</div>' : ''}
-        <h2 class="kq-bigq">${rich(q.q)}</h2>
-        <div class="kq-sub">Bersiap, pilihan jawaban segera muncul.</div>
-        <div class="kq-introbar" aria-hidden="true"><i style="animation-duration:4s"></i></div>
-      </div>${this.foot()}`, '', this.title());
-  },
-  mismatch() {
-    draw(`<div class="kq-center"><div class="kq-verdict" style="font-size:1.8rem">Soal tidak cocok</div><p class="kq-sub">Room ini berisi soal yang tidak ada di file materimu. Pastikan kamu membuka versi materi yang sama dengan pengajar.</p><button class="kq-btn light" id="jHome" data-focus>Menu kuis</button></div>`, 'timeout');
-    on('#jHome', () => Quiz.home());
-  },
-  ask(tok) {
-    const r = this.room, qi = r.q_index, q = Q[qi];
-    if (!q) return this.mismatch();
-    if (this.res[qi]) return this.sent(qi);
-    const T = (r.times && r.times[qi]) || q.time;
-    const end = parseTs(r.q_started_at) + T * 1000;
-    if (end - this.now() <= 0) return this.lateWait();
-    const p = (r.perm && r.perm[qi]) || [0, 1, 2, 3];
-    draw(`
-      <div class="kq-qbox">${rich(q.q)}</div>
-      <div class="kq-timer"><div class="tnum" id="tnum">${Math.ceil((end - this.now()) / 1000)}</div><div class="tbar"><i id="tbar"></i></div></div>
-      <div class="answers" id="answers">
-        ${p.map((orig, d) => `<button class="ans c${d}" data-d="${d}" aria-label="${SHAPE_NAME[d]}: ${esc(plain(q.o[orig]))}">${SHAPES[d]}<span>${rich(q.o[orig])}</span></button>`).join('')}
-      </div>${this.foot()}`, '', this.title());
-    let locked = false, lastSec = T;
-    const pick = d => {
-      if (locked || tok !== this.token) return;
-      locked = true; KEYPICK = null; clearInterval(this.timer);
-      $('#answers').classList.add('locked');
-      $(`[data-d="${d}"]`).classList.add('picked');
-      this.submit(qi, p[d], d);
-    };
-    $$('.ans').forEach(b => b.addEventListener('click', () => pick(+b.dataset.d)));
-    KEYPICK = pick;
-    this.timer = setInterval(() => {
-      const left = Math.max(0, (end - this.now()) / 1000);
-      const bar = $('#tbar'), num = $('#tnum'); if (!bar || tok !== this.token) return clearInterval(this.timer);
-      bar.style.transform = `scaleX(${left / T})`;
-      const sec = Math.ceil(left); num.textContent = sec;
-      if (sec <= 5) { num.classList.add('low'); if (sec !== lastSec && sec > 0) sfx.tick(); }
-      lastSec = sec;
-      if (left <= 0 && !locked) { locked = true; clearInterval(this.timer); KEYPICK = null; sfx.late(); this.lateWait(); }
-    }, 100);
-  },
-  submit(qi, orig, disp) {
-    const pin = this.pin;
-    this.pending = rpc('kq_submit_answer', { p_pin: pin, p_q: qi, p_choice: orig })
-      .then(res => { this.res[qi] = Object.assign({ choice: orig }, res); })
-      .catch(e => {
-        const m = String(e.message || e);
-        if (/ALREADY_ANSWERED/.test(m)) { if (!this.res[qi]) this.res[qi] = { choice: orig, unknown: true }; }
-        else { this.res[qi] = { choice: orig, late: true }; toast('Jawaban tidak tercatat', errMsg(e), '', '⚠️'); }
-      })
-      .finally(() => { LS.set('jres:' + pin, this.res); this.pending = null; });
-    setTimeout(() => { if (this.key === 'question:' + qi) this.sent(qi, disp); }, 450);
-  },
-  sent(qi, disp) {
-    const d = disp != null ? disp : Math.max(0, ((this.room.perm || [])[qi] || [0, 1, 2, 3]).indexOf((this.res[qi] || {}).choice));
-    draw(`
-      <div class="kq-center">
-        <div class="ans c${d}" style="min-height:0;width:120px;height:120px;justify-content:center;pointer-events:none">${SHAPES[d]}</div>
-        <div class="kq-verdict" style="font-size:2rem">Jawaban terkirim</div>
-        <p class="kq-sub">Tunggu yang lain selesai menjawab. Hasilnya muncul bersamaan untuk semua peserta.</p>
-        <div class="wait-dots" aria-hidden="true"><i></i><i></i><i></i></div>
-      </div>${this.foot()}`, '', this.title());
-  },
-  lateWait() {
-    draw(`<div class="kq-center"><div class="kq-verdict">Waktu habis</div><p class="kq-sub">Menunggu pengajar membuka hasil soal ini.</p><div class="wait-dots" aria-hidden="true"><i></i><i></i><i></i></div></div>${this.foot()}`, 'timeout', this.title());
-  },
-  async standing() {
-    const rows = await sel('room_players', q => q.eq('room_pin', this.pin).order('score', { ascending: false }));
-    const i = rows.findIndex(p => p.user_id === UID);
-    return { rows, i, me: rows[i] };
-  },
-  async result(tok) {
-    if (this.pending) await this.pending;
-    const r = this.room, qi = r.q_index, q = Q[qi];
-    if (!q) return this.mismatch();
-    let st = null; try { st = await this.standing(); } catch (e) { }
-    if (tok !== this.token) return;
-    const res = this.res[qi];
-    const timeout = !res || res.late, ok = !!(res && res.correct);
-    const unknown = res && res.unknown;
-    const mood = unknown ? 'board' : (timeout ? 'timeout' : (ok ? 'correct' : 'wrong'));
-    unknown ? 0 : (timeout ? sfx.late() : (ok ? sfx.ok() : sfx.no()));
-    draw(`
-      <div class="kq-center">
-        <div class="kq-verdict">${unknown ? 'Jawaban tercatat' : (timeout ? 'Waktu habis' : (ok ? 'Benar!' : 'Kurang tepat'))}</div>
-        ${ok ? `<div class="kq-pts">+${idn(res.points)}</div>` : ''}
-        ${ok && res.streak > 1 ? `<div class="kq-streak">Beruntun ×${res.streak}${res.bonus ? ` (bonus +${res.bonus})` : ''}</div>` : ''}
-        <div class="kq-exp"><b>Jawaban: ${rich(q.o[q.a])}</b><p>${rich(q.e)}</p></div>
-        ${st && st.me ? `<div class="kq-rank">Skor ${idn(st.me.score)} | Peringkat ${st.i + 1} dari ${st.rows.length}</div>` : ''}
-        <p class="kq-sub">Lihat layar pengajar untuk papan skor.</p>
-      </div>${this.foot()}`, mood, this.title());
-  },
-  async board(tok) {
-    let st = null; try { st = await this.standing(); } catch (e) { }
-    if (tok !== this.token) return;
-    if (!st) return this.lateWait();
-    const r = st.rows.map(p => ({ name: (p.avatar || '') + ' ' + p.nickname, score: p.score, prev: p.score, me: p.user_id === UID }));
-    const above = st.i > 0 ? st.rows[st.i - 1] : null;
-    const tip = st.me ? (st.i === 0 ? 'Kamu memimpin! Pertahankan.' : `Kurang ${idn(above.score - st.me.score)} poin untuk menyalip ${esc(above.nickname)}.`) : '';
-    draw(boardHtml(r, false, false, `<p class="kq-sub">${tip} Menunggu soal berikutnya.</p>`), 'board', this.title());
-  },
-  async final(tok) {
-    clearInterval(this.poll);
-    let st = null; try { st = await this.standing(); } catch (e) { }
-    if (tok !== this.token) return;
-    if (!st || !st.me) { LS.del('joined'); return this.closed(); }
-    const me = st.me, rank = st.i + 1, n = this.room.q_count;
-    const lvBefore = levelOf(P.xp);
-    const rows = [['Ikut room sampai selesai', 30]];
-    if (me.correct) rows.push([`${me.correct} jawaban benar`, me.correct * 10]);
-    const pod = [0, 100, 60, 40][rank] || 0;
-    if (pod) rows.push([`Peringkat ${rank} di kelas`, pod]);
-    const key = 'online:' + this.pin;
-    const fresh = !P.awarded[key];
-    if (fresh) {
-      P.awarded[key] = 1; P.games++; P.bestScore = Math.max(P.bestScore, me.score);
-      addXp(rows.reduce((s, x) => s + x[1], 0));
-    }
-    const earned = [];
-    const tryB = id => { if (giveBadge(id)) earned.push(id); };
-    tryB('online'); tryB('first');
-    if (rank <= 3) tryB('podium');
-    if (rank === 1) tryB('champ');
-    if (me.best_streak >= 5) tryB('streak5');
-    if (me.best_streak >= 10) tryB('streak10');
-    if (me.correct === n) tryB('perfect');
-    sfx.end(); if (rank <= 3) confetti();
-    LS.del('joined');
-    const log = Object.keys(this.res).map(k => ({ i: +k, ok: !!this.res[k].correct, timeout: !!this.res[k].late, picked: this.res[k].choice })).filter(l => Q[l.i]).sort((a, b) => a.i - b.i);
-    const r = st.rows.map(p => ({ name: (p.avatar || '') + ' ' + p.nickname, score: p.score, me: p.user_id === UID }));
-    draw(`
-      <div class="kq-center">
-        <div class="kq-verdict" style="font-size:2rem">${rank === 1 ? 'Juara kelas!' : 'Hasil akhir'}</div>
-        ${podiumHtml(r)}
-        <p class="kq-sub"><b>Peringkatmu: ${rank} dari ${st.rows.length}.</b></p>
-        <div class="stats">
-          <div><b>${idn(me.score)}</b><span>Skor total</span></div>
-          <div><b>${me.correct}/${n}</b><span>Jawaban benar</span></div>
-          <div><b>×${me.best_streak}</b><span>Beruntun terbaik</span></div>
-          <div><b>${rank}</b><span>Peringkat</span></div>
-        </div>
-        ${fresh ? xpBoxHtml(rows, lvBefore) : '<p class="kq-sub">XP untuk room ini sudah masuk ke profilmu.</p>'}
-        ${earned.length ? `<div class="newb">${earned.map(id => `<span>${BADGE[id][1]} ${esc(BADGE[id][2])}</span>`).join('')}</div>` : ''}
-        ${masteryHtml(log)}
-        ${reviewHtml(log)}
-        <div class="btnrow">
-          <button class="kq-btn light" id="jHome" data-focus>Menu kuis</button>
-          <button class="kq-btn ghost" id="toSum">Kembali ke rangkuman</button>
-        </div>
-      </div>`, 'board', 'Hasil akhir');
-    animateXpBox(); bindMastery();
-    on('#jHome', () => Quiz.home());
-    on('#toSum', () => showView('summary'));
-  },
-  closed() {
-    this.stop(); LS.del('joined');
-    draw(`<div class="kq-center"><div class="kq-verdict" style="font-size:2rem">Room ditutup</div><p class="kq-sub">Pengajar sudah menutup room ini.</p><button class="kq-btn light" id="jHome" data-focus>Menu kuis</button></div>`, 'board', 'Room ditutup');
-    on('#jHome', () => Quiz.home());
-  }
-};
-
-/* =====================================================================
-   13. Peringkat kelas & rekap nilai
-   ===================================================================== */
-const Rekap = {
-  open(cls) {
-    cls = (cls || P.classCode || CFG.defaultClass || '').toUpperCase();
-    draw(`
-      <div class="kq-center" style="justify-content:flex-start">
-        <div class="kq-logo" style="font-size:clamp(1.8rem,5vw,2.6rem)">Peringkat & rekap</div>
-        <div class="kq-form" style="flex-direction:row;width:min(460px,100%)">
-          <input type="text" id="rkCls" maxlength="16" placeholder="Kode kelas" value="${esc(cls)}" aria-label="Kode kelas" style="flex:1;min-width:0" data-focus>
-          <button class="kq-btn" id="rkGo">Tampilkan</button>
-        </div>
-        <div id="rk" style="width:100%;display:flex;flex-direction:column;align-items:center;gap:14px"></div>
-        <button class="kq-btn ghost" id="rkBack">Menu kuis</button>
-      </div>`, 'board', 'Peringkat & rekap');
-    const go = () => this.load($('#rkCls').value.trim().toUpperCase());
-    on('#rkGo', go);
-    on('#rkCls', e => { if (e.key === 'Enter') go(); }, 'keydown');
-    on('#rkBack', () => Quiz.home());
-    if (CLASS_RE.test(cls)) this.load(cls);
-  },
-  async load(cls) {
-    const box = $('#rk');
-    if (!CLASS_RE.test(cls)) { box.innerHTML = `<p class="kq-sub">${esc(ERR.BAD_CLASS)}</p>`; return; }
-    box.innerHTML = '<div class="wait-dots" aria-hidden="true"><i></i><i></i><i></i></div>';
-    try {
-      const [pro, rooms] = await Promise.all([
-        sel('profiles', q => q.eq('class_code', cls).order('xp', { ascending: false }).limit(50)),
-        sel('rooms', q => q.eq('class_code', cls).order('created_at', { ascending: false }).limit(40))
-      ]);
-      const mx = Math.max(1, ...pro.map(p => p.xp));
-      box.innerHTML = `
-        <b>Peringkat XP kelas ${esc(cls)}</b>
-        <div class="lb">${pro.map((p, i) => `<div class="lb-row ${p.user_id === UID ? 'me' : ''}"><div class="lb-fill" data-w="${Math.max(4, p.xp / mx * 100)}" style="width:0"></div><span class="lb-rank">${i + 1}</span><span class="lb-name">${esc((p.avatar || '') + ' ' + p.nickname)}${p.user_id === UID ? ' (kamu)' : ''} <small style="opacity:.8">Lv ${levelOf(p.xp)} | ${(p.badges || []).length} lencana</small></span><span class="lb-score">${idn(p.xp)} XP</span></div>`).join('') || '<p class="kq-sub">Belum ada profil dengan kode kelas ini.</p>'}</div>
-        <b>Riwayat sesi room</b>
-        <div class="rk-list">${rooms.map(r => `<button data-pin="${esc(r.pin)}"><b>${esc(r.title || r.material_id)}</b><span>PIN ${fmtPin(r.pin)}</span><span>${new Date(r.created_at).toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' })} | ${r.q_count} soal</span><span>${r.status === 'final' ? 'Selesai' : (r.status === 'closed' ? 'Ditutup' : 'Berjalan')}</span></button>`).join('') || '<p class="kq-sub">Belum ada sesi untuk kelas ini.</p>'}</div>`;
-      animateBoard();
-      $$('[data-pin]', box).forEach(b => b.addEventListener('click', () => this.room(rooms.find(r => r.pin === b.dataset.pin))));
-    } catch (e) { box.innerHTML = `<p class="kq-sub">${esc(errMsg(e))}</p>`; }
-  },
-  async room(room) {
-    loading('Memuat nilai sesi…', 'Rekap');
-    try {
-      const ps = await sel('room_players', q => q.eq('room_pin', room.pin).order('score', { ascending: false }));
-      draw(`
-        <div class="kq-center" style="justify-content:flex-start">
-          <div class="kq-verdict" style="font-size:1.6rem">${esc(room.title || room.material_id)}</div>
-          <p class="kq-sub">Kelas ${esc(room.class_code)} | PIN ${fmtPin(room.pin)} | ${new Date(room.created_at).toLocaleString('id-ID')} | ${ps.length} peserta</p>
-          <div class="rk-table tw"><table>
-            <thead><tr><th>#</th><th>Nama</th><th>NIM</th><th>Skor</th><th>Benar</th><th>Dijawab</th><th>Beruntun</th></tr></thead>
-            <tbody>${ps.map((p, i) => `<tr><td>${i + 1}</td><td>${esc((p.avatar || '') + ' ' + p.nickname)}</td><td>${esc(p.student_id || '')}</td><td>${idn(p.score)}</td><td>${p.correct}/${room.q_count}</td><td>${p.answered}</td><td>×${p.best_streak}</td></tr>`).join('') || '<tr><td colspan="7">Tidak ada peserta.</td></tr>'}</tbody>
-          </table></div>
-          <div class="btnrow">
-            <button class="kq-btn light" id="rkCsv" data-focus>Unduh CSV</button>
-            <button class="kq-btn ghost" id="rkBack2">Kembali</button>
-          </div>
-        </div>`, 'board', 'Rekap sesi');
-      on('#rkCsv', () => {
-        const rows = [['Peringkat', 'Nama', 'NIM', 'Kelas', 'Skor', 'Benar', 'Jumlah soal', 'Dijawab', 'Beruntun terbaik', 'PIN', 'Materi', 'Tanggal']];
-        const d = new Date(room.created_at).toLocaleString('id-ID');
-        ps.forEach((p, i) => rows.push([i + 1, p.nickname, p.student_id, p.class_code || room.class_code, p.score, p.correct, room.q_count, p.answered, p.best_streak, room.pin, room.title || room.material_id, d]));
-        csvDownload(`nilai-${room.class_code}-${room.material_id}-${room.pin}.csv`, rows);
-      });
-      on('#rkBack2', () => this.open(room.class_code));
-    } catch (e) { failScreen(e, () => this.open(room.class_code)); }
-  }
-};
 
 /* =====================================================================
    15. Visual & motion: dipasang otomatis dari atribut data-*
@@ -3095,18 +2339,6 @@ document.addEventListener('keydown', e => {
   if (idx >= 0) { e.preventDefault(); KEYPICK(idx); }
 });
 
-/* Perubahan koneksi: segarkan menu kuis agar tombol online ikut menyala/mati */
-function onNetChange() {
-  const live = Host.phase !== 'idle' || Join.pin;
-  toast(navigator.onLine ? 'Kembali online' : 'Koneksi terputus',
-        navigator.onLine ? 'Mode room online tersedia lagi.' : (live ? 'Sesi online terhenti sampai koneksi kembali.' : 'Latihan solo tetap bisa dimainkan.'),
-        '', navigator.onLine ? '📶' : '✈️');
-  if (navigator.onLine && profileReady('online')) queueSync();
-  if (!live && !$('#view-quiz').hidden && $('#kq-root').querySelector('.modes')) Quiz.home();
-}
-window.addEventListener('online', onNetChange);
-window.addEventListener('offline', onNetChange);
-
 function init() {
   if (!$('#view-summary')) console.warn('[KuisKelas] <main id="view-summary"> tidak ditemukan.');
   buildShell();
@@ -3114,15 +2346,12 @@ function init() {
   enhanceSummary();
   initViz();
   dailyCheckIn();
-  if (netOK() && profileReady('online')) setTimeout(queueSync, 2500);
-  const m = location.hash.match(/join=(\d{6})/);
-  if (m && netOK()) { showView('quiz'); Join.form(m[1]); }
-  else if (location.hash === '#quiz') showView('quiz');
+  if (location.hash === '#quiz') showView('quiz');
 }
 
 window.KQ = {
   version: VERSION,
-  online: () => netOK(),
+  online: () => false,
   /* KQ.award('nama-unik', 25, 'Label') untuk interaksi khusus materi; sekali per kunci */
   award: (key, amount, label) => award(key ? MID + ':x:' + key : null, Math.min(100, amount || 0), label),
   profile: () => JSON.parse(JSON.stringify(P)),
