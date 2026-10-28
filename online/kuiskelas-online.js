@@ -592,7 +592,7 @@ function openProfile() {
 async function loadClassBoard(el, cls, limit) {
   if (!el) return;
   try {
-    const rows = await sel('profiles', q => q.eq('class_code', cls).order('xp', { ascending: false }).limit(limit), PROFILE_COLS);
+    const rows = await sel('kq_profiles', q => q.eq('class_code', cls).order('xp', { ascending: false }).limit(limit), PROFILE_COLS);
     if (!rows.length) { el.innerHTML = '<span class="muted">Belum ada anggota kelas ini di peringkat.</span>'; return; }
     el.innerHTML = rows.map((r, i) => `<div class="${r.user_id === UID ? 'me' : ''}"><b>${i + 1}</b><span>${esc(r.avatar || '🙂')}</span><span>${esc(r.nickname)}${r.user_id === UID ? ' (kamu)' : ''}<span class="muted">Lv ${levelOf(r.xp)} | ${(r.badges || []).length} lencana</span></span><b>${idn(r.xp)} XP</b></div>`).join('');
   } catch (e) { el.innerHTML = `<span class="muted">${esc(errMsg(e))}</span>`; }
@@ -761,7 +761,7 @@ async function removeCh(ch) { if (!ch) return; try { const c = await sb(); c.rem
 /* NIM peserta disimpan terpisah (room_roster) dan hanya bisa dibaca pemandu room */
 async function withNim(pin, players) {
   let nim = {};
-  try { (await sel('room_roster', q => q.eq('room_pin', pin))).forEach(r => { nim[r.user_id] = r.student_id; }); } catch (e) { }
+  try { (await sel('kq_room_roster', q => q.eq('room_pin', pin))).forEach(r => { nim[r.user_id] = r.student_id; }); } catch (e) { }
   return players.map(p => Object.assign({}, p, { student_id: nim[p.user_id] || '' }));
 }
 
@@ -848,7 +848,7 @@ const Host = {
     loading('Menyambung ulang ke room ' + fmtPin(pin) + '…', 'Room ' + pin);
     try {
       await sb();
-      const [room] = await sel('rooms', q => q.eq('pin', pin));
+      const [room] = await sel('kq_rooms', q => q.eq('pin', pin));
       if (!room) throw new Error('ROOM_NOT_FOUND');
       if (room.host_uid !== UID) throw new Error('NOT_HOST');
       const Q = roomQuestions(room);
@@ -868,15 +868,15 @@ const Host = {
     const c = await sb();
     removeCh(this.ch);
     this.ch = c.channel('kqh-' + this.pin + '-' + Math.random().toString(36).slice(2, 7))
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'room_players', filter: 'room_pin=eq.' + this.pin }, () => this.refreshPlayers())
-      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'answers', filter: 'room_pin=eq.' + this.pin }, p => this.onAnswer(p.new))
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'kq_room_players', filter: 'room_pin=eq.' + this.pin }, () => this.refreshPlayers())
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'kq_answers', filter: 'room_pin=eq.' + this.pin }, p => this.onAnswer(p.new))
       .subscribe();
     clearInterval(this.poll);
     this.poll = setInterval(() => this.pollTick(), 2500);   // cadangan bila realtime tidak aktif
     await this.refreshPlayers();
   },
   async refreshPlayers() {
-    try { this.players = await sel('room_players', q => q.eq('room_pin', this.pin).order('score', { ascending: false })); } catch (e) { return; }
+    try { this.players = await sel('kq_room_players', q => q.eq('room_pin', this.pin).order('score', { ascending: false })); } catch (e) { return; }
     if (this.phase === 'lobby') this.paintTiles();
     if (this.phase === 'question') { this.paintCounter(); this.checkAll(); }
   },
@@ -884,7 +884,7 @@ const Host = {
     await this.refreshPlayers();
     if (this.phase !== 'question') return;
     try {
-      const rows = await sel('answers', q => q.eq('room_pin', this.pin).eq('q_index', this.qi));
+      const rows = await sel('kq_answers', q => q.eq('room_pin', this.pin).eq('q_index', this.qi));
       rows.forEach(r => this.answered.add(r.user_id));
       this.paintCounter(); this.checkAll();
     } catch (e) { }
@@ -993,7 +993,7 @@ const Host = {
     await sleep(900);   // beri waktu jawaban detik terakhir tiba di server
     try { await this.adv('result', this.qi); } catch (e) { this.phase = 'question'; toast('Gagal menutup soal', errMsg(e), '', '⚠️'); return; }
     let rows = [];
-    try { rows = await sel('answers', q => q.eq('room_pin', this.pin).eq('q_index', this.qi)); } catch (e) { }
+    try { rows = await sel('kq_answers', q => q.eq('room_pin', this.pin).eq('q_index', this.qi)); } catch (e) { }
     const q = this.Q[this.qi], p = this.perm[this.qi] || [0, 1, 2, 3];
     const counts = [0, 0, 0, 0]; this.lastPts = {};
     rows.forEach(r => { counts[r.choice]++; this.lastPts[r.user_id] = r.points; });
@@ -1103,7 +1103,7 @@ const Join = {
       const info = await rpc('kq_join_room', { p_pin: pin, p_student_id: P.studentId, p_nickname: P.nickname, p_avatar: P.avatar, p_class: P.classCode });
       const t1 = Date.now();
       this.off = parseTs(info.server_now) - (t0 + t1) / 2;
-      const [room] = await sel('rooms', q => q.eq('pin', pin));
+      const [room] = await sel('kq_rooms', q => q.eq('pin', pin));
       if (!room) throw new Error('ROOM_NOT_FOUND');
       this.Q = roomQuestions(room);
       this.sections = room.sections || {};
@@ -1115,7 +1115,7 @@ const Join = {
       sfx.join();
       const c = await sb();
       this.ch = c.channel('kqp-' + pin + '-' + Math.random().toString(36).slice(2, 7))
-        .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'rooms', filter: 'pin=eq.' + pin }, p => this.apply(p.new))
+        .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'kq_rooms', filter: 'pin=eq.' + pin }, p => this.apply(p.new))
         .subscribe();
       this.poll = setInterval(() => this.fetchRoom(), 2000);   // cadangan bila realtime tidak aktif
       this.apply(room);
@@ -1123,7 +1123,7 @@ const Join = {
   },
   async fetchRoom() {
     if (!this.pin) return;
-    try { const [r] = await sel('rooms', q => q.eq('pin', this.pin)); if (r) this.apply(r); } catch (e) { }
+    try { const [r] = await sel('kq_rooms', q => q.eq('pin', this.pin)); if (r) this.apply(r); } catch (e) { }
   },
   async reveal() {
     try { mergeReveal(this.Q, await rpc('kq_room_reveal', { p_pin: this.pin })); } catch (e) { }
@@ -1231,7 +1231,7 @@ const Join = {
     draw(`<div class="kq-center"><div class="kq-verdict">Waktu habis</div><p class="kq-sub">Menunggu pengajar membuka hasil soal ini.</p><div class="wait-dots" aria-hidden="true"><i></i><i></i><i></i></div></div>${this.foot()}`, 'timeout', this.title());
   },
   async standing() {
-    const rows = await sel('room_players', q => q.eq('room_pin', this.pin).order('score', { ascending: false }));
+    const rows = await sel('kq_room_players', q => q.eq('room_pin', this.pin).order('score', { ascending: false }));
     const i = rows.findIndex(p => p.user_id === UID);
     return { rows, i, me: rows[i] };
   },
@@ -1359,8 +1359,8 @@ const Rekap = {
     try {
       await sb();
       const [pro, rooms] = await Promise.all([
-        sel('profiles', q => q.eq('class_code', cls).order('xp', { ascending: false }).limit(50), PROFILE_COLS),
-        sel('rooms', q => q.eq('class_code', cls).eq('host_uid', UID).order('created_at', { ascending: false }).limit(40), 'pin,title,material_id,material_path,class_code,status,q_count,created_at')
+        sel('kq_profiles', q => q.eq('class_code', cls).order('xp', { ascending: false }).limit(50), PROFILE_COLS),
+        sel('kq_rooms', q => q.eq('class_code', cls).eq('host_uid', UID).order('created_at', { ascending: false }).limit(40), 'pin,title,material_id,material_path,class_code,status,q_count,created_at')
       ]);
       const mx = Math.max(1, ...pro.map(p => p.xp));
       box.innerHTML = `
@@ -1375,7 +1375,7 @@ const Rekap = {
   async room(room) {
     loading('Memuat nilai sesi…', 'Rekap');
     try {
-      const ps = await withNim(room.pin, await sel('room_players', q => q.eq('room_pin', room.pin).order('score', { ascending: false })));
+      const ps = await withNim(room.pin, await sel('kq_room_players', q => q.eq('room_pin', room.pin).order('score', { ascending: false })));
       draw(`
         <div class="kq-center" style="justify-content:flex-start">
           <div class="kq-verdict" style="font-size:1.6rem">${esc(room.title || room.material_id)}</div>

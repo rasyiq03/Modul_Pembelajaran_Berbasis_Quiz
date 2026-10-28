@@ -1,0 +1,181 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+  Token warna disamakan dengan mesin materi (engine/kuiskelas.css):
+  --bg #F4F5FA · --surface #FFF · --ink #161A3C · --muted #5B6285 · --line #D9DCEC
+  --accent #46178F · --soft #EEE8FA · fokus #F5B301 · warna Kahoot merah/biru/kuning/hijau.
+  Mode gelap mengikuti sistem, seperti materi; data-theme="light|dark" memaksa salah satunya.
+*/
+@layer base {
+  :root {
+    --background: 230 37% 97%;
+    --foreground: 234 46% 16%;
+    --card: 0 0% 100%;
+    --card-foreground: 234 46% 16%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 234 46% 16%;
+    --primary: 264 72% 33%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 260 64% 95%;
+    --secondary-foreground: 234 46% 16%;
+    --muted: 260 64% 95%;
+    --muted-foreground: 230 19% 44%;
+    --accent: 260 64% 95%;
+    --accent-foreground: 264 72% 33%;
+    --destructive: 351 80% 43%;
+    --destructive-foreground: 0 0% 100%;
+    --success: 108 84% 29%;
+    --success-foreground: 0 0% 100%;
+    --warning: 44 76% 45%;
+    --warning-foreground: 0 0% 100%;
+    --warning-soft: 46 81% 92%;
+    --border: 231 33% 89%;
+    --input: 231 33% 89%;
+    --ring: 44 99% 48%;
+    /* Warna Kahoot dari panggung kuis materi */
+    --chart-1: 350 79% 50%;
+    --chart-2: 213 83% 44%;
+    --chart-3: 44 100% 42%;
+    --chart-4: 108 84% 29%;
+    --chart-5: 264 72% 33%;
+    --radius: 0.5rem;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme='light']) {
+      --background: 235 44% 10%;
+      --foreground: 232 71% 96%;
+      --card: 235 42% 15%;
+      --card-foreground: 232 71% 96%;
+      --popover: 235 42% 15%;
+      --popover-foreground: 232 71% 96%;
+      --primary: 260 77% 78%;
+      --primary-foreground: 259 69% 14%;
+      --secondary: 249 46% 22%;
+      --secondary-foreground: 232 71% 96%;
+      --muted: 249 46% 22%;
+      --muted-foreground: 231 30% 73%;
+      --accent: 249 46% 22%;
+      --accent-foreground: 260 77% 78%;
+      --destructive: 351 75% 62%;
+      --destructive-foreground: 259 69% 14%;
+      --success: 108 55% 55%;
+      --success-foreground: 259 69% 14%;
+      --warning: 45 57% 55%;
+      --warning-foreground: 259 69% 14%;
+      --warning-soft: 48 48% 12%;
+      --border: 235 36% 26%;
+      --input: 235 36% 26%;
+      --chart-5: 260 77% 78%;
+    }
+  }
+  :root[data-theme='dark'] {
+    --background: 235 44% 10%;
+    --foreground: 232 71% 96%;
+    --card: 235 42% 15%;
+    --card-foreground: 232 71% 96%;
+    --popover: 235 42% 15%;
+    --popover-foreground: 232 71% 96%;
+    --primary: 260 77% 78%;
+    --primary-foreground: 259 69% 14%;
+    --secondary: 249 46% 22%;
+    --secondary-foreground: 232 71% 96%;
+    --muted: 249 46% 22%;
+    --muted-foreground: 231 30% 73%;
+    --accent: 249 46% 22%;
+    --accent-foreground: 260 77% 78%;
+    --destructive: 351 75% 62%;
+    --destructive-foreground: 259 69% 14%;
+    --success: 108 55% 55%;
+    --success-foreground: 259 69% 14%;
+    --warning: 45 57% 55%;
+    --warning-foreground: 259 69% 14%;
+    --warning-soft: 48 48% 12%;
+    --border: 235 36% 26%;
+    --input: 235 36% 26%;
+    --chart-5: 260 77% 78%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  html {
+    color-scheme: light dark;
+    scroll-padding-top: 76px;
+  }
+  /* Seperti materi: teks bacaan serif, judul & kontrol Montserrat */
+  body {
+    @apply bg-background font-body text-foreground antialiased;
+    font-size: 17px;
+    line-height: 1.65;
+  }
+  h1, h2, h3, h4, h5, h6,
+  button, input, select, textarea, label, th, nav, [role='tab'], [role='menuitem'], [role='option'] {
+    @apply font-heading;
+  }
+  h1, h2, h3, h4 {
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+  }
+  h1 {
+    @apply font-extrabold;
+    letter-spacing: -0.02em;
+  }
+  a {
+    @apply text-primary;
+  }
+  /* Cincin fokus kuning seperti materi */
+  :focus-visible {
+    outline: 3px solid hsl(var(--ring));
+    outline-offset: 2px;
+  }
+}
+
+@layer utilities {
+  .container-page {
+    @apply mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8;
+  }
+  .container-wide {
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+  .surface-card {
+    @apply rounded-lg border-[1.5px] border-border bg-card;
+  }
+  /* Kotak catatan bergaris kiri (.note di materi) */
+  .note-box {
+    @apply rounded-r-md border-l-4 border-primary bg-secondary px-4 py-3;
+  }
+  .note-box-warn {
+    @apply rounded-r-md border-l-4 border-warning px-4 py-3;
+    background: hsl(var(--warning-soft));
+  }
+  /* Pil seperti tab materi */
+  .pill-tabs {
+    @apply gap-1.5 rounded-full bg-secondary p-1;   /* tampilan (flex) diatur di elemen, mis. hidden md:inline-flex */
+  }
+  .eyebrow {
+    @apply font-heading text-xs font-bold uppercase tracking-[0.12em] text-muted-foreground;
+  }
+  .focus-ring {
+    @apply outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
+
+/* Iframe pembaca materi: materi membawa latar & mode gelapnya sendiri */
+.material-iframe {
+  display: block;
+  width: 100%;
+  height: 78vh;
+  min-height: 520px;
+  border: 0;
+  background: hsl(var(--background));
+}

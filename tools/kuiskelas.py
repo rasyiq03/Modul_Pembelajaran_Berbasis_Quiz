@@ -3,10 +3,10 @@
 
   python3 tools/kuiskelas.py sync       Salin engine/kuiskelas.{js,css} ke semua file materi
   python3 tools/kuiskelas.py manifest   Tulis materi.json (daftar materi untuk KuisKelas Online)
-  python3 tools/kuiskelas.py check      Pastikan semua materi memakai mesin terbaru dan manifest mutakhir
+  python3 tools/kuiskelas.py check      Pastikan materi memakai mesin terbaru, manifest mutakhir, dan migrasi KuisKelas web/ = online/schema.sql
   python3 tools/kuiskelas.py            sync lalu manifest
 
-Materi = setiap file .html di dalam folder mata kuliah (bukan index.html, engine/, online/, tools/).
+Materi = setiap file .html di dalam folder mata kuliah (bukan index.html, engine/, online/, tools/, web/).
 Hanya blok mesin yang disentuh; isi materi, soal, dan skrip khusus materi tidak diubah.
 """
 import json
@@ -20,7 +20,10 @@ ENGINE_CSS = ROOT / 'engine' / 'kuiskelas.css'
 MANIFEST = ROOT / 'materi.json'
 # Kunci teks soal, ditulis gaya JS (q: "...") maupun JSON ("q": "...")
 Q_KEY = re.compile(r"""(?<![\w$])["']?q["']?\s*:\s*["'`]""")
-SKIP_DIRS = {'engine', 'online', 'tools', 'node_modules'}
+SKIP_DIRS = {'engine', 'online', 'tools', 'web', 'node_modules'}
+# Skema KuisKelas Online juga dipasang sebagai migrasi platform web/; keduanya harus identik
+KQ_SCHEMA = ROOT / 'online' / 'schema.sql'
+KQ_MIGRATION = ROOT / 'web' / 'supabase' / 'migrations' / '20261028000400_kuiskelas_online.sql'
 
 CSS_MARK = '<!-- KUISKELAS:ENGINE-CSS -->'
 JS_MARK = '<!-- KUISKELAS:ENGINE-JS -->'
@@ -122,6 +125,8 @@ def cmd_check():
             bad.append(f'masih memuat kode online: {rel}')
     if not MANIFEST.exists() or MANIFEST.read_text(encoding='utf-8') != manifest_text():
         bad.append('materi.json belum mutakhir')
+    if KQ_MIGRATION.exists() and KQ_MIGRATION.read_bytes() != KQ_SCHEMA.read_bytes():
+        bad.append(f'{KQ_MIGRATION.relative_to(ROOT)} berbeda dari online/schema.sql (salin ulang)')
     for b in bad:
         print('  ' + b)
     print('check: ' + ('gagal, jalankan "python3 tools/kuiskelas.py"' if bad else 'semua materi mutakhir'))
