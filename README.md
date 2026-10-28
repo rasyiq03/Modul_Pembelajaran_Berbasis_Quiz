@@ -6,6 +6,7 @@ Kumpulan modul pembelajaran. Setiap modul adalah **satu file HTML mandiri** beri
 |---|---|---|---|
 | **Materi (offline)** | `<Mata Kuliah>/*.html` | Tidak | Rangkuman, lab, bank soal, latihan solo melawan bot, profil, XP, level, lencana |
 | **KuisKelas Online** | `index.html` + `online/` | Ya (Supabase) | Katalog semua materi, room kelas dengan PIN, layar pengajar, peringkat XP kelas, rekap nilai CSV |
+| **Platform web** | `web/` (Next.js) | Ya (Supabase) | Akun & admin, katalog mata kuliah, pembaca materi aman, enrollment key, bank soal, kuis mandiri & live. Lihat [`web/README.md`](web/README.md) |
 
 File materi tidak tahu apa pun tentang mode online. KuisKelas Online **membaca** soal dari file materi (lewat `materi.json`) tanpa mengubahnya, lalu menyimpan soal itu ke room. Jadi:
 
@@ -26,6 +27,7 @@ File materi tidak tahu apa pun tentang mode online. KuisKelas Online **membaca**
 │   ├── kuiskelas-online.css
 │   └── schema.sql             ← skema database + fungsi + keamanan (RLS)
 ├── tools/kuiskelas.py         ← sinkron mesin & manifest
+├── web/                       ← platform Next.js (memakai proyek Supabase yang sama)
 └── <Mata Kuliah>/*.html       ← materi
 ```
 
@@ -41,11 +43,12 @@ File materi tidak tahu apa pun tentang mode online. KuisKelas Online **membaca**
 
 ## Mengaktifkan mode online (sekali saja)
 
-1. Buat proyek gratis di [supabase.com](https://supabase.com).
-2. **Authentication → Sign In / Providers →** aktifkan *Allow anonymous sign-ins*.
-3. **SQL Editor →** tempel seluruh isi `online/schema.sql` → *Run*. Berkas ini aman dijalankan ulang.
-4. **Project Settings → API →** salin *Project URL* dan *anon public key* ke `online/config.js`.
-5. Unggah repo ke hosting statis, misalnya **GitHub Pages** (Settings → Pages → branch `main`, folder `/`). Bagikan alamat `https://<user>.github.io/<repo>/`.
+`online/config.js` sudah berisi proyek Supabase `pwkpanjngtjnujyuctxl`, yang juga dipakai platform `web/`. Tabel KuisKelas berawalan `kq_` (`kq_profiles`, `kq_rooms`, dan seterusnya), jadi tidak bentrok dengan tabel platform.
+
+1. **Authentication → Sign In / Providers →** aktifkan *Allow anonymous sign-ins*.
+2. **SQL Editor →** jalankan `online/schema.sql`. Kalau platform web juga dipasang, cukup jalankan semua file `web/supabase/migrations/` berurutan, karena file terakhirnya adalah salinan persis `online/schema.sql`. Semuanya aman dijalankan ulang.
+3. Bila memakai proyek lain, ganti *Project URL* dan *anon public key* di `online/config.js`.
+4. Unggah repo ke hosting statis, misalnya **GitHub Pages** (Settings → Pages → branch `main`, folder `/`). Bagikan alamat `https://<user>.github.io/<repo>/`.
 
 Anon key memang boleh publik. Keamanan data dijaga oleh `schema.sql`:
 - Tabel tidak bisa ditulis langsung. Semua perubahan lewat fungsi server (`kq_create_room`, `kq_join_room`, `kq_submit_answer`, `kq_host_advance`, `kq_sync_profile`).
@@ -60,7 +63,7 @@ Anon key memang boleh publik. Keamanan data dijaga oleh `schema.sql`:
 
    ```bash
    python3 tools/kuiskelas.py          # sinkron mesin ke semua materi + perbarui materi.json
-   python3 tools/kuiskelas.py check    # pastikan semua materi memakai mesin terbaru dan manifest mutakhir
+   python3 tools/kuiskelas.py check    # mesin terbaru, manifest mutakhir, migrasi KuisKelas di web/ = online/schema.sql
    ```
 
 Perintah ini hanya mengganti blok mesin (di antara penanda `<!-- KUISKELAS:ENGINE-CSS -->` dan `<!-- KUISKELAS:ENGINE-JS -->`). Isi materi, soal, dan skrip khusus materi tidak disentuh. Mesin diubah di `engine/`, bukan di file materi.
