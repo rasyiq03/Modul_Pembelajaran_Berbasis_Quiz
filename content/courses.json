@@ -1,0 +1,41 @@
+{
+  "$comment": "Daftar mata kuliah. slug = nama folder di content/materials/. Dipakai npm run content:import dan content:check.",
+  "courses": [
+    {
+      "slug": "statistika-probabilitas",
+      "title": "Statistika & Probabilitas",
+      "description": "Penyajian data, statistika deskriptif, grafik, dan dasar peluang hingga distribusi diskret.",
+      "order": 1
+    },
+    {
+      "slug": "pengolahan-citra-digital",
+      "title": "Pengolahan Citra Digital",
+      "description": "Operasi dasar citra, histogram, konvolusi dan filter spasial, serta perbaikan kualitas citra.",
+      "order": 2
+    },
+    {
+      "slug": "komputasi-numerik",
+      "title": "Komputasi Numerik",
+      "description": "Analisis galat, metode pencarian akar, regresi kuadrat terkecil, serta diferensiasi dan integrasi numerik.",
+      "order": 3
+    },
+    {
+      "slug": "sistem-informasi",
+      "title": "Sistem Informasi",
+      "description": "Data, informasi, dan pengetahuan; SI dalam organisasi dan CRISP-DM; proses bisnis; serta domain model.",
+      "order": 4
+    },
+    {
+      "slug": "metodologi-penelitian",
+      "title": "Metodologi Penelitian",
+      "description": "Masalah dan pertanyaan penelitian, paradigma penelitian, dan penelusuran literatur secara sistematis.",
+      "order": 5
+    },
+    {
+      "slug": "kewirausahaan",
+      "title": "Kewirausahaan",
+      "description": "Pola pikir wirausaha, analisis peluang bisnis, design thinking, dan strategi pemasaran di era hybrid.",
+      "order": 6
+    }
+  ]
+}

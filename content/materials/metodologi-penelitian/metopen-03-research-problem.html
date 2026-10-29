@@ -1,0 +1,2754 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Merumuskan Masalah Riset: Rangkuman dan Kuis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&family=Source+Serif+4:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
+<!-- KUISKELAS:ENGINE-CSS -->
+<style>
+/*! KuisKelas engine CSS v2.1.0 (offline) — jangan diubah per materi; sumber: content/engine/kuiskelas.css */
+:root{
+  --bg:#F4F5FA; --surface:#FFFFFF; --ink:#161A3C; --muted:#5B6285; --line:#D9DCEC;
+  --accent:#46178F; --accent-ink:#FFFFFF; --soft:#EEE8FA; --warn:#FBF3D9; --warn-line:#C99A1B;
+  --font-head:'Montserrat',system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+  --font-body:'Source Serif 4',Georgia,'Times New Roman',serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1024; --surface:#171A38; --ink:#EDEFFC; --muted:#A5ABCF; --line:#2B2F5C;
+    --accent:#B99CF2; --accent-ink:#1A0B3B; --soft:#261E52; --warn:#2E2810; --warn-line:#8C7326;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1024; --surface:#171A38; --ink:#EDEFFC; --muted:#A5ABCF; --line:#2B2F5C;
+  --accent:#B99CF2; --accent-ink:#1A0B3B; --soft:#261E52; --warn:#2E2810; --warn-line:#8C7326;
+}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 76px);scroll-behavior:smooth}
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:18px;line-height:1.72;-webkit-text-size-adjust:100%}
+h1,h2,h3,h4{font-family:var(--font-head);line-height:1.2;margin:0}
+p{margin:0 0 1em}
+a{color:var(--accent)}
+:focus-visible{outline:3px solid #F5B301;outline-offset:2px}
+
+/* ---------- Header ---------- */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:var(--bg);border-bottom:1px solid var(--line)}
+.top-in{max-width:1120px;margin:0 auto;padding:10px 20px;display:flex;align-items:center;gap:16px;justify-content:space-between}
+.brand{font-family:var(--font-head);font-weight:800;font-size:.95rem;letter-spacing:.01em}
+.tabs{flex:none;display:flex;gap:6px;background:var(--soft);padding:4px;border-radius:999px}
+.tab{white-space:nowrap;font:700 .82rem var(--font-head);border:0;background:transparent;color:var(--ink);padding:8px 16px;border-radius:999px;cursor:pointer}
+.tab[aria-selected="true"]{background:var(--accent);color:var(--accent-ink)}
+
+/* ---------- Ringkasan ---------- */
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+.hero{padding:44px 0 28px}
+.hero h1{font-size:clamp(2rem,5.2vw,3.4rem);font-weight:800;letter-spacing:-.02em;max-width:18ch}
+.hero .lede{font-size:1.15rem;color:var(--muted);max-width:60ch;margin-top:16px}
+
+.explorer{border:1.5px solid var(--ink);border-radius:8px;padding:22px;margin:8px 0 12px;background:var(--surface)}
+.explorer h2{font-size:1.15rem;font-weight:800}
+.explorer p.sub{color:var(--muted);font-size:.95rem;margin:6px 0 18px}
+.spec{position:relative;height:54px;border-radius:6px;overflow:hidden;border:1px solid var(--line)}
+.spec input[type=range]{position:absolute;inset:0;width:100%;height:100%;margin:0;background:transparent;-webkit-appearance:none;appearance:none;cursor:ew-resize}
+.spec input[type=range]::-webkit-slider-runnable-track{background:transparent;height:54px}
+.spec input[type=range]::-moz-range-track{background:transparent;height:54px}
+.spec input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:8px;height:54px;background:#fff;border:2px solid #161A3C;border-radius:2px;box-shadow:0 0 0 2px rgba(255,255,255,.7)}
+.spec input[type=range]::-moz-range-thumb{width:6px;height:52px;background:#fff;border:2px solid #161A3C;border-radius:2px}
+.ticks{position:relative;height:34px;font:600 .74rem var(--font-head);color:var(--muted)}
+.ticks span{position:absolute;top:6px;transform:translateX(-50%);white-space:nowrap}
+.ticks span::before{content:"";position:absolute;left:50%;top:-6px;width:1px;height:6px;background:var(--muted)}
+.readout{display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:stretch;margin-top:6px}
+.swatch{width:96px;border-radius:6px;border:1px solid var(--line);min-height:96px}
+.rgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 22px}
+.rgrid dt{font:600 .74rem var(--font-head);color:var(--muted);margin:0}
+.rgrid dd{margin:0;font:700 1rem var(--font-head);word-break:break-word}
+.verdict{grid-column:1/-1;font-size:.98rem;line-height:1.5;margin:4px 0 0;padding:10px 14px;border-left:4px solid var(--accent);background:var(--soft);border-radius:0 6px 6px 0}
+.verdict.ion{border-left-color:#E21B3C}
+.presets{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;align-items:center}
+.presets button{font:600 .78rem var(--font-head);padding:7px 12px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;cursor:pointer}
+.presets button:hover{border-color:var(--accent)}
+.numin{display:flex;align-items:center;gap:8px;margin-left:auto;font:600 .8rem var(--font-head)}
+.numin input{width:120px;font:600 .9rem var(--font-head);padding:6px 8px;border:1.5px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink)}
+
+.doc{display:grid;grid-template-columns:220px minmax(0,1fr);gap:56px;padding:24px 0 80px}
+.toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 76px);align-self:start;font-family:var(--font-head);font-size:.84rem}
+.toc b{display:block;margin-bottom:10px;font-size:.9rem}
+.toc a{display:block;padding:7px 0 7px 14px;border-left:3px solid var(--line);color:var(--muted);text-decoration:none;font-weight:600;line-height:1.35}
+.toc a.on{border-left-color:var(--accent);color:var(--ink)}
+article section{margin-bottom:64px}
+article h2{font-size:clamp(1.5rem,3vw,2rem);font-weight:800;letter-spacing:-.01em;margin-bottom:18px;padding-top:6px}
+article h3{font-size:1.12rem;font-weight:700;margin:32px 0 10px}
+article ul,article ol{padding-left:1.25em;margin:0 0 1em}
+article li{margin-bottom:.4em}
+.tw{overflow-x:auto;margin:16px 0 22px;border:1px solid var(--line);border-radius:6px}
+table{border-collapse:collapse;width:100%;font-family:var(--font-head);font-size:.84rem;line-height:1.45;min-width:520px;background:var(--surface)}
+th,td{padding:10px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+th{background:var(--soft);font-weight:700}
+tr:last-child td{border-bottom:0}
+td:first-child{font-weight:700}
+.eq{font-style:italic;font-size:1.35rem;text-align:center;padding:14px 12px;margin:14px 0;background:var(--soft);border-radius:6px;overflow-x:auto;white-space:nowrap}
+.eq small{font-style:normal;font-family:var(--font-head);font-size:.78rem;color:var(--muted);display:block;margin-top:4px;white-space:normal}
+.note{border-left:4px solid var(--accent);background:var(--soft);padding:14px 18px;border-radius:0 6px 6px 0;margin:20px 0}
+.note.warn{border-left-color:var(--warn-line);background:var(--warn)}
+.note p:last-child{margin-bottom:0}
+.quote{font-family:var(--font-head);font-weight:700;font-size:1.25rem;line-height:1.4;border-left:5px solid var(--accent);padding:6px 0 6px 20px;margin:26px 0}
+.figure{margin:22px 0}
+.figure svg{width:100%;height:auto;display:block}
+.figure figcaption{font-family:var(--font-head);font-size:.78rem;color:var(--muted);margin-top:6px}
+svg text{font-family:var(--font-head);fill:var(--ink)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 18px}
+.chip{font:700 .78rem var(--font-head);padding:6px 10px;border-radius:5px;color:#111}
+
+.grp{border:1.5px dashed var(--muted);border-radius:8px;padding:12px;margin-bottom:10px}
+.grp-title{font:800 .85rem var(--font-head);margin-bottom:10px}
+.grp.cv{border-color:var(--accent)}
+.chain{display:flex;flex-wrap:wrap;align-items:stretch;gap:8px}
+.node{flex:1 1 150px;border:1.5px solid var(--line);background:var(--surface);padding:10px 12px;border-radius:6px;font-family:var(--font-head);font-size:.8rem;line-height:1.4}
+.node b{display:block;font-size:.88rem;margin-bottom:2px}
+.node span{color:var(--muted);font-family:var(--font-body);font-size:.88rem;line-height:1.4;display:block}
+.arrow{align-self:center;color:var(--accent);font:800 1.2rem var(--font-head)}
+.between{text-align:center;font:800 1.3rem var(--font-head);color:var(--accent);margin:2px 0 10px}
+
+details.bank-item{border-bottom:1px solid var(--line);padding:12px 0;font-family:var(--font-head);font-size:.9rem}
+details.bank-item summary{cursor:pointer;font-weight:700;line-height:1.45}
+details.bank-item ol{list-style:upper-alpha;margin:10px 0 8px;padding-left:1.6em;font-weight:500}
+details.bank-item li.key{font-weight:800;color:var(--accent)}
+details.bank-item p{font-family:var(--font-body);font-size:.95rem;color:var(--muted);margin:6px 0 0}
+
+@media (max-width:900px){
+  .doc{grid-template-columns:minmax(0,1fr);gap:0}
+  .toc{display:none}
+  .readout{grid-template-columns:1fr}
+  .swatch{width:100%;min-height:44px}
+  .numin{margin-left:0;width:100%}
+  .chain{flex-direction:column}
+  .arrow{transform:rotate(90deg)}
+}
+@media (max-width:520px){
+  body{font-size:17px}
+  .brand{font-size:.8rem}
+  .tab{padding:8px 12px}
+  .rgrid{grid-template-columns:1fr 1fr}
+  .ticks .edge{display:none}
+}
+
+
+/* ---------- Laboratorium mini & contoh ---------- */
+.lab{border:1.5px solid var(--ink);border-radius:8px;padding:18px 20px;margin:22px 0;background:var(--surface);font-family:var(--font-head)}
+.lab h4{font-size:1rem;font-weight:800;margin-bottom:4px}
+.lab .labp{font-size:.88rem;color:var(--muted);margin:0 0 12px;line-height:1.5}
+.lab .ctl{display:flex;flex-direction:column;gap:6px;font-size:.88rem;font-weight:600;margin-bottom:8px}
+.lab input[type=range]{width:100%;accent-color:var(--accent)}
+.lab .chk{display:flex;gap:8px;align-items:center;font-size:.85rem;font-weight:600;margin-bottom:12px}
+.mats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:10px}
+.mat{display:flex;flex-direction:column;gap:2px;font-size:.8rem;line-height:1.4}
+.mat .sw{height:64px;border-radius:6px;border:1px solid var(--line);margin-bottom:4px}
+.mat span{color:var(--muted);font-weight:600}
+.bs-stage{position:relative;height:96px;background:#fff;border:1px solid var(--line);border-radius:6px;overflow:hidden;margin:6px 0 10px}
+.bs-cross{position:absolute;left:40px;top:50%;transform:translate(-50%,-50%);font:700 30px/1 var(--font-head);color:#111}
+.bs-dot{position:absolute;top:50%;width:22px;height:22px;border-radius:50%;background:#d0021b;transform:translate(-50%,-50%);left:300px}
+.sc{display:flex;border-radius:6px;overflow:hidden;border:1px solid var(--line);margin:8px 0}
+.sc div{flex:1;height:130px;display:grid;place-items:center}
+.sc i{display:block;width:56px;height:56px;background:#808080}
+.hots-tag{display:inline-block;background:#F5B301;color:#3a2a00;font:800 .7rem var(--font-head);padding:2px 8px;border-radius:4px;margin-right:6px}
+.kq-hots{background:#F5B301;color:#3a2a00;font-weight:800;padding:6px 16px;border-radius:999px;font-size:.85rem}
+@media (max-width:520px){.mats{grid-template-columns:1fr}.mat{flex-direction:row;flex-wrap:wrap;gap:4px 12px;align-items:center}.mat .sw{width:100%;height:36px}}
+
+/* ---------- Kuis Kahoot ---------- */
+#view-quiz{background:#46178F;color:#fff;transition:background .35s;font-family:var(--font-head)}
+#view-quiz[data-mood="correct"]{background:#26890C}
+#view-quiz[data-mood="wrong"]{background:#C4162F}
+#view-quiz[data-mood="timeout"]{background:#1368CE}
+#view-quiz[data-mood="board"]{background:#2B0B5C}
+.kq-stage{max-width:1000px;margin:0 auto;padding:20px 20px 32px;min-height:640px;display:flex;flex-direction:column}
+.kq-bar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
+.kq-pill{background:rgba(0,0,0,.28);border-radius:6px;padding:7px 14px;font-weight:800;font-size:.9rem}
+.kq-mute{border:0;background:rgba(0,0,0,.28);color:#fff;font:700 .78rem var(--font-head);border-radius:6px;padding:7px 12px;cursor:pointer}
+.kq-center{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:14px;padding:14px 0}
+.kq-logo{font-weight:800;font-size:clamp(2.2rem,7vw,3.8rem);letter-spacing:-.02em}
+.kq-sub{opacity:.85;font-weight:600;max-width:46ch;line-height:1.5}
+.kq-pin{background:#fff;color:#46178F;border-radius:8px;padding:10px 26px;font-weight:800}
+.kq-pin small{display:block;font-size:.72rem;font-weight:700;color:#5b3d94}
+.kq-pin b{font-size:2rem;letter-spacing:.14em}
+.kq-form{background:#fff;border-radius:8px;padding:16px;width:min(360px,100%);display:flex;flex-direction:column;gap:10px;color:#222}
+.kq-form input[type=text]{font:700 1.1rem var(--font-head);padding:13px 14px;border:2px solid #c9c9d6;border-radius:6px;text-align:center;color:#222;background:#fff}
+.kq-form label.opt{display:flex;gap:8px;align-items:center;font:600 .82rem var(--font-head);color:#444;text-align:left}
+.kq-btn{font:800 1.05rem var(--font-head);border:0;border-radius:6px;padding:14px 26px;background:#333;color:#fff;cursor:pointer;box-shadow:0 4px 0 rgba(0,0,0,.35)}
+.kq-btn:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(0,0,0,.35)}
+.kq-btn.light{background:#fff;color:#46178F}
+.kq-btn.ghost{background:rgba(0,0,0,.28);box-shadow:none;font-size:.85rem;padding:10px 16px}
+.kq-count{font-weight:800;font-size:1.05rem;background:rgba(0,0,0,.28);padding:8px 18px;border-radius:999px}
+.kq-bigq{font-size:clamp(1.4rem,4vw,2.3rem);font-weight:800;line-height:1.3;max-width:26ch}
+.kq-bigq i,.kq-qbox i,.kq-exp i{font-family:var(--font-body);font-weight:600}
+.kq-introbar{width:min(420px,80%);height:10px;background:rgba(255,255,255,.25);border-radius:6px;overflow:hidden}
+.kq-introbar i{display:block;height:100%;background:#fff;width:0;animation:fill 3s linear forwards}
+@keyframes fill{to{width:100%}}
+.kq-qbox{background:#fff;color:#1c1c28;border-radius:8px;padding:18px 22px;font-weight:800;font-size:clamp(1.05rem,2.6vw,1.6rem);line-height:1.35;text-align:center;margin:6px 0 12px}
+.kq-timer{display:flex;align-items:center;gap:14px;margin-bottom:14px}
+.tnum{flex:none;width:56px;height:56px;border-radius:50%;background:#fff;color:#46178F;display:grid;place-items:center;font-weight:800;font-size:1.5rem}
+.tnum.low{background:#E21B3C;color:#fff;animation:pulse .5s ease-in-out infinite alternate}
+@keyframes pulse{to{transform:scale(1.12)}}
+.tbar{flex:1;height:14px;background:rgba(0,0,0,.3);border-radius:8px;overflow:hidden}
+.tbar i{display:block;height:100%;width:100%;background:#F5B301;transform-origin:left}
+.answers{display:grid;grid-template-columns:1fr 1fr;gap:12px;flex:1}
+.ans{display:flex;align-items:center;gap:16px;min-height:104px;border:0;border-radius:6px;color:#fff;font:700 clamp(1rem,2.4vw,1.35rem) var(--font-head);text-align:left;padding:14px 20px;cursor:pointer;box-shadow:0 5px 0 rgba(0,0,0,.3);line-height:1.3}
+.ans svg{flex:none;width:34px;height:34px;fill:#fff}
+.ans:active{transform:translateY(3px);box-shadow:0 2px 0 rgba(0,0,0,.3)}
+.ans.c0{background:#E21B3C}.ans.c1{background:#1368CE}.ans.c2{background:#B98400}.ans.c3{background:#26890C}
+.answers.locked .ans{pointer-events:none;opacity:.35}
+.answers.locked .ans.picked{opacity:1;outline:4px solid #fff}
+.kq-foot{display:flex;justify-content:space-between;margin-top:14px;background:rgba(0,0,0,.3);padding:10px 16px;border-radius:6px;font-weight:700;font-size:.9rem}
+.kq-verdict{font-weight:800;font-size:clamp(2rem,6vw,3.2rem)}
+.kq-pts{background:rgba(0,0,0,.3);padding:8px 28px;border-radius:999px;font-weight:800;font-size:1.6rem}
+.kq-streak{font-weight:700;background:#F5B301;color:#3a2a00;padding:6px 16px;border-radius:999px;font-size:.9rem}
+.kq-dist{display:flex;gap:12px;align-items:flex-end;height:120px;margin:4px 0}
+.kq-dist div{width:64px;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:4px;font-weight:800;font-size:.9rem}
+.kq-dist i{display:block;width:100%;min-height:6px;border-radius:4px 4px 0 0}
+.kq-dist svg{width:20px;height:20px;fill:#fff}
+.kq-dist .ok{outline:3px solid #fff;outline-offset:2px;border-radius:4px}
+.kq-dist .no{opacity:.45}
+.kq-exp{background:#fff;color:#1c1c28;border-radius:8px;padding:14px 18px;max-width:640px;text-align:left;font-size:.95rem;line-height:1.5}
+.kq-exp b{display:block;margin-bottom:4px;font-size:1rem}
+.kq-exp p{margin:0;font-family:var(--font-body);font-size:1rem;color:#333}
+.kq-rank{font-weight:700;opacity:.92}
+.lb{width:min(620px,100%);display:flex;flex-direction:column;gap:8px;text-align:left}
+.lb-row{display:grid;grid-template-columns:34px 1fr auto;gap:10px;align-items:center;background:rgba(255,255,255,.1);border-radius:6px;padding:8px 12px;position:relative;overflow:hidden}
+.lb-row.me{outline:3px solid #F5B301}
+.lb-fill{position:absolute;inset:0 auto 0 0;background:rgba(255,255,255,.16);width:0;transition:width 1s cubic-bezier(.2,.7,.2,1)}
+.lb-row>:not(.lb-fill){position:relative}
+.lb-rank{font-weight:800;opacity:.8}
+.lb-name{font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lb-score{font-weight:800}
+.podium{display:flex;align-items:flex-end;justify-content:center;gap:10px;height:230px;margin:6px 0 4px;width:min(560px,100%)}
+.pod{flex:1 1 0;min-width:0;max-width:180px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:4px;text-align:center;font-weight:700}
+.pod .nm{font-size:.9rem;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pod .bl{width:100%;border-radius:6px 6px 0 0;background:linear-gradient(#ffd75e,#F5B301);color:#3a2a00;display:grid;place-items:start center;padding-top:10px;font-weight:800;font-size:1.6rem;transform-origin:bottom;animation:rise .9s cubic-bezier(.2,.7,.2,1) both}
+.pod.p1 .bl{height:150px;animation-delay:.5s}.pod.p2 .bl{height:110px;animation-delay:.25s;background:linear-gradient(#e2e6ee,#a9b0c0)}.pod.p3 .bl{height:80px;background:linear-gradient(#e9b98a,#b9783f)}
+@keyframes rise{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;width:min(720px,100%)}
+.stats div{background:rgba(0,0,0,.28);border-radius:6px;padding:12px 8px}
+.stats b{display:block;font-size:1.4rem}
+.stats span{font-size:.74rem;opacity:.85;font-weight:600}
+.review{width:min(720px,100%);text-align:left;display:flex;flex-direction:column;gap:6px}
+.review details{background:rgba(0,0,0,.25);border-radius:6px;padding:10px 14px;font-size:.9rem}
+.review summary{cursor:pointer;font-weight:700;line-height:1.4}
+.review p{margin:8px 0 0;font-family:var(--font-body);font-size:.98rem;opacity:.95}
+.review .tag{display:inline-block;font-weight:800;font-size:.72rem;padding:2px 8px;border-radius:4px;margin-right:6px;background:#26890C}
+.review .tag.x{background:#E21B3C}.review .tag.t{background:#1368CE}
+.btnrow{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+@media (max-width:640px){
+  .ans{min-height:84px;padding:12px 14px;gap:10px}
+  .ans svg{width:26px;height:26px}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .kq-dist div{width:52px}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.01ms!important;animation-delay:0s!important;transition-duration:.01ms!important}
+}
+
+/* =====================================================================
+   KuisKelas engine: tambahan untuk profil dan gamifikasi
+   ===================================================================== */
+.top-in{gap:12px}
+.brand{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.top-r{display:flex;align-items:center;gap:10px;flex:none}
+.me-chip{display:flex;align-items:center;gap:8px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:4px 12px 4px 4px;cursor:pointer;font:700 .78rem var(--font-head)}
+.me-chip:hover{border-color:var(--accent)}
+.me-av{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:var(--soft);font-size:1.05rem;line-height:1}
+.me-lv{display:flex;flex-direction:column;gap:3px;min-width:54px;text-align:left}
+.me-lv b{font-size:.74rem;line-height:1}
+.me-bar{height:5px;border-radius:3px;background:var(--line);overflow:hidden}
+.me-bar i{display:block;height:100%;background:#F5B301;width:0;transition:width .8s cubic-bezier(.2,.7,.2,1)}
+
+/* Progres baca di daftar isi & checkpoint bab */
+.toc .prog{margin:0 0 14px;font-size:.76rem;color:var(--muted);font-weight:600}
+.toc .prog .me-bar{height:6px;margin-top:6px}
+.toc a.done{color:var(--ink)}
+.toc a.done::after{content:" ✓";color:#26890C;font-weight:800}
+.ck{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-top:26px;padding:14px 18px;border:1.5px dashed var(--line);border-radius:8px;font-family:var(--font-head);font-size:.86rem}
+.ck span{color:var(--muted);font-weight:600}
+.ck button{font:800 .84rem var(--font-head);border:0;border-radius:6px;padding:10px 16px;background:var(--accent);color:var(--accent-ink);cursor:pointer}
+.ck.done{border-style:solid;border-color:#26890C;background:color-mix(in srgb,#26890C 8%,var(--surface))}
+.ck.done button{background:transparent;color:#26890C;cursor:default;padding:10px 0}
+.lab.tried{border-color:#26890C}
+.lab-xp{float:right;font:800 .72rem var(--font-head);color:var(--muted);border:1.5px solid var(--line);border-radius:999px;padding:3px 10px;margin-left:10px}
+.lab.tried .lab-xp{color:#26890C;border-color:#26890C}
+
+/* Toast XP / lencana */
+.kq-toasts{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 18px);transform:translateX(-50%);z-index:200;display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none;width:min(420px,calc(100% - 24px))}
+.kq-toast{display:flex;align-items:center;gap:12px;background:#161A3C;color:#fff;border-radius:10px;padding:10px 16px;font:700 .9rem var(--font-head);box-shadow:0 8px 24px rgba(10,10,40,.35);animation:tin .35s cubic-bezier(.2,.7,.2,1) both;width:100%}
+.kq-toast .ic{font-size:1.5rem;line-height:1}
+.kq-toast small{display:block;font-weight:600;opacity:.8;font-size:.78rem}
+.kq-toast.xp{background:#F5B301;color:#3a2a00}
+.kq-toast.lv{background:#46178F}
+.kq-toast.out{animation:tout .3s ease-in forwards}
+@keyframes tin{from{opacity:0;transform:translateY(16px) scale(.96)}}
+@keyframes tout{to{opacity:0;transform:translateY(10px)}}
+
+/* Dialog profil */
+.kq-dlg{border:0;border-radius:12px;padding:0;width:min(560px,calc(100% - 24px));max-height:calc(100% - 40px);background:var(--surface);color:var(--ink);font-family:var(--font-head)}
+.kq-dlg::backdrop{background:rgba(14,16,36,.6)}
+.dlg-in{padding:22px;display:flex;flex-direction:column;gap:16px}
+.dlg-head{display:flex;gap:14px;align-items:center}
+.dlg-head .me-av{width:60px;height:60px;font-size:2rem}
+.dlg-head h3{font-size:1.25rem;font-weight:800}
+.dlg-head p{margin:2px 0 0;color:var(--muted);font-size:.84rem;font-weight:600}
+.dlg-x{margin-left:auto;align-self:flex-start;border:0;background:var(--soft);color:var(--ink);border-radius:6px;padding:6px 10px;font:800 .8rem var(--font-head);cursor:pointer}
+.lvbox{background:var(--soft);border-radius:8px;padding:12px 14px}
+.lvbox .row{display:flex;justify-content:space-between;font-size:.84rem;font-weight:700;margin-bottom:8px}
+.lvbox .me-bar{height:10px}
+.dstats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.dstats div{border:1.5px solid var(--line);border-radius:8px;padding:10px 6px;text-align:center}
+.dstats b{display:block;font-size:1.15rem}
+.dstats span{font-size:.7rem;color:var(--muted);font-weight:600}
+.sec-t{font-size:.9rem;font-weight:800;margin:0}
+.badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px}
+.bdg{border:1.5px solid var(--line);border-radius:8px;padding:10px 6px;text-align:center;font-size:.72rem;font-weight:700;line-height:1.3}
+.bdg .ic{display:block;font-size:1.7rem;line-height:1.2;margin-bottom:4px}
+.bdg small{display:block;font-weight:500;color:var(--muted);margin-top:3px}
+.bdg.locked{opacity:.45;filter:grayscale(1)}
+.bdg.locked .ic{opacity:.5}
+.pform{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pform label{display:flex;flex-direction:column;gap:4px;font-size:.76rem;font-weight:700;color:var(--muted)}
+.pform label.full{grid-column:1/-1}
+.pform input{font:700 .95rem var(--font-head);padding:10px 12px;border:1.5px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink)}
+.avs{display:flex;flex-wrap:wrap;gap:6px}
+.avs button{width:42px;height:42px;border-radius:50%;border:2px solid transparent;background:var(--soft);font-size:1.3rem;cursor:pointer;line-height:1}
+.avs button[aria-pressed="true"]{border-color:var(--accent);background:var(--surface)}
+.dlg-act{display:flex;gap:10px;flex-wrap:wrap;justify-content:space-between}
+.btn-s{font:800 .86rem var(--font-head);border:0;border-radius:6px;padding:11px 18px;background:var(--accent);color:var(--accent-ink);cursor:pointer}
+.btn-s.alt{background:var(--soft);color:var(--ink)}
+.btn-s.danger{background:transparent;color:#C4162F;padding-left:0}
+.err{color:#C4162F;font-size:.8rem;font-weight:700;min-height:1em}
+
+/* Layar kuis: mode dan profil ringkas */
+.modes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;width:min(640px,100%)}
+.mode{display:flex;flex-direction:column;gap:6px;text-align:left;border:0;border-radius:10px;padding:18px;background:#fff;color:#1c1c28;cursor:pointer;box-shadow:0 5px 0 rgba(0,0,0,.3);font-family:var(--font-head)}
+.mode:active{transform:translateY(3px);box-shadow:0 2px 0 rgba(0,0,0,.3)}
+.mode b{font-size:1.08rem;font-weight:800}
+.mode span{font-size:.84rem;color:#555;font-weight:600;line-height:1.4}
+.mode .shape{width:30px;height:30px;fill:#46178F;margin-bottom:4px}
+.mode.c0 .shape{fill:#E21B3C}.mode.c1 .shape{fill:#1368CE}.mode.c2 .shape{fill:#B98400}.mode.c3 .shape{fill:#26890C}
+.modes.one{grid-template-columns:1fr;width:min(440px,100%)}
+.mode[disabled]{opacity:.55;cursor:not-allowed;transform:none;box-shadow:0 5px 0 rgba(0,0,0,.3)}
+.whoami{display:flex;align-items:center;gap:12px;background:rgba(0,0,0,.25);border-radius:999px;padding:6px 16px 6px 6px;font-weight:700;border:0;color:#fff;cursor:pointer;font-family:var(--font-head)}
+.whoami .me-av{background:#fff;width:40px;height:40px;font-size:1.4rem}
+.whoami small{display:block;font-size:.72rem;opacity:.85;font-weight:600}
+.whoami .me-bar{display:block;margin-top:5px;background:rgba(255,255,255,.25);width:140px}
+.kq-form .row2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px}
+.kq-form .row2 input{min-width:0;width:100%;font-size:1rem}
+.kq-form .avs{justify-content:center}
+.kq-form .avs button{background:#f0ecf8}
+.kq-form .avs button[aria-pressed="true"]{border-color:#46178F;background:#fff}
+.kq-form .err{text-align:center}
+.kq-form small.help{font-size:.76rem;color:#666;font-weight:600;line-height:1.4}
+.xpbox{display:flex;flex-direction:column;gap:8px;background:#fff;color:#1c1c28;border-radius:10px;padding:14px 18px;width:min(520px,100%);text-align:left}
+.xpbox .row{display:flex;justify-content:space-between;font-weight:700;font-size:.9rem}
+.xpbox .row.tot{border-top:1.5px solid #e4e0ef;padding-top:8px;font-size:1.05rem;font-weight:800}
+.xpbox .me-bar{height:10px;background:#ece8f6}
+.xpbox .lvl{font-size:.8rem;font-weight:700;color:#555}
+.newb{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.newb span{background:#F5B301;color:#3a2a00;border-radius:999px;padding:6px 14px;font-weight:800;font-size:.86rem;animation:tin .4s both}
+.mastery{width:min(720px,100%);display:flex;flex-direction:column;gap:6px;text-align:left}
+.mastery .m{display:grid;grid-template-columns:1fr 110px 46px;gap:10px;align-items:center;background:rgba(0,0,0,.22);border-radius:6px;padding:8px 12px;font-size:.86rem;font-weight:700}
+.mastery .m i{display:block;height:8px;border-radius:4px;background:rgba(255,255,255,.2);overflow:hidden}
+.mastery .m i b{display:block;height:100%;background:#F5B301}
+.mastery .m.weak i b{background:#ff7a8a}
+.mastery a{color:#ffe28a;font-size:.78rem;display:block;font-weight:700}
+.lvup{position:fixed;inset:0;z-index:250;display:grid;place-items:center;background:rgba(20,6,50,.72);font-family:var(--font-head);color:#fff;text-align:center;animation:tin .3s both}
+.lvup div{display:flex;flex-direction:column;align-items:center;gap:10px;padding:24px}
+.lvup .big{font-size:clamp(3rem,12vw,6rem);font-weight:800;line-height:1;background:#F5B301;color:#3a2a00;border-radius:24px;padding:14px 34px;animation:pop .6s cubic-bezier(.2,1.6,.4,1) both .1s}
+.lvup p{margin:0;font-weight:700;font-size:1.1rem;opacity:.95}
+@keyframes pop{from{transform:scale(.3);opacity:0}}
+.confetti{position:fixed;inset:0;pointer-events:none;z-index:240;overflow:hidden}
+.confetti i{position:absolute;top:-20px;width:10px;height:14px;border-radius:2px;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(110vh) rotate(720deg)}}
+.offline-note{font-size:.8rem;font-weight:600;opacity:.85;max-width:52ch;line-height:1.45}
+
+@media (max-width:640px){
+  .me-lv{display:none}
+  .me-chip{padding:3px}
+  .modes{grid-template-columns:1fr}
+  .dstats{grid-template-columns:repeat(2,1fr)}
+  .pform{grid-template-columns:1fr}
+  .mastery .m{grid-template-columns:1fr 70px 40px}
+}
+@media (max-width:420px){
+  .brand{font-size:.74rem}
+  .tab{padding:7px 10px;font-size:.76rem}
+}
+
+/* =====================================================================
+   VISUAL & MOTION
+   Komponen visual bersama: reveal saat digulir, angka berjalan, grafik,
+   pemutar langkah, penggeser banding, gambar SVG, dan penanda titik.
+   Semua menghormati prefers-reduced-motion.
+   ===================================================================== */
+[data-reveal]{opacity:0;transform:translateY(18px);transition:opacity .6s cubic-bezier(.2,.7,.2,1),transform .6s cubic-bezier(.2,.7,.2,1)}
+[data-reveal="fade"]{transform:none}
+[data-reveal="zoom"]{transform:scale(.94)}
+[data-reveal="left"]{transform:translateX(-24px)}
+[data-reveal="right"]{transform:translateX(24px)}
+[data-reveal].in{opacity:1;transform:none}
+
+.viz{margin:26px 0;padding:18px 20px;border:1.5px solid var(--line);border-radius:10px;background:var(--surface);font-family:var(--font-head)}
+.viz>figcaption,.viz .viz-cap{font-size:.84rem;color:var(--muted);font-weight:600;line-height:1.5;margin-top:12px}
+.viz .viz-title{font-size:1rem;font-weight:800;margin:0 0 4px}
+.viz .viz-sub{font-size:.84rem;color:var(--muted);font-weight:600;margin:0 0 14px}
+
+/* Grafik batang */
+.bars{display:flex;flex-direction:column;gap:10px}
+.bars .b{display:grid;grid-template-columns:minmax(72px,26%) 1fr auto;gap:12px;align-items:center;font-size:.86rem;font-weight:700}
+.bars .b .t{color:var(--muted);line-height:1.3}
+.bars .b .track{height:16px;border-radius:8px;background:var(--soft);overflow:hidden}
+.bars .b .track i{display:block;height:100%;width:0;border-radius:8px;background:var(--accent);transition:width 1s cubic-bezier(.2,.7,.2,1)}
+.bars .b:nth-child(4n+2) .track i{background:#1368CE}
+.bars .b:nth-child(4n+3) .track i{background:#B98400}
+.bars .b:nth-child(4n+4) .track i{background:#26890C}
+.bars .b .v{font-variant-numeric:tabular-nums;min-width:4.5ch;text-align:right}
+
+/* Grafik garis */
+.linechart{width:100%;height:auto;overflow:visible}
+.linechart .grid{stroke:var(--line);stroke-width:1}
+.linechart .axis{stroke:var(--muted);stroke-width:1.5}
+.linechart .lbl{font:600 13px var(--font-head);fill:var(--muted)}
+.linechart .ln{fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:var(--len);stroke-dashoffset:var(--len);transition:stroke-dashoffset 1.6s cubic-bezier(.3,.8,.3,1)}
+.linechart.in .ln{stroke-dashoffset:0}
+.linechart .dot{r:4.5;opacity:0;transition:opacity .4s ease .9s}
+.linechart.in .dot{opacity:1}
+.linechart .lgd{font:700 13px var(--font-head)}
+
+/* Gambar SVG yang digambar sendiri */
+svg[data-draw] [stroke]{stroke-dasharray:var(--len,1000);stroke-dashoffset:var(--len,1000);transition:stroke-dashoffset 1.8s cubic-bezier(.3,.8,.3,1)}
+svg[data-draw].in [stroke]{stroke-dashoffset:0}
+
+/* Pemutar langkah */
+.steps{margin:26px 0;border:1.5px solid var(--line);border-radius:10px;background:var(--surface);overflow:hidden}
+.steps .track{display:flex;gap:6px;padding:14px 18px 0}
+.steps .track i{flex:1;height:5px;border-radius:3px;background:var(--line);overflow:hidden}
+.steps .track i b{display:block;height:100%;width:0;background:var(--accent);transition:width .45s ease}
+.steps .track i.done b{width:100%}
+.steps .stage{padding:18px}
+.steps .step{display:none;animation:stepin .45s cubic-bezier(.2,.7,.2,1)}
+.steps .step.on{display:block}
+.steps .step h5{font:800 1rem var(--font-head);margin:0 0 6px;color:var(--ink)}
+.steps .step p{margin:0;font-family:var(--font-body);font-size:1rem;line-height:1.6}
+.steps .bar{display:flex;align-items:center;flex-wrap:wrap;gap:8px 10px;padding:12px 18px;border-top:1.5px solid var(--line);background:var(--soft);font-family:var(--font-head)}
+.steps .bar button{border:0;border-radius:6px;padding:8px 14px;font:800 .82rem var(--font-head);background:var(--accent);color:var(--accent-ink);cursor:pointer}
+.steps .bar button.g{background:transparent;color:var(--accent);padding:8px 6px}
+.steps .bar button[disabled]{opacity:.4;cursor:default}
+.steps .bar .n{margin-left:auto;white-space:nowrap;font-size:.8rem;font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums}
+@keyframes stepin{from{opacity:0;transform:translateX(14px)}}
+
+/* Penggeser banding sebelum-sesudah */
+.compare{position:relative;margin:26px 0;border-radius:10px;overflow:hidden;border:1.5px solid var(--line);touch-action:none;user-select:none}
+.compare .lay{display:block;width:100%}
+.compare .lay.b{position:absolute;inset:0;width:100%;clip-path:inset(0 50% 0 0)}
+.compare .lay>*{display:block;width:100%;height:100%}
+.compare .tagl,.compare .tagr{position:absolute;top:10px;font:800 .74rem var(--font-head);background:rgba(20,16,44,.72);color:#fff;padding:4px 10px;border-radius:999px}
+.compare .tagl{left:10px}.compare .tagr{right:10px}
+.compare .hnd{position:absolute;top:0;bottom:0;left:50%;width:3px;background:#fff;box-shadow:0 0 0 1px rgba(0,0,0,.25);cursor:ew-resize}
+.compare .hnd::after{content:"";position:absolute;top:50%;left:50%;width:36px;height:36px;margin:-18px 0 0 -18px;border-radius:50%;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+.compare .hnd::before{content:"↔";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:1;font:800 1.1rem var(--font-head);color:#46178F}
+.compare input[type=range]{position:absolute;inset:auto 0 0;width:100%;opacity:0;height:100%;cursor:ew-resize;margin:0}
+
+/* Penanda titik pada gambar */
+.hotspots{position:relative;margin:26px 0}
+.hotspots .hs{position:absolute;transform:translate(-50%,-50%);width:26px;height:26px;border-radius:50%;border:2px solid #fff;background:var(--accent);color:#fff;font:800 .78rem var(--font-head);cursor:pointer;display:grid;place-items:center;box-shadow:0 2px 8px rgba(20,16,44,.35)}
+.hotspots .hs::before{content:"";position:absolute;inset:-6px;border-radius:50%;border:2px solid var(--accent);opacity:.5;animation:ping 2.4s ease-out infinite}
+.hotspots .hs[aria-expanded="true"]{background:#F5B301;color:#3a2a00}
+.hotspots .hs[aria-expanded="true"]::before{animation:none}
+.hotspots .tip{margin-top:10px;background:var(--soft);border-radius:8px;padding:12px 14px;font-family:var(--font-body);font-size:.95rem;line-height:1.55;min-height:1em}
+@keyframes ping{0%{transform:scale(.9);opacity:.6}70%{transform:scale(1.5);opacity:0}100%{opacity:0}}
+
+/* Kanvas simulasi */
+.kq-canvas{display:block;width:100%;height:auto;border-radius:8px;background:var(--soft);border:1.5px solid var(--line)}
+
+@media (prefers-reduced-motion: reduce){
+  [data-reveal]{opacity:1;transform:none;transition:none}
+  .bars .b .track i,.steps .track i b{transition:none}
+  .linechart .ln{stroke-dashoffset:0;transition:none}
+  .linechart .dot{opacity:1;transition:none}
+  svg[data-draw] [stroke]{stroke-dashoffset:0;transition:none}
+  .steps .step{animation:none}
+  .hotspots .hs::before{animation:none}
+}
+
+/* Grafik analisis tambahan */
+.viz-stat{margin-top:12px;font-size:.84rem;font-weight:600;color:var(--muted);line-height:1.6;font-variant-numeric:tabular-nums}
+.viz-stat b{color:var(--ink)}
+.stacked .stk{transform-origin:center bottom;transform:scaleY(0);transition:transform .8s cubic-bezier(.2,.7,.2,1);transform-box:fill-box}
+.stacked.in .stk{transform:scaleY(1)}
+.pie-wrap{display:flex;gap:22px;align-items:center;flex-wrap:wrap;justify-content:center}
+.pie{width:min(230px,58vw);height:auto;flex:none}
+.pie .sl{opacity:0;transform:scale(.8);transform-origin:50% 50%;transition:opacity .5s ease var(--d,0ms),transform .6s cubic-bezier(.2,1.4,.4,1) var(--d,0ms)}
+.pie-wrap.in .sl{opacity:1;transform:scale(1)}
+.pie-mid{font:800 26px var(--font-head);fill:var(--ink)}
+.pie-sub{font:600 12px var(--font-head);fill:var(--muted)}
+.pie-lgd{display:flex;flex-direction:column;gap:7px;font-size:.86rem;font-weight:700;min-width:180px}
+.pie-lgd div{display:grid;grid-template-columns:14px 1fr auto;gap:9px;align-items:center}
+.pie-lgd i{width:14px;height:14px;border-radius:4px}
+.pie-lgd b{color:var(--muted);font-variant-numeric:tabular-nums}
+
+/* Tabel data gaya lembar kerja */
+.dtable{margin:26px 0;border:1.5px solid var(--line);border-radius:10px;background:var(--surface);overflow:hidden}
+.dtable .dt-bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:12px 14px;border-bottom:1.5px solid var(--line);background:var(--soft);font-family:var(--font-head)}
+.dtable .dt-find{flex:1;min-width:150px;font:600 .88rem var(--font-head);padding:8px 12px;border:1.5px solid var(--line);border-radius:6px;background:var(--surface);color:var(--ink)}
+.dtable .dt-hint{font-size:.76rem;color:var(--muted);font-weight:600;flex:1;min-width:140px}
+.dtable .dt-csv{border:0;border-radius:6px;padding:8px 14px;font:800 .8rem var(--font-head);background:var(--accent);color:var(--accent-ink);cursor:pointer}
+.dtable table{width:100%;border-collapse:collapse;font-family:var(--font-head);font-size:.9rem;display:table}
+.dtable thead th{position:sticky;top:0;background:var(--soft);text-align:left;padding:11px 14px;font-weight:800;white-space:nowrap;cursor:pointer;user-select:none}
+.dtable thead th.srt::after{content:"↕";opacity:.35;margin-left:6px;font-size:.8em}
+.dtable thead th[data-dir=asc]::after{content:"↑";opacity:1;color:var(--accent)}
+.dtable thead th[data-dir=desc]::after{content:"↓";opacity:1;color:var(--accent)}
+.dtable thead th.edt::before{content:"✎ ";opacity:.6}
+.dtable td{padding:10px 14px;border-top:1px solid var(--line);font-weight:600}
+.dtable td.num{text-align:right;font-variant-numeric:tabular-nums}
+.dtable td.edit{background:color-mix(in srgb,#F5B301 14%,var(--surface));cursor:text;outline-offset:-2px}
+.dtable td.edit:focus{outline:2px solid var(--accent);background:var(--surface)}
+.dtable tbody tr:nth-child(even){background:color-mix(in srgb,var(--soft) 45%,transparent)}
+.dtable tfoot td{border-top:2px solid var(--accent);background:var(--soft);font-weight:800;text-align:right;font-variant-numeric:tabular-nums}
+.dtable tfoot td:first-child{text-align:left;font-weight:700;color:var(--muted)}
+.dtable tfoot small{display:block;font-size:.66rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.dtable .dt-wrap{overflow:auto;max-height:440px}
+
+/* Peragaan 3D */
+.kq3d{margin:26px 0;border:1.5px solid var(--line);border-radius:10px;background:var(--surface);padding:14px}
+.kq3d .kq-canvas{cursor:grab;background:linear-gradient(180deg,color-mix(in srgb,var(--soft) 70%,var(--surface)),var(--surface))}
+.kq3d .kq-canvas:active{cursor:grabbing}
+.kq3d .kq-canvas:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.kq3d-bar{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;margin-top:12px;font-family:var(--font-head)}
+.kq3d-bar label{display:flex;flex-direction:column;gap:4px;font-size:.74rem;font-weight:700;color:var(--muted)}
+.kq3d-bar select,.kq3d-bar input[type=range]{font:700 .84rem var(--font-head);padding:6px 8px;border:1.5px solid var(--line);border-radius:6px;background:var(--surface);color:var(--ink);min-width:130px}
+.kq3d-bar input[type=range]{padding:0;border:0;accent-color:var(--accent)}
+.kq3d-bar button{border:0;border-radius:6px;padding:9px 14px;font:800 .82rem var(--font-head);background:var(--accent);color:var(--accent-ink);cursor:pointer}
+.kq3d-mat{margin-top:12px;font-family:var(--font-head);font-size:.76rem;color:var(--muted);font-weight:700}
+.kq3d-mat .m{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;max-width:300px;margin-top:6px}
+.kq3d-mat span{background:var(--soft);border-radius:5px;padding:6px 8px;text-align:center;color:var(--ink);font-variant-numeric:tabular-nums}
+@media (max-width:640px){.kq3d-bar select{min-width:110px}.pie-lgd{min-width:0;width:100%}}
+
+/* Kode sebaris tidak boleh mendorong lebar halaman di layar kecil */
+code{overflow-wrap:anywhere}
+</style>
+<style>
+.ex-in{width:100%;min-height:76px;font:600 .95rem var(--font-head);padding:10px 12px;border:1.5px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink);resize:vertical;line-height:1.45}
+.lab input[type=text],.lab select{font:600 .9rem var(--font-head);padding:8px 10px;border:1.5px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink);width:100%}
+.lab .row-btn{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 12px}
+.lab .row-btn button{font:700 .82rem var(--font-head);padding:9px 14px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;cursor:pointer}
+.lab .row-btn button.used{opacity:.35;cursor:default}
+.lab .row-btn button.go{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.seq{display:flex;flex-wrap:wrap;gap:6px;min-height:40px;margin-bottom:10px;align-items:center;font:700 .82rem var(--font-head)}
+.seq span{background:var(--soft);border-radius:6px;padding:6px 10px}
+.seq span.bad{background:#C4162F;color:#fff}
+.seq span.good{background:#26890C;color:#fff}
+.rq{font:600 1rem var(--font-body);background:var(--soft);border-radius:6px;padding:12px 14px;margin:8px 0;line-height:1.55}
+.cmp-card{padding:20px 22px;min-height:230px;background:var(--surface);font-family:var(--font-head);font-size:.9rem;line-height:1.5}
+.cmp-card h5{font-size:1rem;font-weight:800;margin:26px 0 8px}
+.cmp-card ol{margin:0;padding-left:1.2em}
+.cmp-card.bad{background:color-mix(in srgb,#C4162F 9%,var(--surface));padding-right:calc(50% + 14px)}
+.cmp-card.good{padding-left:calc(50% + 14px)}
+@media (max-width:520px){.cmp-card{font-size:.78rem;padding:16px 12px}.cmp-card.bad{padding-right:calc(50% + 8px)}.cmp-card.good{padding-left:calc(50% + 8px)}.cmp-card ol{padding-left:1em}}
+.cmp-card.good{background:color-mix(in srgb,#26890C 9%,var(--surface))}
+.hs-wrap{position:relative}
+.lvl-tag{display:inline-block;font:800 .72rem var(--font-head);padding:2px 8px;border-radius:4px;color:#fff;margin-right:6px}
+</style>
+</head>
+<body>
+
+<main id="view-summary">
+  <div class="wrap">
+    <div class="hero">
+      <h1>Cari masalahnya dulu, baru teknologinya</h1>
+      <p class="lede">Materi ini membahas cara mengubah fenomena menjadi masalah riset teknik informatika: tangga dari topik sampai masalah riset, empat tahap perumusan, jebakan teknologi, Research Problem Canvas, uji tekanan "So What?", dan perburuan literatur mini. Setelah membaca, uji pemahamanmu lewat kuis di akhir.</p>
+    </div>
+
+    <section class="explorer" aria-labelledby="ex-h" data-lab="penguji-pernyataan">
+      <h2 id="ex-h">Penguji pernyataan riset</h2>
+      <p class="sub">Pilih salah satu pernyataan dari catatan kuliah, atau ketik pernyataanmu sendiri. Penguji membaca kata kuncinya lalu menebak tingkatnya dan melakukan tiga uji tekanan secara kasar (heuristik, bukan penilai mutlak).</p>
+      <textarea class="ex-in" id="exIn" aria-label="Pernyataan riset">Saya ingin menggunakan YOLO untuk mendeteksi kendaraan</textarea>
+      <div class="presets" id="exPresets" aria-label="Contoh pernyataan"></div>
+      <div class="readout" style="margin-top:16px">
+        <div class="swatch" id="exSw"></div>
+        <dl class="rgrid">
+          <div><dt>Tingkat pernyataan</dt><dd id="exLv">-</dd></div>
+          <div><dt>The unknown</dt><dd id="exU">-</dd></div>
+          <div><dt>Evidence test</dt><dd id="exE">-</dd></div>
+          <div><dt>IT test</dt><dd id="exT">-</dd></div>
+        </dl>
+        <p class="verdict" id="exV"></p>
+      </div>
+    </section>
+
+    <div class="doc">
+      <nav class="toc" aria-label="Daftar isi"><b>Daftar isi</b></nav>
+      <article>
+
+<section id="s1" data-toc="1. Topik ke masalah riset">
+  <h2 data-reveal>1. Dari topik sampai masalah riset</h2>
+  <p>Banyak proposal tersandung di kalimat pertama karena penulisnya mengira "ingin meneliti sesuatu" sudah sama dengan "punya masalah riset". Padahal keinginan meneliti AI baru menunjuk sebuah <em>topik</em> (wilayah luas), keinginan membuat aplikasi baru menunjuk sebuah <em>produk</em>, dan keinginan memakai YOLO baru menunjuk sebuah <em>teknologi</em>. Ketiganya belum menyatakan apa yang tidak diketahui, sehingga belum ada yang bisa dibuktikan.</p>
+
+  <h3>Empat anak tangga</h3>
+  <p>Catatan kuliah menyusun contoh dengan tanda silang (✗) untuk tiga kalimat pertama dan baru menerima kalimat keempat. Setiap anak tangga menambah ketajaman: objek yang jelas, kondisi yang spesifik, dan ukuran keberhasilan.</p>
+
+  <figure class="figure hotspots" data-hint="Ketuk nomor pada setiap anak tangga untuk melihat kenapa kalimat itu ditolak atau diterima.">
+    <div class="hs-wrap">
+    <svg viewBox="0 0 640 300" role="img" aria-label="Tangga dari topik ke masalah riset">
+      <rect x="20"  y="225" width="150" height="55" rx="6" fill="#C4162F" opacity=".85"/>
+      <rect x="170" y="170" width="150" height="110" rx="6" fill="#B98400" opacity=".85"/>
+      <rect x="320" y="115" width="150" height="165" rx="6" fill="#1368CE" opacity=".85"/>
+      <rect x="470" y="60"  width="150" height="220" rx="6" fill="#26890C" opacity=".9"/>
+      <text x="95"  y="258" text-anchor="middle" style="fill:#fff;font-weight:800;font-size:16px">Topik ✗</text>
+      <text x="245" y="203" text-anchor="middle" style="fill:#fff;font-weight:800;font-size:16px">Produk ✗</text>
+      <text x="395" y="148" text-anchor="middle" style="fill:#fff;font-weight:800;font-size:16px">Teknologi ✗</text>
+      <text x="545" y="93"  text-anchor="middle" style="fill:#fff;font-weight:800;font-size:15px">Masalah riset ✓</text>
+      <text x="320" y="30" text-anchor="middle" style="font-size:14px;font-weight:700">makin spesifik, makin bisa dibuktikan →</text>
+    </svg>
+    <button class="hs" style="left:15%;top:62%" data-tip="Topik: “Saya ingin meneliti Artificial Intelligence.” Terlalu luas; tidak ada objek, kondisi, atau pertanyaan yang bisa dijawab.">1</button>
+    <button class="hs" style="left:38%;top:44%" data-tip="Produk: “Saya ingin membuat aplikasi deteksi kendaraan.” Ini rencana membangun, bukan pertanyaan. Aplikasinya bisa jadi tanpa menghasilkan pengetahuan baru.">2</button>
+    <button class="hs" style="left:62%;top:26%" data-tip="Teknologi: “Saya ingin menggunakan YOLO untuk mendeteksi kendaraan.” Alatnya sudah dipilih sebelum masalahnya jelas. Ini pintu masuk jebakan teknologi.">3</button>
+    <button class="hs" style="left:85%;top:11%" data-tip="Masalah riset: “Saya ingin mengetahui apakah model computer vision tertentu dapat mendeteksi secara akurat pada kondisi malam.” Ada hal yang belum diketahui (akurasi di malam hari), kondisi spesifik, dan ukuran (akurasi).">4</button>
+    </div>
+    <figcaption>Tangga perumusan dari catatan kuliah.</figcaption>
+  </figure>
+
+  <h3>Membedakan fenomena, rencana, dan masalah riset</h3>
+  <p>Halaman yang sama mendaftar enam kalimat yang sering muncul saat mahasiswa mencari ide. Polanya: fenomena dan keluhan adalah bahan mentah; "saya ingin membuat" dan "saya ingin menggunakan" adalah rencana; kalimat yang diawali "belum diketahui apakah/bagaimana" sudah berbentuk masalah riset.</p>
+  <div class="tw"><table>
+    <thead><tr><th>Pernyataan</th><th>Jenis</th><th>Yang masih kurang</th></tr></thead>
+    <tbody>
+      <tr><td>Mahasiswa banyak menggunakan ChatGPT</td><td>Fenomena</td><td>Belum ada pertanyaan; baru pengamatan</td></tr>
+      <tr><td>Aplikasi absensi mahasiswa masih kurang bagus</td><td>Fenomena (keluhan)</td><td>"Kurang bagus" belum terukur; apa persisnya yang gagal?</td></tr>
+      <tr><td>Saya ingin membuat chatbot untuk mahasiswa</td><td>Produk</td><td>Tidak ada hal yang belum diketahui</td></tr>
+      <tr><td>Saya ingin menggunakan YOLO 26 untuk mendeteksi produk retail</td><td>Teknologi</td><td>Alat dipilih lebih dulu; kesenjangannya tidak disebut</td></tr>
+      <tr><td>Belum diketahui apakah chatbot LLM memberikan jawaban konsisten pada pertanyaan yang ambigu</td><td>Masalah riset</td><td>Sudah layak; tinggal ditajamkan metrik konsistensinya</td></tr>
+      <tr><td>Belum diketahui bagaimana performa <em>object detection</em> saat ukuran objek sangat kecil di pencahayaan bervariasi</td><td>Masalah riset</td><td>Sudah layak; dua kondisi sulit digabung dengan jelas</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="note"><p><b>Analogi dokter.</b> Pasien yang berkata "saya mau diperiksa" (topik) atau "saya mau minum antibiotik" (teknologi) belum memberi dokter apa pun untuk diselidiki. Baru ketika ia berkata "demam saya naik setiap malam dan belum jelas penyebabnya", ada hal yang belum diketahui, ada kondisi spesifik, dan ada cara memeriksanya.</p></div>
+</section>
+
+<section id="s2" data-toc="2. Empat tahap perumusan">
+  <h2 data-reveal>2. Empat tahap merumuskan masalah riset</h2>
+  <p>Catatan kuliah merangkum perumusan masalah riset menjadi empat tahap berurutan. Urutannya penting: kesenjangan tidak bisa ditemukan sebelum ada gagasan, dan bukti tidak bisa dirancang sebelum masalahnya dibingkai secara teknik informatika.</p>
+
+  <div class="steps" data-steps>
+    <div class="step"><h5>1. Idea generation</h5><p>Mengubah fenomena menjadi gagasan. Contoh: dari "banyak kecelakaan di jalan gelap" menjadi gagasan "deteksi kendaraan pada malam hari". Peringatan keras di tahap ini: hati-hati jebakan teknologi. Gagasan lahir dari fenomena, bukan dari alat yang sedang disukai.</p></div>
+    <div class="step"><h5>2. Gap identification</h5><p>Menemukan apa yang belum diketahui. Syaratnya, cari tahu dulu apa yang sudah diketahui: baca penelitian sebelumnya, catat metode dan hasilnya, lalu tandai bagian yang belum diuji. Klaim "belum ada" tanpa membaca literatur hanyalah tebakan.</p></div>
+    <div class="step"><h5>3. The IT context</h5><p>Membingkai masalah melalui arsitektur teknik informatika. Pertanyaannya: masalah ini menyentuh lapisan apa (data, model, algoritma, sistem, antarmuka) dan di mana tantangan komputasinya?</p></div>
+    <div class="step"><h5>4. Validation &amp; evidence</h5><p>Menghubungkan masalah dengan data, statistik, dan hipotesis. Di sini masalah diberi bukti bahwa ia nyata (data awal, statistik) dan diberi bentuk yang bisa diuji (hipotesis, metrik).</p></div>
+  </div>
+
+  <div class="tw"><table>
+    <thead><tr><th>Tahap</th><th>Pertanyaan pemandu</th><th>Keluaran</th></tr></thead>
+    <tbody>
+      <tr><td>Idea generation</td><td>Fenomena apa yang saya amati?</td><td>Gagasan awal yang berangkat dari fenomena</td></tr>
+      <tr><td>Gap identification</td><td>Apa yang sudah dan belum diketahui?</td><td>Pernyataan kesenjangan (<em>research gap</em>)</td></tr>
+      <tr><td>The IT context</td><td>Di lapisan TI mana masalah ini hidup?</td><td>Sudut pandang TI dan pendekatan komputasi</td></tr>
+      <tr><td>Validation &amp; evidence</td><td>Bagaimana membuktikan masalah dan solusinya?</td><td>Data, metrik, statistik, hipotesis</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="lab" data-lab="urutan-tahap">
+    <h4>Coba sendiri: susun urutan tahap</h4>
+    <p class="labp">Ketuk keempat tahap sesuai urutan yang benar. Tahap yang salah posisi akan ditandai merah.</p>
+    <div class="row-btn" id="ordBtns"></div>
+    <div class="seq" id="ordSeq"><span style="background:transparent;color:var(--muted)">Urutanmu muncul di sini</span></div>
+    <div class="row-btn"><button type="button" id="ordReset">Ulangi</button></div>
+    <p class="verdict" id="ordV">Mulai dari tahap yang menurutmu paling awal.</p>
+  </div>
+</section>
+
+<section id="s3" data-toc="3. Jebakan teknologi & hook">
+  <h2 data-reveal>3. Jebakan teknologi dan hook</h2>
+  <p>Catatan kuliah memberi satu kalimat yang perlu dihafal: jangan mencari masalah untuk teknologi yang Anda sukai; cari masalahnya terlebih dahulu. Mahasiswa TI mudah terpikat pada model terbaru, lalu berkeliling mencari dataset apa saja yang bisa dicoba. Hasilnya penelitian yang "jalan" secara teknis tetapi tidak menjawab pertanyaan siapa pun.</p>
+
+  <h3>Kenapa jebakan ini berbahaya</h3>
+  <ul>
+    <li><b>Kesenjangan dibuat-buat.</b> Alasan yang muncul biasanya "belum ada yang memakai X untuk Y", padahal belum dipakai tidak sama dengan belum diketahui.</li>
+    <li><b>Bukti lemah.</b> Karena tidak ada masalah nyata, tidak jelas metrik apa yang membuktikan keberhasilan.</li>
+    <li><b>Mudah usang.</b> Teknologi berganti cepat (YOLO saja punya banyak generasi); masalah yang nyata bertahan lebih lama.</li>
+  </ul>
+
+  <div class="compare" data-left="Teknologi dulu" data-right="Masalah dulu">
+    <div class="lay a"><div class="cmp-card good"><h5>Alur yang dianjurkan</h5><ol><li>Fenomena: kendaraan sulit terlihat di jalan minim lampu</li><li>Kesenjangan: akurasi deteksi malam hari belum banyak diuji</li><li>Sudut TI: <em>computer vision</em>, data citra kondisi gelap</li><li>Baru memilih model yang akan dibandingkan</li></ol></div></div>
+    <div class="lay b"><div class="cmp-card bad"><h5>Alur jebakan teknologi</h5><ol><li>Terpikat model baru</li><li>Mencari dataset apa saja yang bisa dideteksi</li><li>Mengarang alasan "belum ada aplikasinya"</li><li>Bingung menentukan metrik dan kesimpulan</li></ol></div></div>
+  </div>
+
+  <h3>Hook: membuka gagasan dengan fenomena</h3>
+  <p>Dalam penyampaian sebuah gagasan, penting memakai <em>hook</em> (pengait) yang baik dan menarik. Menurut catatan, hook paling enak jika dibawa dari fenomena langsung: sesuatu yang dialami atau dilihat audiens sendiri. Hook bukan pengganti bukti; ia hanya pintu yang membuat pendengar mau masuk ke masalahnya.</p>
+  <div class="tw"><table>
+    <thead><tr><th>Jenis pembuka</th><th>Contoh</th><th>Efek</th></tr></thead>
+    <tbody>
+      <tr><td>Definisi</td><td>"Kecerdasan buatan adalah cabang ilmu komputer yang…"</td><td>Datar, terdengar seperti buku ajar</td></tr>
+      <tr><td>Teknologi</td><td>"YOLO adalah model deteksi objek yang cepat…"</td><td>Menggeser fokus ke alat, bukan masalah</td></tr>
+      <tr><td>Fenomena langsung</td><td>"Pernah menyetir di jalan desa tanpa lampu dan baru sadar ada motor saat jaraknya tinggal beberapa meter?"</td><td>Audiens merasakan masalahnya sebelum mendengar solusinya</td></tr>
+    </tbody>
+  </table></div>
+  <div class="note warn"><p><b>Tanda bahaya.</b> Bila kalimat pertama proposalmu menyebut nama model atau kerangka kerja, besar kemungkinan kamu sedang terjebak. Coba tulis ulang kalimat itu tanpa menyebut teknologi apa pun.</p></div>
+</section>
+
+<section id="s4" data-toc="4. Research Problem Canvas">
+  <h2 data-reveal>4. Research Problem Canvas</h2>
+  <p>Research Problem Canvas memaksa gagasan diisi ke tiga ruang. Kalau satu kotak kosong, di situlah proposal masih lemah. Kanvas ini dibaca dari kiri ke kanan: masalah, lalu pengetahuan tentang masalah itu, baru solusi.</p>
+
+  <figure class="figure">
+    <svg data-draw viewBox="0 0 640 260" role="img" aria-label="Tiga ruang Research Problem Canvas">
+      <rect x="10" y="10" width="196" height="240" rx="8" fill="none" stroke="#C4162F" stroke-width="2.5"/>
+      <rect x="222" y="10" width="196" height="240" rx="8" fill="none" stroke="#1368CE" stroke-width="2.5"/>
+      <rect x="434" y="10" width="196" height="240" rx="8" fill="none" stroke="#26890C" stroke-width="2.5"/>
+      <path d="M206 130 L222 130" stroke="#888" stroke-width="2"/>
+      <path d="M418 130 L434 130" stroke="#888" stroke-width="2"/>
+      <text x="108" y="42" text-anchor="middle" style="font-weight:800;font-size:16px">Problem space</text>
+      <text x="108" y="90" text-anchor="middle" style="font-size:14px">Topik</text>
+      <text x="108" y="130" text-anchor="middle" style="font-size:14px">Fenomena</text>
+      <text x="108" y="170" text-anchor="middle" style="font-size:14px">Problem</text>
+      <text x="320" y="42" text-anchor="middle" style="font-weight:800;font-size:16px">Knowledge space</text>
+      <text x="320" y="90" text-anchor="middle" style="font-size:14px">Known</text>
+      <text x="320" y="130" text-anchor="middle" style="font-size:14px">Unknown</text>
+      <text x="320" y="170" text-anchor="middle" style="font-size:14px">Matter (kenapa penting)</text>
+      <text x="532" y="42" text-anchor="middle" style="font-weight:800;font-size:16px">Solution space</text>
+      <text x="532" y="85" text-anchor="middle" style="font-size:14px">Research question</text>
+      <text x="532" y="120" text-anchor="middle" style="font-size:14px">IT angle</text>
+      <text x="532" y="155" text-anchor="middle" style="font-size:14px">Data</text>
+      <text x="532" y="190" text-anchor="middle" style="font-size:14px">IT approach</text>
+    </svg>
+    <figcaption>Tiga ruang kanvas, dibaca dari kiri (masalah) ke kanan (solusi).</figcaption>
+  </figure>
+
+  <div class="tw"><table>
+    <thead><tr><th>Ruang</th><th>Isian</th><th>Pertanyaan yang dijawab</th></tr></thead>
+    <tbody>
+      <tr><td>Problem space</td><td>Topik, fenomena, problem</td><td>Wilayahnya apa, apa yang teramati, apa persisnya yang bermasalah?</td></tr>
+      <tr><td>Knowledge space</td><td>Known, unknown, matter</td><td>Apa yang sudah diketahui, apa yang belum, dan kenapa itu penting dijawab?</td></tr>
+      <tr><td>Solution space</td><td>Research question, IT angle, data, IT approach</td><td>Pertanyaan apa yang dijawab, dari sudut TI mana, dengan data apa, dan dengan pendekatan komputasi apa?</td></tr>
+    </tbody>
+  </table></div>
+
+  <p><em>Matter</em> sering terlupa. Kesenjangan yang benar tetapi tidak berdampak (misalnya akurasi deteksi warna sepatu di ruang kosong) tetap lemah. Kolom ini menuntut alasan: siapa yang dirugikan bila pertanyaan itu tidak terjawab?</p>
+
+  <div class="lab" data-lab="isi-kanvas">
+    <h4>Coba sendiri: isi kanvas, lihat research question-nya</h4>
+    <p class="labp">Isi kolom di bawah. Lab menyusun research question dari isianmu dan menilai kelengkapan kanvas. Contoh awal diambil dari catatan (deteksi kendaraan malam).</p>
+    <div class="ctl"><label for="cvObj">Objek atau tugas (problem)</label><input type="text" id="cvObj" value="deteksi kendaraan"></div>
+    <div class="ctl"><label for="cvCond">Kondisi yang belum diketahui (unknown)</label><input type="text" id="cvCond" value="pada kondisi malam di jalan minim penerangan"></div>
+    <div class="ctl"><label for="cvMatter">Kenapa penting (matter)</label><input type="text" id="cvMatter" value="kendaraan tanpa lampu sulit terlihat dan berisiko kecelakaan"></div>
+    <div class="ctl"><label for="cvAppr">Pendekatan TI (IT approach)</label><input type="text" id="cvAppr" value="model computer vision"></div>
+    <div class="ctl"><label for="cvMetric">Ukuran keberhasilan</label><select id="cvMetric"><option value="">(belum dipilih)</option><option selected>akurasi (precision, recall, mAP)</option><option>konsistensi jawaban</option><option>waktu proses</option><option>tingkat kesalahan</option></select></div>
+    <div class="ctl"><label for="cvData">Data</label><input type="text" id="cvData" value="citra lalu lintas malam hari"></div>
+    <div class="mats" id="cvMats"></div>
+    <p class="rq" id="cvRQ"></p>
+    <p class="verdict" id="cvV"></p>
+  </div>
+</section>
+
+<section id="s5" data-toc="5. Uji tekanan So What?">
+  <h2 data-reveal>5. Uji tekanan: "So What?"</h2>
+  <p>Setelah kanvas terisi, gagasan diuji dengan tiga pertanyaan yang tidak sopan tetapi perlu. Masalah riset yang sehat harus lolos ketiganya; gagal satu saja berarti perlu dirumuskan ulang.</p>
+
+  <figure class="figure">
+    <svg data-draw viewBox="0 0 640 230" role="img" aria-label="Tiga saringan uji So What">
+      <path d="M20 20 L620 20 L540 80 L100 80 Z" fill="none" stroke="#C4162F" stroke-width="2.5"/>
+      <path d="M100 85 L540 85 L470 145 L170 145 Z" fill="none" stroke="#1368CE" stroke-width="2.5"/>
+      <path d="M170 150 L470 150 L410 210 L230 210 Z" fill="none" stroke="#26890C" stroke-width="2.5"/>
+      <text x="320" y="56" text-anchor="middle" style="font-weight:800;font-size:15px">The unknown: apa yang belum diketahui?</text>
+      <text x="320" y="120" text-anchor="middle" style="font-weight:800;font-size:14px">Evidence test: bagaimana membuktikannya?</text>
+      <text x="320" y="185" text-anchor="middle" style="font-weight:800;font-size:13px">IT test: apa persoalan komputasinya?</text>
+    </svg>
+    <figcaption>Tiga saringan: gagasan yang lolos sampai bawah layak menjadi masalah riset TI.</figcaption>
+  </figure>
+
+  <div class="tw"><table>
+    <thead><tr><th>Uji</th><th>Pertanyaan</th><th>Gagal bila…</th></tr></thead>
+    <tbody>
+      <tr><td>The unknown</td><td>Apa yang belum diketahui?</td><td>Alasannya "belum ada aplikasinya". Belum ada aplikasi <b>bukan</b> research gap.</td></tr>
+      <tr><td>Evidence test</td><td>Bagaimana kita membuktikannya?</td><td>Tidak bisa menyebut metrik atau data yang akan dikumpulkan; tanda masalah masih terlalu abstrak.</td></tr>
+      <tr><td>IT test</td><td>Apa persoalan komputasinya?</td><td>Tidak bisa menjelaskan letak tantangan pengolahan data atau algoritmanya; itu bukan riset TI.</td></tr>
+    </tbody>
+  </table></div>
+
+  <p class="quote">Belum ada aplikasinya bukan research gap.</p>
+
+  <div class="lab" data-lab="uji-so-what">
+    <h4>Coba sendiri: tebak lalu cek</h4>
+    <p class="labp">Pilih pernyataan, centang uji yang menurutmu lolos, lalu tekan Cek.</p>
+    <div class="ctl"><label for="swSel">Pernyataan</label><select id="swSel"></select></div>
+    <label class="chk"><input type="checkbox" id="swU"> Lolos the unknown</label>
+    <label class="chk"><input type="checkbox" id="swE"> Lolos evidence test</label>
+    <label class="chk"><input type="checkbox" id="swT"> Lolos IT test</label>
+    <div class="row-btn"><button type="button" class="go" id="swGo">Cek</button></div>
+    <div class="mats" id="swMats"></div>
+    <p class="verdict" id="swV">Tebakanmu belum dicek.</p>
+  </div>
+</section>
+
+<section id="s6" data-toc="6. Mini literature hunt">
+  <h2 data-reveal>6. Mini literature hunt dan bukti</h2>
+  <p>Tahap <em>gap identification</em> menuntut kita tahu apa yang sudah diketahui. Cara praktisnya adalah perburuan literatur mini: membaca beberapa makalah yang relevan, lalu merangkumnya ke satu matriks dengan kolom yang sama. Kolom terakhir, <em>limitation/gap</em>, adalah tambang kesenjangan.</p>
+
+  <h3>Matriks literatur</h3>
+  <p>Contoh di bawah bersifat <b>ilustratif</b> (bukan makalah sungguhan) untuk menunjukkan cara membaca polanya. Ketik "malam" di kotak cari untuk melihat baris mana yang sudah menyentuh kondisi gelap.</p>
+  <div class="tw dtable" data-table data-filter data-export="matriks-literatur.csv">
+    <table>
+      <thead><tr><th>Paper</th><th>Problem</th><th>Metode IT</th><th>Data</th><th>Hasil</th><th>Limitation/gap</th></tr></thead>
+      <tbody>
+        <tr><td>Paper A (ilustratif)</td><td>Deteksi kendaraan di jalan tol</td><td>Detektor satu tahap</td><td>Citra siang hari</td><td>Akurasi tinggi</td><td>Tidak diuji pada malam hari</td></tr>
+        <tr><td>Paper B (ilustratif)</td><td>Penghitungan kendaraan di persimpangan</td><td>Detektor dua tahap + pelacakan</td><td>Video CCTV siang</td><td>Hitungan mendekati manual</td><td>Kamera tunggal, cuaca cerah</td></tr>
+        <tr><td>Paper C (ilustratif)</td><td>Deteksi pejalan kaki malam</td><td>Peningkatan citra gelap + detektor</td><td>Citra malam kota</td><td>Akurasi naik setelah peningkatan citra</td><td>Belum menguji kendaraan; jalan berlampu</td></tr>
+        <tr><td>Paper D (ilustratif)</td><td>Deteksi objek kecil di udara</td><td>Detektor dengan fitur multi-skala</td><td>Citra drone</td><td>Objek kecil lebih terdeteksi</td><td>Pencahayaan seragam</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>Dari matriks ini muncul titik buta: kendaraan di jalan <b>tanpa</b> penerangan belum disentuh. Pertanyaan penutup matriks selalu sama: apa titik buta yang masih belum terjawab?</p>
+
+  <h3>Standar sumber</h3>
+  <p>Catatan kuliah menetapkan batas mutu sumber: jurnal nasional minimal terindeks <b>SINTA 2</b>, dan jurnal internasional terindeks <b>Scopus Q1 sampai Q4</b>. SINTA memeringkat jurnal dari S1 (tertinggi) sampai S6, jadi "minimal SINTA 2" berarti S1 atau S2. Pada Scopus, kuartil Q1 adalah 25% jurnal teratas di bidangnya dan Q4 adalah kelompok terbawah yang masih terindeks.</p>
+  <div class="steps" data-steps>
+    <div class="step"><h5>Cari</h5><p>Gunakan kata kunci dari kanvas (objek + kondisi), misalnya "vehicle detection low light". Saring ke sumber SINTA 2 ke atas atau Scopus Q1–Q4.</p></div>
+    <div class="step"><h5>Catat</h5><p>Isi satu baris matriks per makalah: problem, metode IT, data, hasil, limitation/gap. Jangan menyalin abstrak; tulis dengan kata sendiri.</p></div>
+    <div class="step"><h5>Bandingkan</h5><p>Baca per kolom, bukan per baris. Pola muncul saat terlihat, misalnya, semua data diambil siang hari.</p></div>
+    <div class="step"><h5>Nyatakan gap</h5><p>Tulis titik buta itu sebagai kalimat "belum diketahui…", lalu kembali ke kanvas untuk mengisi kolom unknown.</p></div>
+  </div>
+  <div class="note"><p><b>Evidence dimulai di sini.</b> Matriks literatur sekaligus menjadi bukti pertama bahwa kesenjanganmu nyata, bukan karangan. Ditambah data awal atau statistik fenomena, masalahmu siap diuji dengan hipotesis.</p></div>
+</section>
+
+<section id="sk" data-toc="Studi kasus">
+  <h2>Studi kasus: dari "aplikasi deteksi" ke masalah riset</h2>
+  <p>Dimas, mahasiswa D4 Teknik Informatika, membuka proposalnya dengan "Saya ingin membuat aplikasi deteksi kendaraan memakai YOLO". Kalimat itu berada di anak tangga produk sekaligus teknologi. Berikut perbaikannya tahap demi tahap.</p>
+  <div class="tw"><table>
+    <thead><tr><th>Langkah</th><th>Isian Dimas setelah perbaikan</th></tr></thead>
+    <tbody>
+      <tr><td>Hook (fenomena)</td><td>Motor tanpa lampu belakang di jalan desa baru terlihat saat jaraknya sangat dekat.</td></tr>
+      <tr><td>Problem space</td><td>Topik computer vision; fenomena kendaraan sulit terlihat di jalan gelap; problem deteksi otomatis belum andal di kondisi itu.</td></tr>
+      <tr><td>Known</td><td>Detektor modern akurat pada citra siang (dari matriks literatur).</td></tr>
+      <tr><td>Unknown</td><td>Belum diketahui seberapa akurat detektor itu pada jalan tanpa penerangan.</td></tr>
+      <tr><td>Matter</td><td>Sistem peringatan dini kendaraan bergantung pada deteksi yang andal justru saat gelap.</td></tr>
+      <tr><td>Research question</td><td>Seberapa akurat model computer vision tertentu mendeteksi kendaraan pada malam hari di jalan minim penerangan, diukur dengan precision, recall, dan mAP?</td></tr>
+      <tr><td>Data dan IT approach</td><td>Citra lalu lintas malam berlabel; membandingkan beberapa detektor dengan dan tanpa peningkatan citra gelap.</td></tr>
+      <tr><td>Uji So What?</td><td>Unknown: ada. Evidence: metrik dan data jelas. IT: tantangan algoritma pada citra kontras rendah. Lolos ketiganya.</td></tr>
+    </tbody>
+  </table></div>
+  <p>Perhatikan bahwa YOLO tidak hilang; ia turun pangkat dari "alasan penelitian" menjadi "salah satu model yang dibandingkan". Itulah inti menghindari jebakan teknologi.</p>
+</section>
+
+<section id="sr" data-toc="Ringkasan">
+  <h2>Ringkasan konsep</h2>
+  <div class="tw"><table>
+    <thead><tr><th>Konsep</th><th>Inti</th></tr></thead>
+    <tbody>
+      <tr><td>Tangga perumusan</td><td>Topik ✗, produk ✗, teknologi ✗, masalah riset ✓ (ada unknown, kondisi, ukuran)</td></tr>
+      <tr><td>Empat tahap</td><td>Idea generation → gap identification → IT context → validation &amp; evidence</td></tr>
+      <tr><td>Jebakan teknologi</td><td>Jangan mencari masalah untuk teknologi yang disukai; cari masalahnya dulu</td></tr>
+      <tr><td>Hook</td><td>Pembuka gagasan yang menarik, paling kuat bila dari fenomena langsung</td></tr>
+      <tr><td>Research Problem Canvas</td><td>Problem space (topik, fenomena, problem), knowledge space (known, unknown, matter), solution space (RQ, IT angle, data, IT approach)</td></tr>
+      <tr><td>Uji So What?</td><td>The unknown, evidence test, IT test; "belum ada aplikasi" bukan gap</td></tr>
+      <tr><td>Mini literature hunt</td><td>Matriks paper, problem, metode IT, data, hasil, limitation/gap; cari titik buta</td></tr>
+      <tr><td>Standar sumber</td><td>Minimal SINTA 2; Scopus Q1–Q4</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="bank-soal" data-nocheck data-toc="Bank soal">
+  <h2>Bank soal beserta kunci</h2>
+  <p>30 soal reguler dan 5 soal HOTS. Ketuk soal untuk melihat kunci dan pembahasan, atau buka tab <b>Kuis</b> untuk memainkannya.</p>
+  <div id="bank"></div>
+  <p style="margin-top:22px"><button class="kq-btn" style="background:#46178F" data-go-quiz>Main kuis sekarang</button></p>
+</section>
+
+      </article>
+    </div>
+  </div>
+</main>
+
+<script>
+window.KQ_CONFIG = {
+  defaultClass: ""
+};
+</script>
+
+<script>
+window.COURSE = {
+  id: "metpen-01-merumuskan-masalah-riset",
+  title: "Metodologi Penelitian: Merumuskan Masalah Riset",
+  short: "Merumuskan Masalah Riset",
+  questions: [
+    { topic: "Tangga perumusan", ref: "s1", time: 20,
+      q: "Pernyataan \"Saya ingin meneliti Artificial Intelligence\" berada pada tingkat...",
+      o: ["Masalah riset", "Topik", "Produk", "Teknologi"], a: 1,
+      e: "AI adalah wilayah yang sangat luas tanpa objek, kondisi, atau hal yang belum diketahui, sehingga baru setara topik. Ia belum menyebut aplikasi (produk) atau alat tertentu (teknologi)." },
+    { topic: "Tangga perumusan", ref: "s1", time: 20,
+      q: "\"Saya ingin membuat aplikasi deteksi kendaraan\" termasuk tingkat...",
+      o: ["Produk", "Topik", "Fenomena", "Masalah riset"], a: 0,
+      e: "Kalimat itu adalah rencana membangun sesuatu, yaitu produk. Belum ada pertanyaan tentang hal yang belum diketahui, jadi belum menjadi masalah riset." },
+    { topic: "Tangga perumusan", ref: "s1", time: 20,
+      q: "\"Saya ingin menggunakan YOLO untuk mendeteksi kendaraan\" dikategorikan sebagai...",
+      o: ["Topik", "Masalah riset", "Fenomena", "Teknologi"], a: 3,
+      e: "Alat (YOLO) sudah dipilih sebelum masalahnya jelas, sehingga kalimat ini berada di tingkat teknologi. Menyebut tugas deteksi tidak otomatis menghadirkan unknown." },
+    { topic: "Tangga perumusan", ref: "s1", time: 25,
+      q: "Pernyataan mana yang <b>sudah</b> berbentuk masalah riset?",
+      o: ["Saya ingin membuat chatbot untuk mahasiswa", "Aplikasi absensi mahasiswa masih kurang bagus", "Belum diketahui apakah chatbot LLM memberikan jawaban konsisten pada pertanyaan yang ambigu", "Saya ingin menggunakan YOLO 26 untuk mendeteksi produk retail"], a: 2,
+      e: "Hanya opsi ini yang menyatakan hal yang belum diketahui (konsistensi jawaban) pada kondisi spesifik (pertanyaan ambigu). Opsi lain berupa produk, keluhan, atau teknologi." },
+    { topic: "Tangga perumusan", ref: "s1", time: 20,
+      q: "\"Mahasiswa banyak menggunakan ChatGPT\" paling tepat disebut...",
+      o: ["Fenomena yang masih perlu diubah menjadi gagasan", "Masalah riset yang sudah lengkap", "Research question", "IT approach"], a: 0,
+      e: "Itu pengamatan atas kejadian di lapangan, yaitu fenomena. Fenomena adalah bahan mentah tahap idea generation, belum berisi pertanyaan atau pendekatan." },
+
+    { topic: "Empat tahap", ref: "s2", time: 20,
+      q: "Tahap yang mengubah fenomena menjadi gagasan disebut...",
+      o: ["Gap identification", "Validation & evidence", "Idea generation", "The IT context"], a: 2,
+      e: "Idea generation adalah tahap pertama: fenomena diolah menjadi gagasan. Gap identification baru mencari apa yang belum diketahui dari gagasan itu." },
+    { topic: "Empat tahap", ref: "s2", time: 20,
+      q: "Sebelum menyatakan apa yang <b>belum</b> diketahui, peneliti perlu...",
+      o: ["Langsung memilih algoritma", "Mencari tahu dulu apa yang sudah diketahui", "Membuat prototipe aplikasi", "Menyusun kuesioner kepuasan"], a: 1,
+      e: "Catatan menegaskan: cari tahu dulu apa yang sudah diketahui. Tanpa membaca literatur, klaim kesenjangan hanyalah tebakan." },
+    { topic: "Empat tahap", ref: "s2", time: 20,
+      q: "Tujuan tahap \"The IT context\" adalah...",
+      o: ["Mencari sponsor penelitian", "Membingkai masalah melalui arsitektur teknik informatika", "Menulis hook pembuka presentasi", "Mengumpulkan data statistik kependudukan"], a: 1,
+      e: "IT context menempatkan masalah di lapisan TI (data, model, algoritma, sistem) agar terlihat letak persoalan komputasinya. Hook dan statistik termasuk penyampaian dan bukti." },
+    { topic: "Empat tahap", ref: "s2", time: 20,
+      q: "Menghubungkan masalah dengan data, statistik, dan hipotesis adalah tahap...",
+      o: ["The IT context", "Idea generation", "Gap identification", "Validation & evidence"], a: 3,
+      e: "Validation & evidence memberi masalah bukti dan bentuk yang bisa diuji. IT context hanya membingkai, belum membuktikan." },
+    { topic: "Empat tahap", ref: "s2", time: 20,
+      q: "Peringatan \"hati-hati jebakan teknologi\" dalam catatan ditempelkan pada tahap...",
+      o: ["Idea generation", "Validation & evidence", "Gap identification", "The IT context"], a: 0,
+      e: "Jebakan teknologi paling sering terjadi saat gagasan lahir: gagasan datang dari alat yang disukai, bukan dari fenomena. Karena itu peringatannya diletakkan di tahap pertama." },
+
+    { topic: "Jebakan teknologi", ref: "s3", time: 20,
+      q: "Inti dari jebakan teknologi adalah...",
+      o: ["Memakai teknologi yang sudah lama", "Mencari masalah untuk membenarkan teknologi yang disukai", "Tidak memakai teknologi sama sekali", "Memakai dataset yang terlalu kecil"], a: 1,
+      e: "Jebakan terjadi ketika teknologi mendahului masalah. Umur teknologi atau ukuran dataset adalah persoalan lain." },
+    { topic: "Jebakan teknologi", ref: "s3", time: 20,
+      q: "Urutan berpikir yang dianjurkan adalah...",
+      o: ["Teknologi → masalah → data", "Aplikasi → teknologi → masalah", "Masalah → kesenjangan → pendekatan teknologi", "Hook → teknologi → judul"], a: 2,
+      e: "Masalah dulu, lalu cari apa yang belum diketahui, baru pilih pendekatan teknologinya. Urutan lain menaruh teknologi atau produk di depan." },
+    { topic: "Hook", ref: "s3", time: 20,
+      q: "Menurut catatan, hook paling kuat ditarik dari...",
+      o: ["Definisi dari kamus", "Spesifikasi teknologi terbaru", "Daftar fitur aplikasi", "Fenomena yang langsung dialami atau diamati"], a: 3,
+      e: "Hook paling enak dibawa dari fenomena langsung, karena audiens merasakan masalahnya sendiri. Definisi terasa datar dan spesifikasi teknologi menggeser fokus ke alat." },
+    { topic: "Jebakan teknologi", ref: "s3", time: 25,
+      q: "Seorang mahasiswa terpesona dengan YOLO26, lalu mencari dataset apa saja yang bisa ia deteksi. Kekeliruannya adalah...",
+      o: ["Teknologi mendahului masalah (jebakan teknologi)", "YOLO26 tidak mampu mendeteksi objek", "Dataset harus selalu dikumpulkan sendiri", "Tidak ada kekeliruan selama akurasinya tinggi"], a: 0,
+      e: "Ia memulai dari alat lalu mencari masalah untuknya. Kemampuan teknis model tidak dipersoalkan; yang keliru adalah arah berpikirnya." },
+    { topic: "Hook", ref: "s3", time: 20,
+      q: "Fungsi hook dalam menyampaikan gagasan adalah...",
+      o: ["Menggantikan data dan statistik", "Menarik perhatian dan membuat masalah terasa nyata", "Menyatakan hasil akhir penelitian", "Menentukan algoritma yang dipakai"], a: 1,
+      e: "Hook adalah pintu masuk yang membuat audiens tertarik. Ia tidak menggantikan bukti; bukti tetap urusan tahap validation & evidence." },
+
+    { topic: "Problem Canvas", ref: "s4", time: 20,
+      q: "Tiga ruang pada Research Problem Canvas adalah...",
+      o: ["Input, proses, output", "Problem space, knowledge space, solution space", "Latar belakang, metode, hasil", "Topik, judul, abstrak"], a: 1,
+      e: "Kanvas dibagi menjadi ruang masalah, ruang pengetahuan, dan ruang solusi. Opsi lain adalah susunan lain yang tidak dipakai kanvas ini." },
+    { topic: "Problem Canvas", ref: "s4", time: 20,
+      q: "Isian known, unknown, dan matter berada di ruang...",
+      o: ["Problem space", "Solution space", "Knowledge space", "Evidence space"], a: 2,
+      e: "Ketiganya menggambarkan pengetahuan tentang masalah, jadi berada di knowledge space. Problem space berisi topik, fenomena, problem." },
+    { topic: "Problem Canvas", ref: "s4", time: 20,
+      q: "Research question, IT angle, data, dan IT approach termasuk ruang...",
+      o: ["Solution space", "Knowledge space", "Problem space", "Literature space"], a: 0,
+      e: "Keempatnya menjelaskan bagaimana masalah akan dijawab, sehingga masuk solution space." },
+    { topic: "Problem Canvas", ref: "s4", time: 20,
+      q: "Kolom <i>matter</i> pada knowledge space menjawab pertanyaan...",
+      o: ["Berapa biaya penelitian", "Siapa dosen pembimbingnya", "Kenapa kesenjangan itu penting untuk dijawab", "Bahasa pemrograman apa yang dipakai"], a: 2,
+      e: "Matter menuntut alasan dampak: siapa yang dirugikan bila pertanyaan tak terjawab. Biaya, pembimbing, dan bahasa pemrograman bukan bagian kanvas." },
+    { topic: "Problem Canvas", ref: "s4", time: 20,
+      q: "Isian \"kendaraan sulit terlihat di jalan desa yang minim lampu\" paling tepat ditaruh di kolom...",
+      o: ["Data", "IT approach", "Research question", "Fenomena (problem space)"], a: 3,
+      e: "Itu pengamatan kejadian nyata, jadi fenomena. Belum berupa data yang dikumpulkan, pendekatan komputasi, ataupun pertanyaan." },
+
+    { topic: "Uji So What?", ref: "s5", time: 20,
+      q: "Alasan \"belum ada aplikasinya\" membuat gagasan gagal pada uji...",
+      o: ["Evidence test", "IT test", "The unknown", "Hook"], a: 2,
+      e: "Catatan menegaskan: belum ada aplikasi bukan research gap. Uji the unknown menanyakan pengetahuan apa yang belum ada, bukan produk apa yang belum dibuat." },
+    { topic: "Uji So What?", ref: "s5", time: 20,
+      q: "Evidence test menanyakan...",
+      o: ["Apa yang belum diketahui", "Bagaimana kita membuktikannya", "Apa persoalan komputasinya", "Siapa calon pengguna aplikasinya"], a: 1,
+      e: "Evidence test berfokus pada pembuktian: metrik dan data. Pertanyaan unknown dan komputasi milik dua uji lainnya." },
+    { topic: "Uji So What?", ref: "s5", time: 20,
+      q: "Jika peneliti tidak bisa menyebutkan metrik atau data apa yang akan dikumpulkan, artinya...",
+      o: ["Masalahnya masih terlalu abstrak", "Masalahnya sudah siap diuji", "Penelitian tidak memerlukan literatur", "Teknologi yang dipilih harus diganti"], a: 0,
+      e: "Itulah tanda gagal evidence test: masalah belum cukup konkret untuk dibuktikan. Mengganti teknologi tidak memperbaiki hal ini." },
+    { topic: "Uji So What?", ref: "s5", time: 20,
+      q: "IT test menguji apakah peneliti dapat menjelaskan...",
+      o: ["Jumlah pengguna aplikasi", "Kemenarikan antarmuka", "Lama waktu pengembangan", "Letak tantangan pengolahan data atau algoritmanya"], a: 3,
+      e: "Bila letak persoalan komputasinya tidak bisa dijelaskan, itu bukan riset TI. Antarmuka dan jadwal bukan inti uji ini." },
+    { topic: "Uji So What?", ref: "s5", time: 25,
+      q: "Penelitian \"membuat website profil desa\" tanpa tantangan pengolahan data maupun algoritma paling jelas gagal pada...",
+      o: ["Penulisan hook", "Standar Scopus", "IT test", "Matriks literatur"], a: 2,
+      e: "Tidak ada persoalan komputasi yang diteliti, sehingga gagal IT test. Hook dan standar sumber tidak menentukan apakah ini riset TI." },
+
+    { topic: "Literatur", ref: "s6", time: 20,
+      q: "Kolom matriks mini literature hunt dalam catatan adalah...",
+      o: ["Judul, penulis, tahun, halaman", "Latar belakang, tujuan, manfaat", "Nama jurnal, penerbit, ISSN, DOI", "Paper, problem, metode IT, data, hasil, limitation/gap"], a: 3,
+      e: "Matriks merangkum isi penelitian (problem, metode IT, data, hasil, gap), bukan data bibliografi. Kolom inilah yang memungkinkan perbandingan antarpenelitian." },
+    { topic: "Literatur", ref: "s6", time: 20,
+      q: "Pertanyaan kunci setelah matriks literatur terisi adalah...",
+      o: ["Makalah mana yang paling tebal", "Apa titik buta yang masih belum terjawab", "Siapa penulis yang paling terkenal", "Berapa jumlah sitasi totalnya"], a: 1,
+      e: "Tujuan matriks adalah menemukan titik buta, yaitu calon research gap. Tebal makalah atau popularitas penulis tidak relevan." },
+    { topic: "Standar sumber", ref: "s6", time: 20,
+      q: "Batas minimal jurnal nasional dalam catatan adalah SINTA 2. Jurnal yang <b>memenuhi</b> syarat ini adalah jurnal berperingkat...",
+      o: ["S4", "S3", "S6", "S1"], a: 3,
+      e: "SINTA memeringkat dari S1 (tertinggi) sampai S6. Minimal SINTA 2 berarti S1 atau S2; S3, S4, dan S6 berada di bawah batas." },
+    { topic: "Standar sumber", ref: "s6", time: 20,
+      q: "Pada pemeringkatan kuartil Scopus, kuartil dengan peringkat tertinggi adalah...",
+      o: ["Q4", "Q1", "Q3", "Q2"], a: 1,
+      e: "Q1 berisi 25% jurnal teratas di bidangnya; Q4 kelompok terbawah yang masih terindeks. Catatan menerima Q1 sampai Q4." },
+    { topic: "Literatur", ref: "s6", time: 20,
+      q: "Kolom limitation/gap pada matriks paling berguna karena...",
+      o: ["Menjadi bahan utama menemukan kesenjangan", "Menunjukkan biaya penelitian", "Menjadi tempat menulis hook", "Menentukan format sitasi"], a: 0,
+      e: "Keterbatasan penelitian lain menunjukkan bagian yang belum diuji, yaitu sumber research gap." },
+
+    { topic: "HOTS: Perumusan ulang", ref: "s1", time: 45, hots: true,
+      q: "Proposal berbunyi: \"Aplikasi absensi kurang bagus, maka saya ingin membuat absensi berbasis pengenalan wajah.\" Revisi mana yang paling tepat sebagai masalah riset?",
+      o: ["Saya ingin membuat aplikasi absensi wajah yang lebih modern dan menarik", "Saya ingin menggunakan model pengenalan wajah terbaru untuk absensi", "Belum diketahui seberapa akurat pengenalan wajah ringan di perangkat absensi berdaya rendah saat pencahayaan kelas berubah-ubah, diukur dengan akurasi dan waktu inferensi", "Belum ada aplikasi absensi wajah di kampus ini sehingga perlu dibuat"], a: 2,
+      e: "Hanya opsi ini yang memuat unknown (akurasi pada kondisi spesifik), bukti (akurasi, waktu inferensi), dan tantangan komputasi (model ringan, perangkat lemah). Opsi pertama produk, kedua teknologi, keempat memakai alasan \"belum ada aplikasi\" yang bukan gap." },
+    { topic: "HOTS: Evidence test", ref: "s5", time: 45, hots: true,
+      q: "Masalah riset: \"Belum diketahui apakah chatbot LLM memberikan jawaban konsisten pada pertanyaan yang ambigu.\" Rancangan bukti mana yang paling lolos evidence test?",
+      o: ["Mengajukan setiap pertanyaan ambigu beberapa kali dan dalam beberapa parafrasa, lalu mengukur tingkat kesamaan atau kesepakatan jawabannya", "Menanyakan kepuasan mahasiswa terhadap tampilan chatbot", "Menghitung jumlah fitur chatbot dibanding aplikasi lain", "Mengukur waktu yang dibutuhkan untuk membuat chatbot"], a: 0,
+      e: "Konsistensi dibuktikan dengan mengulang pertanyaan dan mengukur kesepakatan jawaban, sehingga metrik dan data cocok dengan masalah. Opsi lain mengukur hal yang tidak ditanyakan." },
+    { topic: "HOTS: Evaluasi uji", ref: "s5", time: 45, hots: true,
+      q: "\"Belum diketahui apakah mahasiswa lebih menyukai warna biru atau hijau pada poster kampus; data dari kuesioner 200 mahasiswa.\" Penilaian yang paling tepat adalah...",
+      o: ["Gagal the unknown karena sudah ada poster", "Gagal evidence test karena tidak ada data", "Lolos ketiga uji karena ada data dan pertanyaan", "Lolos the unknown dan evidence test, tetapi gagal IT test karena tidak ada persoalan komputasi"], a: 3,
+      e: "Ada hal yang belum diketahui dan ada data, tetapi tidak ada tantangan pengolahan data atau algoritma. Penelitian ini sah untuk bidang lain, namun bukan riset TI." },
+    { topic: "HOTS: Gap dari literatur", ref: "s6", time: 45, hots: true,
+      q: "Tiga makalah deteksi kendaraan melaporkan akurasi tinggi, semuanya memakai citra siang di jalan tol. Satu makalah lain menguji pejalan kaki di malam hari di jalan berlampu. Research question yang paling didukung matriks ini adalah...",
+      o: ["Seberapa akurat detektor kendaraan pada malam hari di jalan tanpa penerangan?", "Bagaimana membuat aplikasi deteksi kendaraan yang lebih indah?", "Apakah detektor kendaraan akurat pada citra siang di jalan tol?", "Apakah YOLO lebih populer daripada detektor lain?"], a: 0,
+      e: "Kombinasi kendaraan, malam, dan tanpa penerangan belum disentuh satu pun makalah: itulah titik buta. Opsi ketiga sudah dijawab literatur; opsi lain produk dan popularitas." },
+    { topic: "HOTS: Diagnosis tahap", ref: "s2", time: 40, hots: true,
+      q: "Saat seminar, dosen bertanya \"penelitian apa saja yang sudah ada tentang ini?\" dan mahasiswa tidak bisa menyebut satu pun, padahal ia yakin topiknya baru. Tahap yang terlewat adalah...",
+      o: ["Idea generation", "The IT context", "Gap identification", "Validation & evidence"], a: 2,
+      e: "Gap identification mensyaratkan mencari tahu dulu apa yang sudah diketahui. Tanpa itu, keyakinan bahwa topiknya baru tidak berdasar." }
+  ]
+};
+</script>
+
+<!-- KUISKELAS:ENGINE-JS -->
+<script>
+/*!
+ * KuisKelas engine v2.1.0 (offline)
+ * Mesin tampilan materi + kuis gaya Kahoot + profil, XP, dan lencana. Berjalan penuh tanpa internet.
+ * Materi cukup menyediakan: window.KQ_CONFIG, window.COURSE, dan <main id="view-summary">.
+ * Kuis bersama satu kelas (sesi live dengan kode), enrollment, dan riwayat nilai ada di platform web;
+ * soal dari window.COURSE diimpor ke bank soal dengan `npm run content:import`.
+ * Sumber: content/engine/kuiskelas.js. Jangan ubah per materi; sebarkan dengan `npm run content:sync`.
+ */
+(function () {
+'use strict';
+
+/* =====================================================================
+   0. Konfigurasi & data
+   ===================================================================== */
+const VERSION = '2.1.0';
+const CFG = Object.assign({
+  defaultClass: '',
+  bots: 12
+}, window.KQ_CONFIG || {});
+const C = window.COURSE || {};
+const Q = (Array.isArray(C.questions) ? C.questions : []).map(q => Object.assign({ time: q.hots ? 40 : 20 }, q));
+const MID = String(C.id || document.title || 'materi').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60) || 'materi';
+const TITLE = C.short || C.title || document.title || 'Materi';
+const CLASS_RE = /^[A-Z0-9-]{2,16}$/;
+
+/* =====================================================================
+   1. Utilitas
+   ===================================================================== */
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+/* Teks soal/opsi/pembahasan: di-escape, lalu tag format sederhana dikembalikan. */
+const rich = s => esc(s)
+  .replace(/&lt;(\/?)(b|i|em|strong|sub|sup|code|u|small)&gt;/g, '<$1$2>')
+  .replace(/&lt;br\s*\/?&gt;/g, '<br>');
+const plain = s => String(s == null ? '' : s).replace(/<[^>]*>/g, '');
+const idn = (n, d = 0) => Number(n || 0).toLocaleString('id-ID', { maximumFractionDigits: d });
+const shuffle4 = () => { const p = [0, 1, 2, 3]; for (let k = 3; k > 0; k--) { const j = Math.floor(Math.random() * (k + 1)); [p[k], p[j]] = [p[j], p[k]]; } return p; };
+const today = (d = new Date()) => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+const reduceMotion = () => window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+const LS = {
+  get(k, d) { try { const v = localStorage.getItem('kq:' + k); return v ? JSON.parse(v) : d; } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem('kq:' + k, JSON.stringify(v)); } catch (e) { } },
+  del(k) { try { localStorage.removeItem('kq:' + k); } catch (e) { } }
+};
+
+const SHAPES = [
+  '<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3 30 28H2z"/></svg>',
+  '<svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 2 30 16 16 30 2 16z"/></svg>',
+  '<svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="13"/></svg>',
+  '<svg viewBox="0 0 32 32" aria-hidden="true"><rect x="4" y="4" width="24" height="24"/></svg>'
+];
+const SHAPE_NAME = ['Segitiga merah', 'Belah ketupat biru', 'Lingkaran kuning', 'Persegi hijau'];
+const SHAPE_COLOR = ['#E21B3C', '#1368CE', '#D89E00', '#26890C'];
+const MOODS = { '': '#46178F', correct: '#26890C', wrong: '#C4162F', timeout: '#1368CE', board: '#2B0B5C' };
+const AVATARS = ['🦊', '🐼', '🐯', '🐸', '🐙', '🦉', '🐧', '🦄', '🐝', '🐳', '🦖', '🐱', '🤖', '👾', '🚀', '🌵'];
+const BOT_NAMES = ['Ayu', 'Bima88', 'Nora', 'Rafi_R', 'Sinta', 'Dimas', 'Lena', 'Citra', 'Fajar404', 'Wulan', 'Gilang', 'Putri.K', 'Bayu_B', 'Rina', 'Kevin', 'Salsa', 'Yoga', 'Tiara'];
+
+const BAD_CLASS = 'Kode kelas hanya boleh huruf kapital, angka, dan tanda minus (2–16 karakter).';
+
+/* =====================================================================
+   2. Suara (Web Audio, tanpa file eksternal)
+   ===================================================================== */
+let actx = null, soundOn = LS.get('sound', true);
+function tone(freq, dur = .12, type = 'sine', vol = .07, delay = 0) {
+  if (!soundOn) return;
+  try {
+    actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+    const t = actx.currentTime + delay, o = actx.createOscillator(), g = actx.createGain();
+    o.type = type; o.frequency.value = freq;
+    g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(g); g.connect(actx.destination); o.start(t); o.stop(t + dur + .02);
+  } catch (e) { }
+}
+const sfx = {
+  tick: () => tone(880, .05, 'square', .03),
+  start: () => { tone(523, .12, 'triangle', .08, 0); tone(659, .12, 'triangle', .08, .12); tone(784, .2, 'triangle', .08, .24); },
+  ok: () => { tone(660, .12, 'sine', .09, 0); tone(880, .22, 'sine', .09, .12); },
+  no: () => tone(150, .4, 'sawtooth', .05),
+  late: () => tone(300, .3, 'triangle', .06),
+  join: () => tone(990, .08, 'sine', .05),
+  xp: () => { tone(1046, .08, 'sine', .05, 0); tone(1318, .12, 'sine', .05, .07); },
+  level: () => { [523, 659, 784, 1047, 1319].forEach((f, i) => tone(f, .2, 'triangle', .08, i * .1)); },
+  end: () => { [523, 659, 784, 1047].forEach((f, i) => tone(f, .22, 'triangle', .08, i * .14)); }
+};
+
+/* =====================================================================
+   3. Profil, XP, level, lencana
+   ===================================================================== */
+const P0 = { nickname: '', studentId: '', classCode: CFG.defaultClass ? String(CFG.defaultClass).toUpperCase() : '', avatar: AVATARS[0], xp: 0, badges: [], awarded: {}, games: 0, bestScore: 0, dayStreak: 0, lastDay: '', read: {}, labs: {} };
+let P = Object.assign({}, P0, LS.get('profile', {}));
+P.read = P.read || {}; P.labs = P.labs || {}; P.awarded = P.awarded || {}; P.badges = P.badges || [];
+const saveP = () => { LS.set('profile', P); refreshChip(); };
+
+const need = n => 50 * (n - 1) * n;                 // XP minimum untuk level n: 0, 100, 300, 600, 1000, 1500 ...
+const levelOf = x => { let n = 1; while (x >= need(n + 1)) n++; return n; };
+const LV_NAMES = ['Pemula', 'Penjelajah', 'Analis', 'Praktisi', 'Ahli', 'Pakar', 'Master', 'Legenda'];
+const lvName = n => LV_NAMES[Math.min(n, LV_NAMES.length) - 1];
+const lvProgress = x => { const n = levelOf(x), a = need(n), b = need(n + 1); return { n, pct: Math.round((x - a) / (b - a) * 100), toNext: b - x }; };
+
+const BADGES = [
+  ['first', '🎯', 'Langkah pertama', 'Selesaikan satu kuis'],
+  ['streak5', '🔥', 'Beruntun 5', '5 jawaban benar berturut-turut'],
+  ['streak10', '☄️', 'Tak terbendung', '10 benar berturut-turut'],
+  ['perfect', '💎', 'Sempurna', 'Semua soal benar dalam satu permainan'],
+  ['hots', '🧠', 'Pemikir tajam', 'Semua soal HOTS benar dalam satu permainan'],
+  ['speed', '⚡', 'Kilat', 'Rata-rata di bawah 5 detik, akurasi minimal 70%'],
+  ['comeback', '🚀', 'Bangkit', 'Dari luar lima besar menjadi juara 1'],
+  ['reader', '📖', 'Pembaca tuntas', 'Tandai semua bab dalam satu materi'],
+  ['labrat', '🧪', 'Tangan laboratorium', 'Coba semua lab dalam satu materi'],
+  ['day3', '📅', 'Rajin', 'Belajar 3 hari berturut-turut'],
+  ['day7', '🗓️', 'Seminggu penuh', 'Belajar 7 hari berturut-turut'],
+  ['lv5', '🏅', 'Ahli', 'Capai level 5']
+];
+const BADGE = Object.fromEntries(BADGES.map(b => [b[0], b]));
+
+function addXp(amount, label) {
+  amount = Math.max(0, Math.round(amount)); if (!amount) return 0;
+  const before = levelOf(P.xp);
+  P.xp += amount;
+  const after = levelOf(P.xp);
+  saveP();
+  if (label) toast('+' + idn(amount) + ' XP', label, 'xp', '⭐');
+  if (after > before) setTimeout(() => levelUp(after), 500);
+  if (after >= 5) giveBadge('lv5');
+  return amount;
+}
+/* XP sekali saja per kunci (misal membaca bab yang sama tidak memberi XP dua kali) */
+function award(key, amount, label) {
+  if (key) { if (P.awarded[key]) return 0; P.awarded[key] = 1; }
+  return addXp(amount, label);
+}
+function giveBadge(id) {
+  if (!BADGE[id] || P.badges.includes(id)) return false;
+  P.badges.push(id); saveP();
+  const b = BADGE[id];
+  setTimeout(() => { toast('Lencana baru: ' + b[2], b[3], 'lv', b[1]); sfx.xp(); }, 300);
+  return true;
+}
+function profileReady() {
+  return !!P.nickname;
+}
+function dailyCheckIn() {
+  const t = today();
+  if (P.lastDay === t) return;
+  const y = new Date(); y.setDate(y.getDate() - 1);
+  P.dayStreak = P.lastDay === today(y) ? (P.dayStreak || 0) + 1 : 1;
+  P.lastDay = t;
+  saveP();
+  setTimeout(() => {
+    award('day:' + t, 10, P.dayStreak > 1 ? 'Hadir ' + P.dayStreak + ' hari berturut-turut' : 'Hadir hari ini');
+    if (P.dayStreak >= 3) giveBadge('day3');
+    if (P.dayStreak >= 7) giveBadge('day7');
+  }, 1200);
+}
+
+/* =====================================================================
+   4. Umpan balik visual: toast, level up, confetti
+   ===================================================================== */
+function toast(title, sub, kind = '', icon = '') {
+  const box = $('#kqToasts'); if (!box) return;
+  const el = document.createElement('div');
+  el.className = 'kq-toast ' + kind; el.setAttribute('role', 'status');
+  el.innerHTML = (icon ? `<span class="ic" aria-hidden="true">${icon}</span>` : '') + `<div>${esc(title)}${sub ? `<small>${esc(sub)}</small>` : ''}</div>`;
+  box.appendChild(el);
+  while (box.children.length > 3) box.firstChild.remove();
+  setTimeout(() => { el.classList.add('out'); setTimeout(() => el.remove(), 320); }, 3200);
+}
+function levelUp(n) {
+  sfx.level(); confetti();
+  const o = document.createElement('div');
+  o.className = 'lvup'; o.setAttribute('role', 'dialog'); o.setAttribute('aria-label', 'Naik level');
+  o.innerHTML = `<div><p>Naik level!</p><span class="big">Lv ${n}</span><p>Gelar baru: ${esc(lvName(n))}</p><button class="kq-btn light">Lanjut</button></div>`;
+  document.body.appendChild(o);
+  const close = () => o.remove();
+  o.querySelector('button').addEventListener('click', close);
+  o.querySelector('button').focus({ preventScroll: true });
+  setTimeout(close, 4500);
+}
+function confetti() {
+  if (reduceMotion()) return;
+  const wrap = document.createElement('div'); wrap.className = 'confetti'; wrap.setAttribute('aria-hidden', 'true');
+  const cols = ['#E21B3C', '#1368CE', '#F5B301', '#26890C', '#ffffff', '#B99CF2'];
+  for (let i = 0; i < 70; i++) {
+    const p = document.createElement('i');
+    p.style.left = Math.random() * 100 + '%';
+    p.style.background = cols[i % cols.length];
+    p.style.animationDuration = (1.8 + Math.random() * 1.6) + 's';
+    p.style.animationDelay = (Math.random() * .6) + 's';
+    wrap.appendChild(p);
+  }
+  document.body.appendChild(wrap);
+  setTimeout(() => wrap.remove(), 4200);
+}
+
+/* =====================================================================
+   5. Unduhan CSV (dipakai tabel data)
+   ===================================================================== */
+function csvDownload(name, rows) {
+  const s = rows.map(r => r.map(v => { v = String(v == null ? '' : v); return /[",;\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; }).join(',')).join('\n');
+  const blob = new Blob(['\ufeff' + s], { type: 'text/csv;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = name;
+  document.body.appendChild(a); a.click();
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+}
+
+/* =====================================================================
+   6. Kerangka halaman (header, tab, panggung kuis, dialog)
+   ===================================================================== */
+function buildShell() {
+  $$('header.top').forEach(h => h.remove());   // hindari header ganda bila materi menulis sendiri
+  const header = document.createElement('header');
+  header.className = 'top';
+  header.innerHTML = `
+    <div class="top-in">
+      <div class="brand">${esc(TITLE)}</div>
+      <div class="top-r">
+        <div class="tabs" role="tablist" aria-label="Pilih tampilan">
+          <button class="tab" role="tab" data-view="summary" aria-selected="true">Rangkuman</button>
+          <button class="tab" role="tab" data-view="quiz" aria-selected="false">Kuis</button>
+        </div>
+        <button class="me-chip" id="meChip" aria-haspopup="dialog" aria-label="Profil dan pencapaian">
+          <span class="me-av" id="meAv"></span>
+          <span class="me-lv"><b id="meLv"></b><span class="me-bar"><i id="meBar"></i></span></span>
+        </button>
+      </div>
+    </div>`;
+  document.body.insertBefore(header, document.body.firstChild);
+
+  let quiz = $('#view-quiz');
+  if (!quiz) {
+    quiz = document.createElement('section');
+    quiz.id = 'view-quiz'; quiz.hidden = true; quiz.setAttribute('aria-label', 'Kuis');
+    const main = $('#view-summary');
+    (main && main.parentNode ? main.parentNode : document.body).insertBefore(quiz, main ? main.nextSibling : null);
+  }
+  quiz.innerHTML = `
+    <div class="kq-stage">
+      <div class="kq-bar">
+        <span class="kq-pill" id="kqTitle">Kuis</span>
+        <button class="kq-mute" id="muteBtn" aria-pressed="${!soundOn}">Suara: ${soundOn ? 'nyala' : 'mati'}</button>
+      </div>
+      <div id="kq-root" style="flex:1;display:flex;flex-direction:column" aria-live="polite"></div>
+    </div>`;
+
+  const t = document.createElement('div'); t.id = 'kqToasts'; t.className = 'kq-toasts'; t.setAttribute('aria-live', 'polite');
+  document.body.appendChild(t);
+  const d = document.createElement('dialog'); d.id = 'kqDlg'; d.className = 'kq-dlg';
+  document.body.appendChild(d);
+
+  $$('.tab').forEach(b => b.addEventListener('click', () => showView(b.dataset.view)));
+  $('#meChip').addEventListener('click', openProfile);
+  $('#muteBtn').addEventListener('click', e => {
+    soundOn = !soundOn; LS.set('sound', soundOn);
+    e.currentTarget.textContent = 'Suara: ' + (soundOn ? 'nyala' : 'mati');
+    e.currentTarget.setAttribute('aria-pressed', String(!soundOn));
+  });
+  refreshChip();
+}
+function refreshChip() {
+  const av = $('#meAv'); if (!av) return;
+  const lp = lvProgress(P.xp);
+  av.textContent = P.avatar;
+  $('#meLv').textContent = 'Lv ' + lp.n + ' ' + lvName(lp.n);
+  $('#meBar').style.width = lp.pct + '%';
+  $('#meChip').title = (P.nickname || 'Profil') + ': level ' + lp.n + ' (' + lvName(lp.n) + ')';
+  const pr = $('#tocProg');
+  if (pr) paintReadProgress();
+}
+
+function showView(v) {
+  $$('.tab').forEach(t => t.setAttribute('aria-selected', String(t.dataset.view === v)));
+  const s = $('#view-summary'), q = $('#view-quiz');
+  if (s) s.hidden = v !== 'summary';
+  q.hidden = v !== 'quiz';
+  if (v === 'quiz') {
+    if (!$('#kq-root').children.length) Quiz.home();
+    document.body.style.background = MOODS[q.dataset.mood || ''];
+  } else {
+    Solo.abort();
+    document.body.style.background = '';
+  }
+  window.scrollTo(0, 0);
+}
+
+/* =====================================================================
+   7. Rangkuman: daftar isi, checkpoint bab, lab, bank soal
+   ===================================================================== */
+let SECTIONS = [], LABS = [];
+function enhanceSummary() {
+  const art = $('#view-summary article');
+  const toc = $('#view-summary nav.toc');
+  const secs = art ? $$(':scope > section[id]', art) : [];
+
+  if (toc && !toc.querySelector('a')) {
+    toc.innerHTML = '<b>Daftar isi</b>' + secs.map(s => {
+      const h = s.querySelector('h2');
+      const label = s.dataset.toc || (h ? h.textContent : s.id);
+      return `<a href="#${esc(s.id)}">${esc(label)}</a>`;
+    }).join('');
+  }
+
+  SECTIONS = secs.filter(s => !s.hasAttribute('data-nocheck') && !s.querySelector('#bank'));
+  const done = P.read[MID] || {};
+  SECTIONS.forEach(s => {
+    const h = s.querySelector('h2');
+    const ck = document.createElement('div');
+    ck.className = 'ck' + (done[s.id] ? ' done' : '');
+    ck.innerHTML = done[s.id]
+      ? `<span>Bab ini sudah kamu tandai paham.</span><button disabled>Selesai ✓</button>`
+      : `<span>Sudah paham isi bab ini?</span><button type="button">Tandai paham (+20 XP)</button>`;
+    s.appendChild(ck);
+    const btn = ck.querySelector('button:not([disabled])');
+    if (btn) btn.addEventListener('click', () => {
+      P.read[MID] = P.read[MID] || {}; P.read[MID][s.id] = 1;
+      award(MID + ':read:' + s.id, 20, 'Bab selesai: ' + (h ? plain(h.textContent).slice(0, 48) : s.id));
+      ck.className = 'ck done';
+      ck.innerHTML = `<span>Bab ini sudah kamu tandai paham.</span><button disabled>Selesai ✓</button>`;
+      sfx.xp(); paintReadProgress();
+      if (SECTIONS.every(x => P.read[MID][x.id])) { if (giveBadge('reader')) confetti(); }
+    });
+  });
+
+  if (toc && SECTIONS.length) {
+    const pr = document.createElement('div');
+    pr.className = 'prog'; pr.id = 'tocProg';
+    const b = toc.querySelector('b');
+    b ? b.after(pr) : toc.prepend(pr);
+    paintReadProgress();
+  }
+
+  /* Lab: 3 interaksi pertama = lab dianggap dicoba (+15 XP sekali) */
+  LABS = $$('#view-summary .lab, #view-summary [data-lab]').filter(l => !l.hasAttribute('data-noxp'));
+  LABS.forEach((lab, i) => {
+    const id = lab.dataset.lab || lab.id || ('lab' + (i + 1));
+    lab.dataset.lab = id;
+    const tried = (P.labs[MID] || {})[id];
+    const h = lab.querySelector('h4, h3, h2');
+    if (h) { const pill = document.createElement('span'); pill.className = 'lab-xp'; pill.textContent = tried ? 'Dicoba ✓' : '+15 XP'; h.prepend(pill); }
+    if (tried) { lab.classList.add('tried'); return; }
+    let n = 0;
+    const hit = () => {
+      if (++n < 3 || lab.classList.contains('tried')) return;
+      lab.classList.add('tried');
+      P.labs[MID] = P.labs[MID] || {}; P.labs[MID][id] = 1;
+      const pill = lab.querySelector('.lab-xp'); if (pill) pill.textContent = 'Dicoba ✓';
+      award(MID + ':lab:' + id, 15, 'Lab dicoba: ' + (h ? plain(h.textContent).replace(/^\+15 XP|Dicoba ✓/, '').trim().slice(0, 40) : id));
+      if (LABS.every(l => (P.labs[MID] || {})[l.dataset.lab])) giveBadge('labrat');
+    };
+    ['input', 'click', 'change'].forEach(ev => lab.addEventListener(ev, e => { if (e.target !== lab) hit(); }));
+  });
+
+  /* Bank soal */
+  const bank = $('#bank');
+  if (bank) bank.innerHTML = Q.map((q, i) => `
+    <details class="bank-item"><summary>${q.hots ? '<span class="hots-tag">HOTS</span>' : ''}Soal ${i + 1}. ${rich(q.q)}</summary>
+      <ol>${q.o.map((t, k) => `<li class="${k === q.a ? 'key' : ''}">${rich(t)}${k === q.a ? ' (Kunci)' : ''}</li>`).join('')}</ol>
+      <p><b>Pembahasan:</b> ${rich(q.e)}</p>
+    </details>`).join('');
+
+  $$('[data-go-quiz], #goQuiz').forEach(b => b.addEventListener('click', () => showView('quiz')));
+
+  /* Penanda bab aktif di daftar isi */
+  if (toc && 'IntersectionObserver' in window) {
+    const links = $$('a', toc);
+    const map = new Map(links.map(a => [a.getAttribute('href').slice(1), a]));
+    const io = new IntersectionObserver(es => {
+      es.forEach(en => { if (en.isIntersecting) { links.forEach(l => l.classList.remove('on')); const a = map.get(en.target.id); if (a) a.classList.add('on'); } });
+    }, { rootMargin: '-20% 0px -70% 0px' });
+    map.forEach((_, id) => { const el = document.getElementById(id); if (el) io.observe(el); });
+  }
+}
+function paintReadProgress() {
+  const pr = $('#tocProg'); if (!pr) return;
+  const done = P.read[MID] || {};
+  const n = SECTIONS.filter(s => done[s.id]).length;
+  pr.innerHTML = `Progres baca ${n}/${SECTIONS.length}<div class="me-bar"><i style="width:${SECTIONS.length ? n / SECTIONS.length * 100 : 0}%"></i></div>`;
+  $$('#view-summary nav.toc a').forEach(a => a.classList.toggle('done', !!done[a.getAttribute('href').slice(1)]));
+}
+function goSection(id) {
+  showView('summary');
+  const el = document.getElementById(id);
+  if (el) setTimeout(() => el.scrollIntoView({ behavior: reduceMotion() ? 'auto' : 'smooth' }), 60);
+}
+
+/* Validasi data soal agar kesalahan pembuatan materi langsung terlihat */
+function validate() {
+  const bad = [];
+  if (!Q.length) bad.push('COURSE.questions kosong.');
+  Q.forEach((q, i) => {
+    const n = 'Soal ' + (i + 1) + ': ';
+    if (!q.q) bad.push(n + 'teks soal (q) kosong');
+    if (!Array.isArray(q.o) || q.o.length !== 4) bad.push(n + 'opsi (o) harus tepat 4');
+    if (!(Number.isInteger(q.a) && q.a >= 0 && q.a <= 3)) bad.push(n + 'kunci (a) harus 0–3');
+    if (!q.e) bad.push(n + 'pembahasan (e) kosong');
+    if (q.ref && !document.getElementById(q.ref)) bad.push(n + 'ref "' + q.ref + '" tidak cocok dengan id bab mana pun');
+  });
+  if (bad.length) {
+    console.warn('[KuisKelas] Data materi perlu diperiksa:\n' + bad.join('\n'));
+    const m = $('#view-summary .wrap') || $('#view-summary');
+    if (m) {
+      const b = document.createElement('div');
+      b.className = 'note warn'; b.style.margin = '16px 0';
+      b.innerHTML = '<p><b>Data materi perlu diperiksa.</b> ' + esc(bad.slice(0, 6).join('; ')) + (bad.length > 6 ? ' …' : '') + '</p>';
+      m.prepend(b);
+    }
+  }
+  return bad;
+}
+
+/* =====================================================================
+   8. Dialog profil & pencapaian
+   ===================================================================== */
+function avatarPicker(cur) {
+  return `<div class="avs" role="group" aria-label="Pilih avatar">${AVATARS.map(a => `<button type="button" data-av="${a}" aria-pressed="${a === cur}" aria-label="Avatar ${a}">${a}</button>`).join('')}</div>`;
+}
+function bindAvatarPicker(root, onPick) {
+  $$('[data-av]', root).forEach(b => b.addEventListener('click', () => {
+    $$('[data-av]', root).forEach(x => x.setAttribute('aria-pressed', 'false'));
+    b.setAttribute('aria-pressed', 'true'); onPick(b.dataset.av);
+  }));
+}
+function readProfileForm(root) {
+  const v = s => ($(s, root) ? $(s, root).value : '').trim();
+  return { nickname: v('[name=nick]').slice(0, 24), studentId: v('[name=nim]').slice(0, 24), classCode: v('[name=cls]').toUpperCase().replace(/\s+/g, '-').slice(0, 16) };
+}
+function openProfile() {
+  const d = $('#kqDlg');
+  const lp = lvProgress(P.xp);
+  let av = P.avatar;
+  const readN = Object.values(P.read).reduce((s, o) => s + Object.keys(o).length, 0);
+  d.innerHTML = `
+    <form class="dlg-in" method="dialog">
+      <div class="dlg-head">
+        <span class="me-av" id="dlgAv">${P.avatar}</span>
+        <div><h3>${esc(P.nickname || 'Profil baru')}</h3><p>Level ${lp.n}: ${esc(lvName(lp.n))}${P.classCode ? ' | Kelas ' + esc(P.classCode) : ''}</p></div>
+        <button class="dlg-x" value="close" aria-label="Tutup">Tutup</button>
+      </div>
+      <div class="lvbox">
+        <div class="row"><span>${idn(P.xp)} XP</span><span>${idn(lp.toNext)} XP lagi ke level ${lp.n + 1}</span></div>
+        <div class="me-bar"><i style="width:${lp.pct}%"></i></div>
+      </div>
+      <div class="dstats">
+        <div><b>${P.games}</b><span>Permainan</span></div>
+        <div><b>${idn(P.bestScore)}</b><span>Skor terbaik</span></div>
+        <div><b>${P.dayStreak || 0}</b><span>Hari beruntun</span></div>
+        <div><b>${readN}</b><span>Bab dipahami</span></div>
+      </div>
+      <p class="sec-t">Lencana ${P.badges.length}/${BADGES.length}</p>
+      <div class="badges">${BADGES.map(b => `<div class="bdg ${P.badges.includes(b[0]) ? '' : 'locked'}" title="${esc(b[3])}"><span class="ic">${b[1]}</span>${esc(b[2])}<small>${esc(b[3])}</small></div>`).join('')}</div>
+      <p class="sec-t">Identitas</p>
+      ${avatarPicker(P.avatar)}
+      <div class="pform">
+        <label class="full">Nama panggilan<input name="nick" maxlength="24" value="${esc(P.nickname)}" autocomplete="nickname"></label>
+        <label>NIM / ID siswa<input name="nim" maxlength="24" value="${esc(P.studentId)}" autocomplete="off"></label>
+        <label>Kode kelas<input name="cls" maxlength="16" value="${esc(P.classCode)}" placeholder="misal TI-2A" autocomplete="off"></label>
+      </div>
+      <p class="err" id="dlgErr"></p>
+      <div class="dlg-act">
+        <button type="button" class="btn-s danger" id="dlgReset">Hapus profil di perangkat ini</button>
+        <button type="button" class="btn-s" id="dlgSave">Simpan profil</button>
+      </div>
+    </form>`;
+  bindAvatarPicker(d, a => { av = a; $('#dlgAv').textContent = a; });
+  $('#dlgSave').addEventListener('click', () => {
+    const f = readProfileForm(d);
+    if (!f.nickname) { $('#dlgErr').textContent = 'Isi nama panggilan terlebih dahulu.'; return; }
+    if (f.classCode && !CLASS_RE.test(f.classCode)) { $('#dlgErr').textContent = BAD_CLASS; return; }
+    Object.assign(P, f, { avatar: av }); saveP();
+    d.close(); toast('Profil tersimpan', P.nickname + (P.classCode ? ' | ' + P.classCode : ''), '', P.avatar);
+  });
+  $('#dlgReset').addEventListener('click', () => {
+    if (!confirm('Hapus profil, XP, dan lencana di perangkat ini? Tindakan ini tidak bisa dibatalkan.')) return;
+    P = Object.assign({}, P0, { read: {}, labs: {}, awarded: {}, badges: [] }); LS.set('profile', P); refreshChip(); d.close();
+    location.reload();
+  });
+  if (typeof d.showModal === 'function') d.showModal(); else d.setAttribute('open', '');
+}
+/* =====================================================================
+   9. Panggung kuis: layar awal, profil singkat
+   ===================================================================== */
+let KEYPICK = null;   // fungsi pemilih jawaban aktif (untuk tombol 1–4 / A–D)
+function draw(html, mood, title) {
+  KEYPICK = null;
+  $('#kq-root').innerHTML = html;
+  const q = $('#view-quiz');
+  q.dataset.mood = mood || '';
+  if (!q.hidden) document.body.style.background = MOODS[mood || ''];
+  $('#kqTitle').textContent = title || TITLE;
+  const f = $('#kq-root [data-focus]'); if (f && !q.hidden) f.focus({ preventScroll: true });
+}
+const on = (sel, fn, ev = 'click') => { const el = $(sel); if (el) el.addEventListener(ev, fn); return el; };
+function whoami() {
+  const lp = lvProgress(P.xp);
+  return `<button class="whoami" id="whoBtn" aria-label="Buka profil"><span class="me-av">${P.avatar}</span><span style="text-align:left">${esc(P.nickname)}<small>Lv ${lp.n} ${esc(lvName(lp.n))} | ${idn(P.xp)} XP</small><span class="me-bar"><i style="width:${lp.pct}%"></i></span></span></button>`;
+}
+
+const Quiz = {
+  home() {
+    Solo.abort();
+    if (!profileReady()) return this.gate(() => this.home());
+    const nH = Q.filter(x => x.hots).length;
+    draw(`
+      <div class="kq-center">
+        <div class="kq-logo">${esc(TITLE)}</div>
+        ${whoami()}
+        <p class="kq-sub">${Q.length} soal: ${Q.length - nH} reguler${nH ? ` dan ${nH} HOTS dengan poin ganda` : ''}. Makin cepat menjawab benar, makin besar poinnya. Setiap permainan menambah XP profilmu.</p>
+        <div class="modes one">
+          <button class="mode c0" id="mSolo" data-focus>${SHAPES[0].replace('<svg', '<svg class="shape"')}<b>Latihan solo</b><span>Bertanding melawan ${CFG.bots} bot. Cocok untuk belajar mandiri kapan saja, juga tanpa internet.</span></button>
+        </div>
+        <p class="offline-note">Ingin kuis bersama satu kelas? Pengajar bisa membuka sesi live dengan kode di platform KuisKelas.</p>
+      </div>`, '', TITLE);
+    on('#whoBtn', openProfile);
+    on('#mSolo', () => Solo.lobby());
+  },
+
+  /* Formulir profil singkat di panggung kuis */
+  gate(next) {
+    let av = P.avatar;
+    draw(`
+      <div class="kq-center">
+        <div class="kq-logo" style="font-size:clamp(1.8rem,5vw,2.6rem)">Buat profil</div>
+        <p class="kq-sub">Profil tersimpan di perangkat ini dan mengumpulkan XP, level, serta lencana dari semua materi.</p>
+        <div class="kq-form" id="gateForm">
+          ${avatarPicker(av)}
+          <input type="text" name="nick" maxlength="24" placeholder="Nama panggilan" value="${esc(P.nickname)}" aria-label="Nama panggilan" autocomplete="nickname" data-focus>
+          <div class="row2">
+            <input type="text" name="nim" maxlength="24" placeholder="NIM (opsional)" value="${esc(P.studentId)}" aria-label="NIM atau ID siswa" autocomplete="off">
+            <input type="text" name="cls" maxlength="16" placeholder="Kode kelas (opsional)" value="${esc(P.classCode)}" aria-label="Kode kelas" autocomplete="off">
+          </div>
+          <small class="help">Kode kelas diberikan pengajar, misalnya TI-2A. Huruf, angka, dan tanda minus.</small>
+          <p class="err" id="gErr"></p>
+          <button class="kq-btn" id="gSave">Simpan dan lanjut</button>
+        </div>
+      </div>`, '', 'Profil');
+    const root = $('#gateForm');
+    bindAvatarPicker(root, a => { av = a; });
+    const save = () => {
+      const f = readProfileForm(root);
+      const err = $('#gErr');
+      if (!f.nickname) return err.textContent = 'Isi nama panggilan terlebih dahulu.';
+      if (f.classCode && !CLASS_RE.test(f.classCode)) return err.textContent = BAD_CLASS;
+      Object.assign(P, f, { avatar: av }); saveP();
+      next();
+    };
+    on('#gSave', save);
+    $$('input', root).forEach(i => i.addEventListener('keydown', e => { if (e.key === 'Enter') save(); }));
+  }
+};
+
+/* =====================================================================
+   10. Mode solo melawan bot
+   ===================================================================== */
+const pts = (dt, T, hots) => Math.round((1 - (dt / T) / 2) * 1000) * (hots ? 2 : 1);
+const streakBonus = s => s > 1 ? Math.min(s - 1, 5) * 100 : 0;
+
+const Solo = {
+  phase: 'idle', i: 0, perm: [], bots: [], me: null, timer: null, intro: null, t0: 0, T: 20, locked: false, lastSec: 0,
+  clear() { clearInterval(this.timer); clearTimeout(this.intro); this.timer = this.intro = null; },
+  abort() { if (this.phase !== 'idle') { this.clear(); this.phase = 'idle'; } },
+
+  lobby() {
+    this.clear(); this.phase = 'lobby';
+    const shuffle = LS.get('shuffle', true);
+    draw(`
+      <div class="kq-center">
+        <div class="kq-logo">Latihan solo</div>
+        <div class="kq-pin"><small>Game PIN</small><b>${Math.floor(100000 + Math.random() * 900000)}</b></div>
+        <p class="kq-sub">Kamu melawan ${CFG.bots} bot dengan kemampuan berbeda. Tekan 1–4 atau A–D di keyboard sesuai urutan warna.</p>
+        <div class="kq-form">
+          <label class="opt"><input type="checkbox" id="optShuffle" ${shuffle ? 'checked' : ''}> Acak posisi jawaban tiap soal</label>
+          <button class="kq-btn" id="startBtn" data-focus>Mulai sebagai ${esc(P.nickname)}</button>
+          <button class="kq-btn ghost" id="backBtn" style="color:#46178F;background:#eee8fa">Kembali</button>
+        </div>
+      </div>`, '', 'Latihan solo');
+    on('#startBtn', () => this.start());
+    on('#backBtn', () => Quiz.home());
+  },
+
+  start() {
+    const sh = $('#optShuffle').checked; LS.set('shuffle', sh);
+    this.perm = Q.map(() => sh ? shuffle4() : [0, 1, 2, 3]);
+    const names = (Array.isArray(C.bots) && C.bots.length ? C.bots : BOT_NAMES).slice().sort(() => Math.random() - .5);
+    this.bots = Array.from({ length: CFG.bots }, (_, k) => ({ name: names[k % names.length] + (k >= names.length ? '_' + k : ''), skill: .4 + Math.random() * .5, speed: .12 + Math.random() * .5, score: 0, prev: 0, streak: 0 }));
+    this.me = { name: P.nickname, score: 0, prev: 0, streak: 0, best: 0, correct: 0, time: 0, answered: 0, log: [], worst: 1 };
+    this.i = 0;
+    sfx.start();
+    this.introQ();
+  },
+
+  introQ() {
+    const q = Q[this.i]; this.T = q.time; this.phase = 'intro';
+    draw(`
+      <div class="kq-center">
+        <div class="kq-count">Soal ${this.i + 1} dari ${Q.length}</div>
+        ${q.hots ? '<div class="kq-hots">Soal HOTS: poin ganda</div>' : ''}
+        <h2 class="kq-bigq">${rich(q.q)}</h2>
+        <div class="kq-sub">Waktu menjawab: ${q.time} detik</div>
+        <div class="kq-introbar" aria-hidden="true"><i></i></div>
+        <button class="kq-btn ghost" id="skipIntro" data-focus>Langsung jawab</button>
+      </div>`, '', `Soal ${this.i + 1}/${Q.length}`);
+    on('#skipIntro', () => { this.clear(); this.ask(); });
+    this.intro = setTimeout(() => this.ask(), 3000);
+  },
+
+  ask() {
+    const q = Q[this.i], p = this.perm[this.i];
+    this.clear(); this.phase = 'ask'; this.locked = false; this.lastSec = this.T;
+    draw(`
+      <div class="kq-qbox">${rich(q.q)}</div>
+      <div class="kq-timer"><div class="tnum" id="tnum" aria-label="Sisa waktu">${this.T}</div><div class="tbar"><i id="tbar"></i></div></div>
+      <div class="answers" id="answers">
+        ${p.map((orig, d) => `<button class="ans c${d}" data-d="${d}" aria-label="${SHAPE_NAME[d]}: ${esc(plain(q.o[orig]))}">${SHAPES[d]}<span>${rich(q.o[orig])}</span></button>`).join('')}
+      </div>
+      <div class="kq-foot"><span>${esc(P.avatar + ' ' + this.me.name)}</span><span>Skor ${idn(this.me.score)}${this.me.streak > 1 ? ' | Beruntun ×' + this.me.streak : ''}</span></div>`,
+      '', `Soal ${this.i + 1}/${Q.length}`);
+    $$('.ans').forEach(b => b.addEventListener('click', () => this.pick(+b.dataset.d)));
+    KEYPICK = d => this.pick(d);
+    this.t0 = performance.now();
+    this.timer = setInterval(() => this.tick(), 100);
+  },
+
+  tick() {
+    const left = Math.max(0, this.T - (performance.now() - this.t0) / 1000);
+    const bar = $('#tbar'), num = $('#tnum'); if (!bar) return;
+    bar.style.transform = `scaleX(${left / this.T})`;
+    const sec = Math.ceil(left);
+    num.textContent = sec;
+    if (sec <= 5) { num.classList.add('low'); if (sec !== this.lastSec && sec > 0) sfx.tick(); }
+    this.lastSec = sec;
+    if (left <= 0) this.finish(null, this.T);
+  },
+
+  pick(d) {
+    if (this.locked || this.phase !== 'ask') return;
+    const dt = Math.min(this.T, (performance.now() - this.t0) / 1000);
+    this.locked = true; clearInterval(this.timer); KEYPICK = null;
+    const ans = $('#answers'); ans.classList.add('locked');
+    ans.querySelector(`[data-d="${d}"]`).classList.add('picked');
+    setTimeout(() => this.finish(d, dt), 650);
+  },
+
+  finish(d, dt) {
+    this.clear(); this.phase = 'result';
+    const q = Q[this.i], p = this.perm[this.i], me = this.me;
+    const picked = d === null ? -1 : p[d];
+    const ok = picked === q.a;
+    let base = 0, bonus = 0;
+    me.prev = me.score;
+    if (ok) { me.streak++; me.correct++; base = pts(dt, this.T, q.hots); bonus = streakBonus(me.streak); me.best = Math.max(me.best, me.streak); }
+    else me.streak = 0;
+    if (d !== null) { me.time += dt; me.answered++; }
+    me.score += base + bonus;
+    const counts = [0, 0, 0, 0]; if (picked >= 0) counts[picked]++;
+    this.bots.forEach(b => {
+      b.prev = b.score;
+      const right = Math.random() < b.skill * (q.hots ? .75 : 1);
+      const rt = Math.min(.97, Math.max(.06, b.speed + (Math.random() - .5) * .4)) * this.T;
+      if (right) { b.streak++; b.score += pts(rt, this.T, q.hots) + streakBonus(b.streak); counts[q.a]++; }
+      else { b.streak = 0; const w = [0, 1, 2, 3].filter(x => x !== q.a); counts[w[Math.floor(Math.random() * 3)]]++; }
+    });
+    me.log.push({ i: this.i, picked, ok, timeout: d === null, pts: base + bonus, dt });
+    const rank = this.ranking().findIndex(x => x.me) + 1;
+    if (this.i >= 2) me.worst = Math.max(me.worst, rank);
+
+    const mood = d === null ? 'timeout' : (ok ? 'correct' : 'wrong');
+    d === null ? sfx.late() : (ok ? sfx.ok() : sfx.no());
+    const mx = Math.max(...counts, 1);
+    draw(`
+      <div class="kq-center">
+        <div class="kq-verdict">${d === null ? 'Waktu habis' : (ok ? 'Benar!' : 'Kurang tepat')}</div>
+        ${ok ? `<div class="kq-pts">+${idn(base + bonus)}</div>` : ''}
+        ${ok && me.streak > 1 ? `<div class="kq-streak">Beruntun ×${me.streak}${bonus ? ` (bonus +${bonus})` : ''}</div>` : ''}
+        ${distHtml(p, q.a, counts, mx)}
+        <div class="kq-exp"><b>Jawaban: ${rich(q.o[q.a])}</b><p>${rich(q.e)}</p></div>
+        <div class="kq-rank">Skor ${idn(me.score)} | Peringkat ${rank} dari ${this.bots.length + 1}</div>
+        <button class="kq-btn light" id="toBoard" data-focus>Papan skor</button>
+      </div>`, mood, `Soal ${this.i + 1}/${Q.length}`);
+    on('#toBoard', () => this.board());
+  },
+
+  ranking() {
+    const all = this.bots.map(b => ({ name: b.name, score: b.score, prev: b.prev, me: false }));
+    all.push({ name: P.avatar + ' ' + this.me.name, score: this.me.score, prev: this.me.prev, me: true });
+    return all.sort((a, b) => b.score - a.score || (a.me ? -1 : 1));
+  },
+
+  board() {
+    this.phase = 'board';
+    const last = this.i === Q.length - 1;
+    draw(boardHtml(this.ranking(), last), 'board', `Soal ${this.i + 1}/${Q.length}`);
+    animateBoard();
+    on('#nextQ', () => { if (last) this.final(); else { this.i++; this.introQ(); } });
+  },
+
+  final() {
+    this.phase = 'final'; sfx.end();
+    const r = this.ranking(), me = this.me, myRank = r.findIndex(x => x.me) + 1;
+    const acc = Math.round(me.correct / Q.length * 100);
+    const avgT = me.answered ? me.time / me.answered : 0;
+
+    /* XP: soal yang pertama kali benar +10, ulangan +2, selesai +20, podium bonus */
+    let firstRight = 0, repeatRight = 0;
+    me.log.forEach(l => { if (!l.ok) return; const k = MID + ':q:' + l.i; if (!P.awarded[k]) { P.awarded[k] = 1; firstRight++; } else repeatRight++; });
+    const rows = [['Selesai bermain', 20]];
+    if (firstRight) rows.push([`${firstRight} soal benar pertama kali`, firstRight * 10]);
+    if (repeatRight) rows.push([`${repeatRight} soal benar (ulangan)`, repeatRight * 2]);
+    const pod = [0, 40, 25, 15][myRank] || 0;
+    if (pod) rows.push([`Podium peringkat ${myRank}`, pod]);
+    const lvBefore = levelOf(P.xp);
+    const gained = rows.reduce((s, x) => s + x[1], 0);
+    P.games++; P.bestScore = Math.max(P.bestScore, me.score);
+    addXp(gained);
+
+    const earned = [];
+    const tryB = id => { if (giveBadge(id)) earned.push(id); };
+    tryB('first');
+    if (me.best >= 5) tryB('streak5');
+    if (me.best >= 10) tryB('streak10');
+    if (me.correct === Q.length) tryB('perfect');
+    const hotsIdx = Q.map((q, i) => q.hots ? i : -1).filter(i => i >= 0);
+    if (hotsIdx.length && hotsIdx.every(i => me.log[i] && me.log[i].ok)) tryB('hots');
+    if (me.answered && avgT < 5 && acc >= 70) tryB('speed');
+    if (myRank === 1 && me.worst > 5) tryB('comeback');
+    if (myRank <= 3) confetti();
+
+    const msg = myRank === 1 ? 'Juara 1! Pemahamanmu sudah kuat.' : (myRank <= 3 ? 'Masuk podium, sedikit lagi ke puncak.' : (acc >= 70 ? 'Pemahamanmu bagus; percepat lagi jawabanmu.' : 'Baca lagi bab yang ditandai di bawah, lalu coba lagi.'));
+    draw(`
+      <div class="kq-center">
+        <div class="kq-verdict" style="font-size:2rem">Hasil akhir</div>
+        ${podiumHtml(r)}
+        <p class="kq-sub"><b>Peringkatmu: ${myRank} dari ${r.length}.</b> ${msg}</p>
+        <div class="stats">
+          <div><b>${idn(me.score)}</b><span>Skor total</span></div>
+          <div><b>${me.correct}/${Q.length}</b><span>Jawaban benar (${acc}%)</span></div>
+          <div><b>×${me.best}</b><span>Beruntun terbaik</span></div>
+          <div><b>${me.answered ? avgT.toFixed(1).replace('.', ',') + ' dtk' : '-'}</b><span>Rata-rata waktu</span></div>
+        </div>
+        ${xpBoxHtml(rows, lvBefore)}
+        ${earned.length ? `<div class="newb">${earned.map(id => `<span>${BADGE[id][1]} ${esc(BADGE[id][2])}</span>`).join('')}</div>` : ''}
+        ${masteryHtml(me.log)}
+        ${reviewHtml(me.log)}
+        <div class="btnrow">
+          <button class="kq-btn light" id="again" data-focus>Main lagi</button>
+          <button class="kq-btn ghost" id="toHome">Menu kuis</button>
+          <button class="kq-btn ghost" id="toSum">Kembali ke rangkuman</button>
+        </div>
+      </div>`, 'board', 'Hasil akhir');
+    animateXpBox();
+    bindMastery();
+    on('#again', () => this.lobby());
+    on('#toHome', () => Quiz.home());
+    on('#toSum', () => showView('summary'));
+  }
+};
+
+/* ----- Potongan tampilan hasil permainan ----- */
+function distHtml(perm, key, counts, mx) {
+  return `<div class="kq-dist" aria-label="Sebaran jawaban">${perm.map((orig, disp) => `
+    <div class="${orig === key ? 'ok' : 'no'}"><span>${counts[orig]}</span><i style="height:${Math.max(6, counts[orig] / mx * 80)}px;background:${SHAPE_COLOR[disp]}"></i>${SHAPES[disp]}</div>`).join('')}</div>`;
+}
+function boardHtml(r, last, nextLabel, extra) {
+  const mx = Math.max(...r.map(x => x.score), 1);
+  const shown = r.slice(0, 5);
+  const meIdx = r.findIndex(x => x.me);
+  if (meIdx >= 5) shown.push(r[meIdx]);
+  return `
+    <div class="kq-center">
+      <h2 class="kq-verdict" style="font-size:2rem">Papan skor</h2>
+      <div class="lb">${shown.map(x => `<div class="lb-row ${x.me ? 'me' : ''}"><div class="lb-fill" data-w="${Math.max(4, x.score / mx * 100)}" style="width:${Math.max(4, (x.prev || 0) / mx * 100)}%"></div><span class="lb-rank">${r.indexOf(x) + 1}</span><span class="lb-name">${esc(x.name)}${x.me ? ' (kamu)' : ''}</span><span class="lb-score">${idn(x.score)}</span></div>`).join('') || '<p class="kq-sub">Belum ada peserta.</p>'}</div>
+      ${extra || ''}
+      ${nextLabel === false ? '' : `<button class="kq-btn light" id="nextQ" data-focus>${nextLabel || (last ? 'Lihat hasil akhir' : 'Soal berikutnya')}</button>`}
+    </div>`;
+}
+function animateBoard() {
+  requestAnimationFrame(() => requestAnimationFrame(() => $$('.lb-fill').forEach(el => el.style.width = el.dataset.w + '%')));
+}
+function podiumHtml(r) {
+  const top = [r[1], r[0], r[2]], cls = ['p2', 'p1', 'p3'], pos = [2, 1, 3];
+  return `<div class="podium">${top.map((x, k) => x ? `<div class="pod ${cls[k]}"><span class="nm">${esc(x.name)}${x.me ? ' (kamu)' : ''}</span><span>${idn(x.score)}</span><div class="bl">${pos[k]}</div></div>` : '<div class="pod"></div>').join('')}</div>`;
+}
+function xpBoxHtml(rows, lvBefore) {
+  const lp = lvProgress(P.xp), tot = rows.reduce((s, x) => s + x[1], 0);
+  return `<div class="xpbox" aria-label="XP yang didapat">
+    ${rows.map(x => `<div class="row"><span>${esc(x[0])}</span><span>+${idn(x[1])} XP</span></div>`).join('')}
+    <div class="row tot"><span>Total</span><span>+${idn(tot)} XP</span></div>
+    <div class="me-bar"><i data-w="${lp.pct}" style="width:${lp.n > lvBefore ? 0 : Math.max(0, lp.pct - Math.round(tot / Math.max(1, need(lp.n + 1) - need(lp.n)) * 100))}%"></i></div>
+    <span class="lvl">Level ${lp.n} ${esc(lvName(lp.n))}${lp.n > lvBefore ? ' (naik level!)' : ''} | ${idn(lp.toNext)} XP lagi ke level ${lp.n + 1}</span>
+  </div>`;
+}
+function animateXpBox() {
+  requestAnimationFrame(() => requestAnimationFrame(() => $$('.xpbox .me-bar i').forEach(el => el.style.width = el.dataset.w + '%')));
+}
+/* Penguasaan per topik soal; topik lemah diberi tautan ke bab (q.ref) */
+function masteryHtml(log) {
+  /* Kelompokkan per bab (q.ref) bila tersedia, agar saran "baca lagi" langsung menunjuk bab */
+  const by = new Map();
+  log.forEach(l => {
+    const q = Q[l.i];
+    const sec = q.ref && document.getElementById(q.ref);
+    const k = sec ? 'ref:' + q.ref : 'topic:' + (q.topic || 'Umum');
+    const label = sec ? plain(sec.dataset.toc || (sec.querySelector('h2') || {}).textContent || q.ref) : (q.topic || 'Umum');
+    const o = by.get(k) || { n: 0, ok: 0, ref: sec ? q.ref : '', label };
+    o.n++; if (l.ok) o.ok++;
+    by.set(k, o);
+  });
+  if (by.size < 2) return '';
+  const rows = [...by.values()].sort((a, b) => a.ok / a.n - b.ok / b.n);
+  return `<div class="mastery" aria-label="Penguasaan per bab"><b style="text-align:center">Penguasaan per bab</b>${rows.map(o => {
+    const pc = Math.round(o.ok / o.n * 100), weak = pc < 60;
+    return `<div class="m ${weak ? 'weak' : ''}"><span>${esc(o.label)} <small style="opacity:.75">(${o.ok}/${o.n})</small>${weak && o.ref ? `<a href="#${esc(o.ref)}" data-goto="${esc(o.ref)}">Baca lagi bab ini</a>` : ''}</span><i><b style="width:${pc}%"></b></i><span>${pc}%</span></div>`;
+  }).join('')}</div>`;
+}
+function bindMastery() {
+  $$('[data-goto]').forEach(a => a.addEventListener('click', e => { e.preventDefault(); goSection(a.dataset.goto); }));
+}
+function reviewHtml(log) {
+  return `<div class="review">${log.map(l => {
+    const q = Q[l.i];
+    const t = l.timeout ? '<span class="tag t">Waktu habis</span>' : (l.ok ? '<span class="tag">Benar</span>' : '<span class="tag x">Salah</span>');
+    return `<details><summary>${t}${q.hots ? '<span class="tag" style="background:#F5B301;color:#3a2a00">HOTS</span>' : ''}Soal ${l.i + 1}: ${rich(q.q)}</summary><p><b>Kunci: ${rich(q.o[q.a])}.</b>${l.ok || l.timeout || l.picked < 0 ? '' : ' Jawabanmu: ' + rich(q.o[l.picked]) + '.'} ${rich(q.e)}</p></details>`;
+  }).join('')}</div>`;
+}
+
+/* =====================================================================
+   15. Visual & motion: dipasang otomatis dari atribut data-*
+   ===================================================================== */
+const VIZ_COLORS = ['#46178F', '#1368CE', '#B98400', '#26890C', '#C4162F', '#00857C'];
+/* Angka di atribut data-* ditulis gaya internasional (titik desimal, tanpa pemisah ribuan);
+   tampilannya otomatis diubah ke format Indonesia oleh idn(). */
+const vizNum = t => { const n = parseFloat(String(t).trim()); return isFinite(n) ? n : 0; };
+
+/* Muncul saat digulir; juga memicu animasi grafik dan gambar */
+let vizIO = null;
+function watch(el, fn) {
+  if (!('IntersectionObserver' in window)) { fn(el); return; }
+  if (!vizIO) vizIO = new IntersectionObserver(es => es.forEach(e => {
+    if (!e.isIntersecting) return;
+    vizIO.unobserve(e.target);
+    (e.target.__vizFn || (x => x.classList.add('in')))(e.target);
+  }), { rootMargin: '0px 0px -12% 0px', threshold: .15 });
+  el.__vizFn = fn;
+  vizIO.observe(el);
+}
+
+/* Angka berjalan: <b data-count="1234" data-suffix=" nm" data-dec="1"> */
+function initCounters(root) {
+  $$('[data-count]', root).forEach(el => {
+    const to = vizNum(el.dataset.count), dec = +(el.dataset.dec || 0), suf = el.dataset.suffix || '', pre = el.dataset.prefix || '';
+    el.textContent = pre + idn(0, dec) + suf;
+    watch(el, () => {
+      if (reduceMotion()) { el.textContent = pre + idn(to, dec) + suf; return; }
+      const t0 = performance.now(), dur = 1100;
+      const tick = t => {
+        const k = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - k, 3);
+        el.textContent = pre + idn(to * e, dec) + suf;
+        if (k < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    });
+  });
+}
+
+/* Grafik batang: <div class="viz" data-viz="bar" data-series="Sel batang:120;Sel kerucut:6" data-unit=" juta"> */
+function initBars(el) {
+  const rows = (el.dataset.series || '').split(';').map(s => s.trim()).filter(Boolean).map(s => {
+    const i = s.lastIndexOf(':');
+    return { t: s.slice(0, i).trim(), v: vizNum(s.slice(i + 1)) };
+  });
+  if (!rows.length) return;
+  const max = Math.max(...rows.map(r => r.v), 1), unit = el.dataset.unit || '', dec = +(el.dataset.dec || 0);
+  const box = document.createElement('div'); box.className = 'bars';
+  box.innerHTML = rows.map(r => `<div class="b"><span class="t">${esc(r.t)}</span><span class="track"><i data-w="${Math.max(1.5, r.v / max * 100)}"></i></span><span class="v">${idn(r.v, dec)}${esc(unit)}</span></div>`).join('');
+  el.appendChild(box);
+  watch(el, () => $$('.track i', box).forEach((i, k) => setTimeout(() => i.style.width = i.dataset.w + '%', reduceMotion() ? 0 : k * 90)));
+}
+
+/* Grafik garis: data-labels="2019,2020,2021" data-series="Akurasi:70,82,91;Waktu:40,30,22" */
+function initLine(el) {
+  const labels = (el.dataset.labels || '').split(',').map(s => s.trim()).filter(Boolean);
+  const series = (el.dataset.series || '').split(';').map(s => s.trim()).filter(Boolean).map(s => {
+    const i = s.lastIndexOf(':');
+    return { name: s.slice(0, i).trim(), vals: s.slice(i + 1).split(',').map(vizNum) };
+  });
+  if (!series.length) return;
+  const W = 640, H = 300, L = 54, R = 16, T = series.length > 1 ? 34 : 14, B = 40;
+  const all = series.flatMap(s => s.vals);
+  const lo = el.dataset.min != null ? vizNum(el.dataset.min) : Math.min(0, ...all);
+  const hi = el.dataset.max != null ? vizNum(el.dataset.max) : Math.max(...all) * 1.08 || 1;
+  const n = Math.max(...series.map(s => s.vals.length));
+  const x = i => L + (W - L - R) * (n > 1 ? i / (n - 1) : .5);
+  const y = v => T + (H - T - B) * (1 - (v - lo) / (hi - lo || 1));
+  const ticks = 4;
+  let g = '';
+  for (let k = 0; k <= ticks; k++) {
+    const v = lo + (hi - lo) * k / ticks, yy = y(v);
+    g += `<line class="grid" x1="${L}" y1="${yy}" x2="${W - R}" y2="${yy}"/><text class="lbl" x="${L - 8}" y="${yy + 4}" text-anchor="end">${esc(idn(v, +(el.dataset.dec || 0)))}</text>`;
+  }
+  labels.slice(0, n).forEach((t, i) => { g += `<text class="lbl" x="${x(i)}" y="${H - B + 22}" text-anchor="middle">${esc(t)}</text>`; });
+  let paths = '', dots = '', lgd = '';
+  series.forEach((s, k) => {
+    const c = VIZ_COLORS[k % VIZ_COLORS.length];
+    const d = s.vals.map((v, i) => (i ? 'L' : 'M') + x(i) + ' ' + y(v)).join(' ');
+    paths += `<path class="ln s${k}" d="${d}" stroke="${c}"/>`;
+    dots += s.vals.map((v, i) => `<circle class="dot" cx="${x(i)}" cy="${y(v)}" fill="${c}"><title>${esc(s.name)}: ${esc(idn(v, 2))}</title></circle>`).join('');
+    if (series.length > 1) lgd += `<g transform="translate(${L + k * 150} 16)"><rect width="14" height="4" y="-4" rx="2" fill="${c}"/><text class="lgd" x="20" y="0" fill="${c}">${esc(s.name)}</text></g>`;
+  });
+  const svg = document.createElement('div');
+  svg.innerHTML = `<svg class="linechart" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(el.dataset.alt || el.querySelector('.viz-title') && el.querySelector('.viz-title').textContent || 'Grafik garis')}">
+    ${g}<line class="axis" x1="${L}" y1="${T}" x2="${L}" y2="${H - B}"/><line class="axis" x1="${L}" y1="${H - B}" x2="${W - R}" y2="${H - B}"/>${lgd}${paths}${dots}</svg>`;
+  const chart = svg.firstElementChild;
+  el.appendChild(chart);
+  $$('.ln', chart).forEach(p => { const len = Math.ceil(p.getTotalLength ? p.getTotalLength() : 1200); p.style.setProperty('--len', len); });
+  watch(chart, c => c.classList.add('in'));
+}
+
+/* Gambar SVG yang menggambar dirinya: <svg data-draw> */
+function initDraw(root) {
+  $$('svg[data-draw]', root).forEach(svg => {
+    $$('[stroke]', svg).forEach(p => {
+      const len = p.getTotalLength ? Math.ceil(p.getTotalLength()) : 0;
+      if (len) p.style.setProperty('--len', len);
+    });
+    watch(svg, s => s.classList.add('in'));
+  });
+}
+
+/* Pemutar langkah: <div class="steps" data-steps><div class="step"><h5>…</h5><p>…</p></div>…</div>
+   Setiap pergantian mengirim event "kq:step" berisi {index} agar lab bisa ikut bergerak. */
+function initSteps(root) {
+  $$('.steps[data-steps]', root).forEach(box => {
+    const steps = $$('.step', box);
+    if (!steps.length) return;
+    const stage = document.createElement('div'); stage.className = 'stage';
+    steps.forEach(s => stage.appendChild(s));
+    const track = document.createElement('div'); track.className = 'track';
+    track.innerHTML = steps.map(() => '<i><b></b></i>').join('');
+    const bar = document.createElement('div'); bar.className = 'bar';
+    bar.innerHTML = `<button type="button" class="play">Putar</button><button type="button" class="g prev">Sebelumnya</button><button type="button" class="g next">Berikutnya</button><span class="n"></span>`;
+    box.append(track, stage, bar);
+    const btn = { play: $('.play', bar), prev: $('.prev', bar), next: $('.next', bar), n: $('.n', bar) };
+    let i = 0, timer = null;
+    const show = k => {
+      i = Math.max(0, Math.min(steps.length - 1, k));
+      steps.forEach((s, j) => s.classList.toggle('on', j === i));
+      $$('i', track).forEach((t, j) => t.classList.toggle('done', j <= i));
+      btn.prev.disabled = i === 0; btn.next.disabled = i === steps.length - 1;
+      btn.n.textContent = `Langkah ${i + 1} dari ${steps.length}`;
+      box.dispatchEvent(new CustomEvent('kq:step', { detail: { index: i, total: steps.length }, bubbles: true }));
+    };
+    const stop = () => { clearInterval(timer); timer = null; btn.play.textContent = 'Putar'; };
+    btn.play.addEventListener('click', () => {
+      if (timer) return stop();
+      if (i === steps.length - 1) show(0);
+      btn.play.textContent = 'Jeda';
+      timer = setInterval(() => { if (i >= steps.length - 1) return stop(); show(i + 1); }, 2600);
+    });
+    btn.prev.addEventListener('click', () => { stop(); show(i - 1); });
+    btn.next.addEventListener('click', () => { stop(); show(i + 1); });
+    show(0);
+  });
+}
+
+/* Penggeser banding: lapisan .lay.a menempati sisi kanan (dasar), .lay.b ditampilkan di sisi kiri.
+   <div class="compare" data-left="Sebelum" data-right="Sesudah"><div class="lay a">sesudah</div><div class="lay b">sebelum</div></div> */
+function initCompare(root) {
+  $$('.compare', root).forEach(box => {
+    if ($('.hnd', box)) return;
+    const hnd = document.createElement('div'); hnd.className = 'hnd';
+    const rng = document.createElement('input');
+    rng.type = 'range'; rng.min = 0; rng.max = 100; rng.value = 50;
+    rng.setAttribute('aria-label', 'Geser untuk membandingkan ' + (box.dataset.left || 'kiri') + ' dan ' + (box.dataset.right || 'kanan'));
+    const l = document.createElement('span'); l.className = 'tagl'; l.textContent = box.dataset.left || '';
+    const r = document.createElement('span'); r.className = 'tagr'; r.textContent = box.dataset.right || '';
+    box.append(hnd, rng, l, r);
+    const b = $('.lay.b', box);
+    const set = v => { hnd.style.left = v + '%'; if (b) b.style.clipPath = `inset(0 ${100 - v}% 0 0)`; };
+    rng.addEventListener('input', () => set(+rng.value));
+    set(50);
+  });
+}
+
+/* Penanda titik: <figure class="figure hotspots"><svg…/><button class="hs" style="left:32%;top:48%" data-tip="Penjelasan">1</button></figure> */
+function initHotspots(root) {
+  $$('.hotspots', root).forEach(box => {
+    const spots = $$('.hs', box);
+    if (!spots.length) return;
+    let tip = $('.tip', box);
+    if (!tip) { tip = document.createElement('p'); tip.className = 'tip'; tip.setAttribute('aria-live', 'polite'); box.appendChild(tip); }
+    tip.textContent = box.dataset.hint || 'Ketuk nomor pada gambar untuk melihat keterangannya.';
+    spots.forEach((s, i) => {
+      if (!s.textContent.trim()) s.textContent = i + 1;
+      s.type = 'button'; s.setAttribute('aria-expanded', 'false');
+      s.addEventListener('click', () => {
+        const open = s.getAttribute('aria-expanded') === 'true';
+        spots.forEach(o => o.setAttribute('aria-expanded', 'false'));
+        s.setAttribute('aria-expanded', String(!open));
+        tip.textContent = open ? (box.dataset.hint || 'Ketuk nomor pada gambar untuk melihat keterangannya.') : (s.dataset.tip || '');
+      });
+    });
+  });
+}
+
+/* =====================================================================
+   15b. Grafik analisis: sebar, lingkaran, batang bertumpuk, histogram
+   ===================================================================== */
+const parsePairs = s => s.split(';').map(t => t.trim()).filter(Boolean).map(t => {
+  const [a, b] = t.split(',');
+  return { x: vizNum(a), y: vizNum(b) };
+});
+const splitSeries = s => (s || '').split('|').map(t => t.trim()).filter(Boolean).map(t => {
+  const i = t.indexOf(':');
+  return { name: t.slice(0, i).trim(), body: t.slice(i + 1) };
+});
+function axisFrame(W, H, L, R, T, B, xlo, xhi, ylo, yhi, xlab, ylab, dec) {
+  let g = '';
+  const X = v => L + (W - L - R) * ((v - xlo) / (xhi - xlo || 1));
+  const Y = v => T + (H - T - B) * (1 - (v - ylo) / (yhi - ylo || 1));
+  for (let k = 0; k <= 4; k++) {
+    const v = ylo + (yhi - ylo) * k / 4, y = Y(v);
+    g += `<line class="grid" x1="${L}" y1="${y}" x2="${W - R}" y2="${y}"/><text class="lbl" x="${L - 8}" y="${y + 4}" text-anchor="end">${esc(idn(v, dec))}</text>`;
+  }
+  for (let k = 0; k <= 4; k++) {
+    const v = xlo + (xhi - xlo) * k / 4, x = X(v);
+    g += `<text class="lbl" x="${x}" y="${H - B + 22}" text-anchor="middle">${esc(idn(v, dec))}</text>`;
+  }
+  g += `<line class="axis" x1="${L}" y1="${T}" x2="${L}" y2="${H - B}"/><line class="axis" x1="${L}" y1="${H - B}" x2="${W - R}" y2="${H - B}"/>`;
+  if (xlab) g += `<text class="lbl" x="${(L + W - R) / 2}" y="${H - 4}" text-anchor="middle">${esc(xlab)}</text>`;
+  if (ylab) g += `<text class="lbl" transform="translate(14 ${(T + H - B) / 2}) rotate(-90)" text-anchor="middle">${esc(ylab)}</text>`;
+  return { g, X, Y };
+}
+
+/* Diagram sebar: data-series="Kelas A: 1,2 ; 2,3 | Kelas B: 1,5 ; 2,1"  data-trend="1" */
+function initScatter(el) {
+  const series = splitSeries(el.dataset.series).map(s => ({ name: s.name, pts: parsePairs(s.body) })).filter(s => s.pts.length);
+  if (!series.length) return;
+  const all = series.flatMap(s => s.pts);
+  const pad = (a, b) => { const d = (b - a) || 1; return [a - d * .08, b + d * .08]; };
+  const [xlo, xhi] = pad(Math.min(...all.map(p => p.x)), Math.max(...all.map(p => p.x)));
+  const [ylo, yhi] = pad(Math.min(...all.map(p => p.y)), Math.max(...all.map(p => p.y)));
+  const W = 640, H = 340, L = 60, R = 18, T = series.length > 1 ? 34 : 16, B = 48;
+  const dec = +(el.dataset.dec || 0);
+  const f = axisFrame(W, H, L, R, T, B, xlo, xhi, ylo, yhi, el.dataset.xlabel, el.dataset.ylabel, dec);
+  let body = f.g, lgd = '', info = '';
+  series.forEach((s, k) => {
+    const c = VIZ_COLORS[k % VIZ_COLORS.length];
+    body += s.pts.map(p => `<circle class="dot" cx="${f.X(p.x)}" cy="${f.Y(p.y)}" r="5" fill="${c}" fill-opacity=".85"><title>${esc(s.name)}: ${esc(idn(p.x, 2))}, ${esc(idn(p.y, 2))}</title></circle>`).join('');
+    if (series.length > 1) lgd += `<g transform="translate(${L + k * 160} 16)"><circle cx="6" cy="-4" r="5" fill="${c}"/><text class="lgd" x="18" y="0" fill="${c}">${esc(s.name)}</text></g>`;
+    if (el.dataset.trend != null && s.pts.length > 1) {
+      const n = s.pts.length, sx = s.pts.reduce((a, p) => a + p.x, 0), sy = s.pts.reduce((a, p) => a + p.y, 0);
+      const sxy = s.pts.reduce((a, p) => a + p.x * p.y, 0), sxx = s.pts.reduce((a, p) => a + p.x * p.x, 0);
+      const syy = s.pts.reduce((a, p) => a + p.y * p.y, 0);
+      const m = (n * sxy - sx * sy) / (n * sxx - sx * sx || 1), b0 = (sy - m * sx) / n;
+      const r = (n * sxy - sx * sy) / (Math.sqrt((n * sxx - sx * sx) * (n * syy - sy * sy)) || 1);
+      body += `<path class="ln" d="M${f.X(xlo)} ${f.Y(m * xlo + b0)} L${f.X(xhi)} ${f.Y(m * xhi + b0)}" stroke="${c}" stroke-dasharray="8 6" stroke-width="2.5" opacity=".9"/>`;
+      info += `<div><b style="color:${c}">${esc(s.name)}</b> y = ${idn(m, 3)}x ${b0 < 0 ? '−' : '+'} ${idn(Math.abs(b0), 3)}, r = ${idn(r, 3)}, r² = ${idn(r * r, 3)}</div>`;
+    }
+  });
+  const box = document.createElement('div');
+  box.innerHTML = `<svg class="linechart" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(el.dataset.alt || 'Diagram sebar')}">${body}${lgd}</svg>${info ? `<div class="viz-stat">${info}</div>` : ''}`;
+  while (box.firstChild) el.appendChild(box.firstChild);
+  watch($('.linechart', el), c => c.classList.add('in'));
+}
+
+/* Lingkaran / donat: data-viz="pie" atau "donut", data-series="Label:40;Label:35" */
+function initPie(el) {
+  const rows = (el.dataset.series || '').split(';').map(s => s.trim()).filter(Boolean).map(s => {
+    const i = s.lastIndexOf(':');
+    return { t: s.slice(0, i).trim(), v: Math.max(0, vizNum(s.slice(i + 1))) };
+  }).filter(r => r.v > 0);
+  if (!rows.length) return;
+  const tot = rows.reduce((a, r) => a + r.v, 0), donut = el.dataset.viz === 'donut';
+  const R = 78, C = 100, hole = donut ? 44 : 0;
+  let a0 = -Math.PI / 2, paths = '';
+  rows.forEach((r, k) => {
+    const a1 = a0 + r.v / tot * Math.PI * 2, big = a1 - a0 > Math.PI ? 1 : 0;
+    const p = (ang, rad) => [C + Math.cos(ang) * rad, C + Math.sin(ang) * rad];
+    const [x0, y0] = p(a0, R), [x1, y1] = p(a1, R), [x2, y2] = p(a1, hole), [x3, y3] = p(a0, hole);
+    const d = hole
+      ? `M${x0} ${y0} A${R} ${R} 0 ${big} 1 ${x1} ${y1} L${x2} ${y2} A${hole} ${hole} 0 ${big} 0 ${x3} ${y3} Z`
+      : `M${C} ${C} L${x0} ${y0} A${R} ${R} 0 ${big} 1 ${x1} ${y1} Z`;
+    paths += `<path class="sl" d="${d}" fill="${VIZ_COLORS[k % VIZ_COLORS.length]}" style="--d:${k * 90}ms"><title>${esc(r.t)}: ${esc(idn(r.v, 2))} (${idn(r.v / tot * 100, 1)}%)</title></path>`;
+    a0 = a1;
+  });
+  const mid = donut ? `<text class="pie-mid" x="${C}" y="${C - 2}" text-anchor="middle">${esc(el.dataset.center || idn(tot, +(el.dataset.dec || 0)))}</text><text class="pie-sub" x="${C}" y="${C + 16}" text-anchor="middle">${esc(el.dataset.centerSub || 'total')}</text>` : '';
+  const box = document.createElement('div');
+  box.className = 'pie-wrap';
+  box.innerHTML = `<svg class="pie" viewBox="0 0 200 200" role="img" aria-label="${esc(el.dataset.alt || 'Diagram lingkaran')}">${paths}${mid}</svg>
+    <div class="pie-lgd">${rows.map((r, k) => `<div><i style="background:${VIZ_COLORS[k % VIZ_COLORS.length]}"></i><span>${esc(r.t)}</span><b>${idn(r.v / tot * 100, 1)}%</b></div>`).join('')}</div>`;
+  el.appendChild(box);
+  watch(box, b => b.classList.add('in'));
+}
+
+/* Batang bertumpuk: data-labels="2023,2024", data-series="Lulus:20,24;Mengulang:5,3" */
+function initStacked(el) {
+  const labels = (el.dataset.labels || '').split(',').map(s => s.trim()).filter(Boolean);
+  const series = (el.dataset.series || '').split(';').map(s => s.trim()).filter(Boolean).map(s => {
+    const i = s.lastIndexOf(':');
+    return { name: s.slice(0, i).trim(), vals: s.slice(i + 1).split(',').map(vizNum) };
+  });
+  if (!series.length || !labels.length) return;
+  const pct = el.dataset.mode === 'persen';
+  const totals = labels.map((_, i) => series.reduce((a, s) => a + (s.vals[i] || 0), 0));
+  const max = pct ? 100 : Math.max(...totals, 1);
+  const W = 640, H = 320, L = 54, R = 16, T = 34, B = 44;
+  const bw = Math.min(70, (W - L - R) / labels.length * .6);
+  let g = '', lgd = '';
+  for (let k = 0; k <= 4; k++) {
+    const v = max * k / 4, y = T + (H - T - B) * (1 - k / 4);
+    g += `<line class="grid" x1="${L}" y1="${y}" x2="${W - R}" y2="${y}"/><text class="lbl" x="${L - 8}" y="${y + 4}" text-anchor="end">${esc(idn(v, 0))}${pct ? '%' : ''}</text>`;
+  }
+  labels.forEach((lab, i) => {
+    const cx = L + (W - L - R) * ((i + .5) / labels.length);
+    let acc = 0;
+    series.forEach((s, k) => {
+      const raw = s.vals[i] || 0, v = pct ? (totals[i] ? raw / totals[i] * 100 : 0) : raw;
+      const h = (H - T - B) * (v / max), y = T + (H - T - B) * (1 - (acc + v) / max);
+      g += `<rect class="stk" x="${cx - bw / 2}" y="${y}" width="${bw}" height="${h}" fill="${VIZ_COLORS[k % VIZ_COLORS.length]}" rx="3" style="--h:${h};--y:${y}"><title>${esc(s.name)} ${esc(lab)}: ${esc(idn(raw, 2))}</title></rect>`;
+      acc += v;
+    });
+    g += `<text class="lbl" x="${cx}" y="${H - B + 22}" text-anchor="middle">${esc(lab)}</text>`;
+  });
+  series.forEach((s, k) => { lgd += `<g transform="translate(${L + k * 150} 16)"><rect width="12" height="12" y="-10" rx="3" fill="${VIZ_COLORS[k % VIZ_COLORS.length]}"/><text class="lgd" x="18" y="0" fill="${VIZ_COLORS[k % VIZ_COLORS.length]}">${esc(s.name)}</text></g>`; });
+  const wrap = document.createElement('div');
+  wrap.innerHTML = `<svg class="linechart stacked" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(el.dataset.alt || 'Batang bertumpuk')}"><line class="axis" x1="${L}" y1="${T}" x2="${L}" y2="${H - B}"/><line class="axis" x1="${L}" y1="${H - B}" x2="${W - R}" y2="${H - B}"/>${g}${lgd}</svg>`;
+  el.appendChild(wrap.firstChild);
+  watch($('.stacked', el), c => c.classList.add('in'));
+}
+
+/* Histogram: data-values="2.3,4.1,…" data-bins="8" */
+function initHist(el) {
+  const vals = (el.dataset.values || '').split(',').map(vizNum).filter(v => isFinite(v));
+  if (vals.length < 2) return;
+  const bins = Math.max(3, Math.min(20, +(el.dataset.bins || 8)));
+  const lo = Math.min(...vals), hi = Math.max(...vals), step = (hi - lo) / bins || 1;
+  const counts = new Array(bins).fill(0);
+  vals.forEach(v => counts[Math.min(bins - 1, Math.floor((v - lo) / step))]++);
+  const mean = vals.reduce((a, b) => a + b, 0) / vals.length;
+  const sd = Math.sqrt(vals.reduce((a, b) => a + (b - mean) ** 2, 0) / vals.length);
+  const sorted = [...vals].sort((a, b) => a - b);
+  const med = vals.length % 2 ? sorted[(vals.length - 1) / 2] : (sorted[vals.length / 2 - 1] + sorted[vals.length / 2]) / 2;
+  const W = 640, H = 300, L = 54, R = 16, T = 16, B = 44, max = Math.max(...counts);
+  let g = '';
+  for (let k = 0; k <= 4; k++) {
+    const v = max * k / 4, y = T + (H - T - B) * (1 - k / 4);
+    g += `<line class="grid" x1="${L}" y1="${y}" x2="${W - R}" y2="${y}"/><text class="lbl" x="${L - 8}" y="${y + 4}" text-anchor="end">${idn(v, 0)}</text>`;
+  }
+  const bw = (W - L - R) / bins;
+  counts.forEach((c, i) => {
+    const h = (H - T - B) * (c / (max || 1)), y = T + (H - T - B) - h;
+    g += `<rect class="stk" x="${L + i * bw + 2}" y="${y}" width="${bw - 4}" height="${h}" rx="3" fill="${VIZ_COLORS[0]}" style="--h:${h};--y:${y}"><title>${idn(lo + i * step, 2)} sampai ${idn(lo + (i + 1) * step, 2)}: ${c} data</title></rect>`;
+  });
+  [0, bins / 2, bins].forEach(i => { g += `<text class="lbl" x="${L + i * bw}" y="${H - B + 22}" text-anchor="middle">${esc(idn(lo + i * step, +(el.dataset.dec || 1)))}</text>`; });
+  const wrap = document.createElement('div');
+  wrap.innerHTML = `<svg class="linechart stacked" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(el.dataset.alt || 'Histogram')}">${g}<line class="axis" x1="${L}" y1="${T}" x2="${L}" y2="${H - B}"/><line class="axis" x1="${L}" y1="${H - B}" x2="${W - R}" y2="${H - B}"/></svg>
+    <div class="viz-stat"><div>n = ${vals.length}, rata-rata = ${idn(mean, 2)}, median = ${idn(med, 2)}, simpangan baku = ${idn(sd, 2)}, rentang ${idn(lo, 2)} sampai ${idn(hi, 2)}</div></div>`;
+  while (wrap.firstChild) el.appendChild(wrap.firstChild);
+  watch($('.stacked', el), c => c.classList.add('in'));
+}
+
+/* =====================================================================
+   15c. Tabel data gaya lembar kerja: urut, saring, kolom rumus, total, CSV
+   ===================================================================== */
+function initTables(root) {
+  $$('[data-table]', root).forEach(box => {
+    const table = $('table', box);
+    if (!table || box.dataset.tableReady) return;
+    box.dataset.tableReady = '1';
+    box.classList.add('dtable');
+    const ths = $$('thead th', table);
+    const names = ths.map(t => (t.dataset.key || t.textContent).trim());
+    const numCol = ths.map(t => t.hasAttribute('data-num') || t.hasAttribute('data-formula'));
+    const dec = ths.map(t => +(t.dataset.dec || 0));
+    const formula = ths.map(t => t.dataset.formula || '');
+    const rows = () => $$('tbody tr', table);
+
+    /* rumus kolom: ditulis dengan nama kolom, misal data-formula="Nilai*Bobot/100" */
+    const compiled = formula.map(f => {
+      if (!f) return null;
+      let expr = f;
+      names.forEach((n, i) => { if (n) expr = expr.split(n).join('c[' + i + ']'); });
+      const probe = expr.replace(/c\[\d+\]/g, '0').replace(/Math\.[A-Za-z0-9_]+/g, '0');
+      if (!/^[0-9+\-*/%().,\s<>=?:!]*$/.test(probe)) {
+        console.warn('[KuisKelas] rumus tabel ditolak:', f); return null;
+      }
+      try { return new Function('c', 'return (' + expr + ')'); } catch (e) { return null; }
+    });
+    /* nilai sel: dataset.raw sudah berupa angka mentah; teks ditulis format Indonesia */
+    const cellNum = td => td.dataset.raw != null
+      ? vizNum(td.dataset.raw)
+      : vizNum(String(td.textContent).trim().replace(/\.(?=\d{3}\b)/g, '').replace(',', '.'));
+    const recompute = () => {
+      rows().forEach(tr => {
+        const tds = $$('td', tr);
+        const c = tds.map((td, i) => numCol[i] ? cellNum(td) : td.textContent.trim());
+        compiled.forEach((fn, i) => {
+          if (!fn || !tds[i]) return;
+          let v = 0; try { v = fn(c); } catch (e) { v = 0; }
+          c[i] = v; tds[i].dataset.raw = v; tds[i].textContent = idn(v, dec[i]);
+        });
+      });
+      foot();
+    };
+    /* baris ringkasan */
+    const sums = ths.map(t => t.dataset.sum || '');
+    let tfoot = $('tfoot', table);
+    const foot = () => {
+      if (!sums.some(Boolean)) return;
+      if (!tfoot) { tfoot = document.createElement('tfoot'); tfoot.innerHTML = '<tr>' + ths.map(() => '<td></td>').join('') + '</tr>'; table.appendChild(tfoot); }
+      const tds = $$('td', tfoot);
+      const visible = rows().filter(tr => !tr.hidden);
+      sums.forEach((kind, i) => {
+        if (!kind) { if (i === 0) tds[0].textContent = visible.length + ' baris'; return; }
+        const vals = visible.map(tr => cellNum($$('td', tr)[i])).filter(v => isFinite(v));
+        const tot = vals.reduce((a, b) => a + b, 0);
+        const v = kind === 'rata' ? (vals.length ? tot / vals.length : 0) : kind === 'maks' ? Math.max(...vals, 0) : kind === 'min' ? Math.min(...vals, 0) : tot;
+        const lbl = { rata: 'rata-rata', maks: 'maks', min: 'min', jumlah: 'jumlah' }[kind] || kind;
+        tds[i].innerHTML = `<small>${esc(lbl)}</small>${idn(v, dec[i])}`;
+      });
+    };
+    /* urutkan */
+    ths.forEach((th, i) => {
+      th.tabIndex = 0; th.setAttribute('role', 'button'); th.classList.add('srt');
+      const go = () => {
+        const asc = th.dataset.dir !== 'asc';
+        ths.forEach(o => { if (o !== th) delete o.dataset.dir; });
+        th.dataset.dir = asc ? 'asc' : 'desc';
+        const body = $('tbody', table);
+        rows().slice().sort((a, b) => {
+          const x = $$('td', a)[i], y = $$('td', b)[i];
+          const r = numCol[i] ? cellNum(x) - cellNum(y) : x.textContent.localeCompare(y.textContent, 'id');
+          return asc ? r : -r;
+        }).forEach(tr => body.appendChild(tr));
+      };
+      th.addEventListener('click', go);
+      th.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); } });
+    });
+    /* sel yang bisa diubah */
+    ths.forEach((th, i) => {
+      if (!th.hasAttribute('data-edit')) return;
+      th.classList.add('edt');
+      rows().forEach(tr => {
+        const td = $$('td', tr)[i]; if (!td) return;
+        td.contentEditable = 'true'; td.className = 'edit'; td.inputMode = 'decimal';
+        td.addEventListener('blur', () => { const v = cellNum(td); td.dataset.raw = v; td.textContent = idn(v, dec[i]); recompute(); });
+        td.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); td.blur(); } });
+      });
+    });
+    /* alat: cari dan unduh */
+    if (!table.parentElement.classList.contains('dt-wrap')) {
+      const wrap = document.createElement('div'); wrap.className = 'dt-wrap';
+      table.parentNode.insertBefore(wrap, table); wrap.appendChild(table);
+    }
+    const bar = document.createElement('div'); bar.className = 'dt-bar';
+    const editable = ths.some(t => t.hasAttribute('data-edit'));
+    bar.innerHTML = `${box.dataset.filter != null ? '<input type="search" class="dt-find" placeholder="Cari di tabel…" aria-label="Cari di tabel">' : ''}
+      <span class="dt-hint">${editable ? 'Sel bertanda dapat diubah, kolom rumus ikut menghitung ulang.' : 'Klik judul kolom untuk mengurutkan.'}</span>
+      ${box.dataset.export != null ? '<button type="button" class="dt-csv">Unduh CSV</button>' : ''}`;
+    box.insertBefore(bar, box.firstChild);
+    const find = $('.dt-find', bar);
+    if (find) find.addEventListener('input', () => {
+      const q = find.value.toLowerCase().trim();
+      rows().forEach(tr => tr.hidden = q && !tr.textContent.toLowerCase().includes(q));
+      foot();
+    });
+    const csv = $('.dt-csv', bar);
+    if (csv) csv.addEventListener('click', () => {
+      const data = [names].concat(rows().filter(tr => !tr.hidden).map(tr => $$('td', tr).map(td => (td.dataset.raw != null ? td.dataset.raw : td.textContent).trim())));
+      csvDownload((box.dataset.export || 'tabel') + (/\.csv$/i.test(box.dataset.export || '') ? '' : '.csv'), data);
+    });
+    numCol.forEach((n, i) => { if (n) rows().forEach(tr => { const td = $$('td', tr)[i]; if (td) td.classList.add('num'); }); });
+    recompute();
+  });
+}
+
+/* =====================================================================
+   15d. Peragaan 3D
+   Perender lunak di atas <canvas> 2D: tanpa pustaka luar, jalan luring.
+   Alur yang diperagakan sama dengan pipa grafika: model → dunia → kamera →
+   proyeksi → layar, dengan pengurutan pelukis dan pencahayaan Lambert.
+   ===================================================================== */
+const MESH = {
+  kubus() {
+    const v = [[-1,-1,-1],[1,-1,-1],[1,1,-1],[-1,1,-1],[-1,-1,1],[1,-1,1],[1,1,1],[-1,1,1]];
+    const f = [[0,1,2,3],[5,4,7,6],[4,0,3,7],[1,5,6,2],[4,5,1,0],[3,2,6,7]];
+    return { v, f };
+  },
+  limas() {
+    const v = [[-1,-1,-1],[1,-1,-1],[1,-1,1],[-1,-1,1],[0,1.4,0]];
+    const f = [[3,2,1,0],[0,1,4],[1,2,4],[2,3,4],[3,0,4]];
+    return { v, f };
+  },
+  prisma() {
+    const v = [[-1,-1,-1],[1,-1,-1],[0,1,-1],[-1,-1,1],[1,-1,1],[0,1,1]];
+    const f = [[2,1,0],[3,4,5],[0,1,4,3],[1,2,5,4],[2,0,3,5]];
+    return { v, f };
+  },
+  bola(seg = 16, ring = 10) {
+    const v = [], f = [];
+    for (let i = 0; i <= ring; i++) {
+      const th = i / ring * Math.PI;
+      for (let j = 0; j < seg; j++) {
+        const ph = j / seg * Math.PI * 2;
+        v.push([Math.sin(th) * Math.cos(ph), Math.cos(th), Math.sin(th) * Math.sin(ph)]);
+      }
+    }
+    for (let i = 0; i < ring; i++) for (let j = 0; j < seg; j++) {
+      const a = i * seg + j, b = i * seg + (j + 1) % seg;
+      f.push([a, b, b + seg, a + seg]);
+    }
+    return { v, f };
+  },
+  silinder(seg = 18) {
+    const v = [], f = [];
+    for (let j = 0; j < seg; j++) {
+      const a = j / seg * Math.PI * 2;
+      v.push([Math.cos(a), -1, Math.sin(a)]); v.push([Math.cos(a), 1, Math.sin(a)]);
+    }
+    for (let j = 0; j < seg; j++) {
+      const a = j * 2, b = ((j + 1) % seg) * 2;
+      f.push([a, b, b + 1, a + 1]);
+    }
+    f.push(Array.from({ length: seg }, (_, j) => j * 2).reverse());
+    f.push(Array.from({ length: seg }, (_, j) => j * 2 + 1));
+    return { v, f };
+  },
+  torus(seg = 20, ring = 12, r = .42) {
+    const v = [], f = [];
+    for (let i = 0; i < ring; i++) for (let j = 0; j < seg; j++) {
+      const u = i / ring * Math.PI * 2, t = j / seg * Math.PI * 2;
+      v.push([(1 + r * Math.cos(t)) * Math.cos(u), r * Math.sin(t), (1 + r * Math.cos(t)) * Math.sin(u)]);
+    }
+    for (let i = 0; i < ring; i++) for (let j = 0; j < seg; j++) {
+      const a = i * seg + j, b = i * seg + (j + 1) % seg, c = ((i + 1) % ring) * seg + (j + 1) % seg, d = ((i + 1) % ring) * seg + j;
+      f.push([a, b, c, d]);
+    }
+    return { v, f };
+  }
+};
+
+function scene3d(canvas, opts) {
+  opts = opts || {};
+  const S = {
+    mesh: typeof opts.mesh === 'string' ? (MESH[opts.mesh] || MESH.kubus)() : (opts.mesh || MESH.kubus()),
+    rot: { x: -.5, y: .7, z: 0 }, scale: { x: 1, y: 1, z: 1 }, pos: { x: 0, y: 0, z: 0 },
+    dist: 5.2, fov: 55, persp: opts.persp !== false, shade: opts.shade || 'flat',
+    spin: !!opts.spin, color: opts.color || '#7B4BD8', bg: opts.bg || null, onFrame: opts.onFrame || null
+  };
+  const ctx = canvas.getContext('2d');
+  const cssVar = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+
+  const mul = (a, b) => a.map((_, i) => b[0].map((_, j) => a[i].reduce((s, v, k) => s + v * b[k][j], 0)));
+  const rotM = (x, y, z) => {
+    const cx = Math.cos(x), sx = Math.sin(x), cy = Math.cos(y), sy = Math.sin(y), cz = Math.cos(z), sz = Math.sin(z);
+    return mul(mul([[1,0,0],[0,cx,-sx],[0,sx,cx]], [[cy,0,sy],[0,1,0],[-sy,0,cy]]), [[cz,-sz,0],[sz,cz,0],[0,0,1]]);
+  };
+  S.matrix = () => {
+    const R = rotM(S.rot.x, S.rot.y, S.rot.z);
+    return R.map((row, i) => row.map((v, j) => v * [S.scale.x, S.scale.y, S.scale.z][j]));
+  };
+
+  function draw() {
+    const w = canvas.width, h = canvas.height, M = S.matrix();
+    ctx.clearRect(0, 0, w, h);
+    if (S.bg) { ctx.fillStyle = S.bg; ctx.fillRect(0, 0, w, h); }
+    const k = Math.min(w, h) / 2 / Math.tan(S.fov * Math.PI / 360);
+    const P = S.mesh.v.map(p => {
+      const x = M[0][0]*p[0] + M[0][1]*p[1] + M[0][2]*p[2] + S.pos.x;
+      const y = M[1][0]*p[0] + M[1][1]*p[1] + M[1][2]*p[2] + S.pos.y;
+      const z = M[2][0]*p[0] + M[2][1]*p[1] + M[2][2]*p[2] + S.pos.z + S.dist;
+      const f = S.persp ? k / Math.max(.15, z) : Math.min(w, h) / 4.4;
+      return { x: w / 2 + x * f, y: h / 2 - y * f, z, ok: z > .15 };
+    });
+    const faces = S.mesh.f.map(idx => {
+      const pts = idx.map(i => P[i]);
+      const zc = pts.reduce((a, p) => a + p.z, 0) / pts.length;
+      const a = S.mesh.v[idx[0]], b = S.mesh.v[idx[1]], c = S.mesh.v[idx[2]];
+      const u = [b[0]-a[0], b[1]-a[1], b[2]-a[2]], v = [c[0]-a[0], c[1]-a[1], c[2]-a[2]];
+      let n = [u[1]*v[2]-u[2]*v[1], u[2]*v[0]-u[0]*v[2], u[0]*v[1]-u[1]*v[0]];
+      const nn = [0,1,2].map(i => M[i][0]*n[0] + M[i][1]*n[1] + M[i][2]*n[2]);
+      const len = Math.hypot(...nn) || 1;
+      return { pts, zc, n: nn.map(q => q / len), ok: pts.every(p => p.ok) };
+    }).filter(f => f.ok).sort((a, b) => b.zc - a.zc);
+
+    const ink = cssVar('--ink') || '#161A3C';
+    const L = [-.45, .6, .66];
+    faces.forEach(f => {
+      const back = f.n[2] > 0;
+      if (S.shade !== 'rangka' && back) return;            // buang muka belakang
+      ctx.beginPath();
+      f.pts.forEach((p, i) => i ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y));
+      ctx.closePath();
+      if (S.shade === 'rangka') {
+        ctx.strokeStyle = back ? 'rgba(123,75,216,.28)' : S.color;
+        ctx.lineWidth = back ? 1 : 1.8; ctx.stroke();
+        return;
+      }
+      const lam = Math.max(0, -(f.n[0]*L[0] + f.n[1]*L[1] + f.n[2]*L[2]));
+      const t = .28 + .72 * lam;
+      const c = S.color.match(/\w\w/g).map(x => parseInt(x, 16));
+      ctx.fillStyle = `rgb(${c.map(v => Math.round(255 - (255 - v) * t)).join(',')})`;
+      ctx.fill();
+      if (S.shade === 'flat') { ctx.strokeStyle = 'rgba(22,26,60,.25)'; ctx.lineWidth = 1; ctx.stroke(); }
+    });
+    if (S.axes !== false) {                                 // sumbu koordinat
+      const O = { x: w / 2, y: h / 2 };
+      [['#C4162F', [1.9,0,0]], ['#26890C', [0,1.9,0]], ['#1368CE', [0,0,1.9]]].forEach(([col, a]) => {
+        const x = M[0][0]*a[0] + M[0][1]*a[1] + M[0][2]*a[2];
+        const y = M[1][0]*a[0] + M[1][1]*a[1] + M[1][2]*a[2];
+        const z = M[2][0]*a[0] + M[2][1]*a[1] + M[2][2]*a[2] + S.dist;
+        const f = S.persp ? k / Math.max(.15, z) : Math.min(w, h) / 4.4;
+        ctx.beginPath(); ctx.moveTo(O.x, O.y); ctx.lineTo(w / 2 + x * f, h / 2 - y * f);
+        ctx.strokeStyle = col; ctx.lineWidth = 2; ctx.globalAlpha = .75; ctx.stroke(); ctx.globalAlpha = 1;
+      });
+    }
+    if (S.onFrame) S.onFrame(S, ctx);
+  }
+
+  /* interaksi: seret untuk memutar, cubit/gulir untuk mendekat */
+  let drag = null;
+  const pt = e => e.touches ? { x: e.touches[0].clientX, y: e.touches[0].clientY } : { x: e.clientX, y: e.clientY };
+  const down = e => { drag = pt(e); S.spin = false; canvas.setPointerCapture && e.pointerId != null && canvas.setPointerCapture(e.pointerId); };
+  const move = e => {
+    if (!drag) return;
+    const p = pt(e);
+    S.rot.y += (p.x - drag.x) * .01; S.rot.x += (p.y - drag.y) * .01;
+    drag = p; e.preventDefault(); draw();
+    if (S.onInput) S.onInput(S);
+  };
+  const up = () => { drag = null; };
+  canvas.addEventListener('pointerdown', down); canvas.addEventListener('pointermove', move);
+  addEventListener('pointerup', up);
+  canvas.addEventListener('wheel', e => { e.preventDefault(); S.dist = Math.min(14, Math.max(2.4, S.dist + Math.sign(e.deltaY) * .35)); draw(); }, { passive: false });
+  canvas.style.touchAction = 'none';
+  canvas.tabIndex = 0;
+  canvas.setAttribute('role', 'application');
+  canvas.addEventListener('keydown', e => {
+    const k = { ArrowLeft: ['y', -.12], ArrowRight: ['y', .12], ArrowUp: ['x', -.12], ArrowDown: ['x', .12] }[e.key];
+    if (!k) return;
+    e.preventDefault(); S.spin = false; S.rot[k[0]] += k[1]; draw();
+  });
+
+  let raf = null;
+  const loop = () => { if (S.spin && !reduceMotion()) { S.rot.y += .012; draw(); } raf = requestAnimationFrame(loop); };
+  S.draw = draw; S.setMesh = m => { S.mesh = typeof m === 'string' ? (MESH[m] || MESH.kubus)() : m; draw(); };
+  S.stop = () => cancelAnimationFrame(raf);
+  draw(); loop();
+  return S;
+}
+
+/* Deklaratif: <div class="kq3d" data-3d="kubus" data-3d-controls="bentuk,proyeksi,tampilan,putar,skala" data-3d-matrix> */
+function init3D(root) {
+  $$('[data-3d]', root).forEach(box => {
+    if (box.dataset.ready3d) return;
+    box.dataset.ready3d = '1';
+    box.classList.add('kq3d');
+    const cv = document.createElement('canvas');
+    cv.className = 'kq-canvas'; cv.width = 640; cv.height = 400;
+    cv.setAttribute('aria-label', box.dataset.alt || 'Peragaan tiga dimensi, seret untuk memutar');
+    box.appendChild(cv);
+    const S = scene3d(cv, { mesh: box.dataset['3d'] || 'kubus', spin: box.dataset.spin != null, shade: box.dataset.shade || 'flat' });
+    const ctrls = (box.dataset['3dControls'] || 'bentuk,proyeksi,tampilan,putar').split(',').map(s => s.trim()).filter(Boolean);
+    const bar = document.createElement('div'); bar.className = 'kq3d-bar';
+    const parts = [];
+    if (ctrls.includes('bentuk')) parts.push(`<label>Bentuk<select data-c="bentuk">${Object.keys(MESH).map(m => `<option value="${m}"${m === (box.dataset['3d'] || 'kubus') ? ' selected' : ''}>${m[0].toUpperCase() + m.slice(1)}</option>`).join('')}</select></label>`);
+    if (ctrls.includes('proyeksi')) parts.push(`<label>Proyeksi<select data-c="proyeksi"><option value="1">Perspektif</option><option value="0">Ortografis</option></select></label>`);
+    if (ctrls.includes('tampilan')) parts.push(`<label>Tampilan<select data-c="tampilan"><option value="flat">Bidang berbayang</option><option value="halus">Tanpa garis</option><option value="rangka">Rangka kawat</option></select></label>`);
+    if (ctrls.includes('skala')) parts.push(`<label>Skala Y<input type="range" data-c="sy" min="0.3" max="2" step="0.05" value="1"></label>`);
+    if (ctrls.includes('fov')) parts.push(`<label>Sudut pandang<input type="range" data-c="fov" min="20" max="100" step="1" value="55"></label>`);
+    if (ctrls.includes('putar')) parts.push(`<button type="button" data-c="spin">${S.spin ? 'Hentikan putaran' : 'Putar otomatis'}</button>`);
+    bar.innerHTML = parts.join('');
+    if (parts.length) box.appendChild(bar);
+    let mat = null;
+    if (box.dataset['3dMatrix'] != null) {
+      mat = document.createElement('div'); mat.className = 'kq3d-mat';
+      box.appendChild(mat);
+      const paint = () => {
+        const M = S.matrix();
+        mat.innerHTML = '<b>Matriks transformasi (rotasi × skala)</b><div class="m">' +
+          M.map(r => r.map(v => `<span>${v.toFixed(2).replace('.', ',')}</span>`).join('')).join('') + '</div>';
+      };
+      S.onInput = paint; paint();
+      const old = S.draw; S.draw = () => { old(); paint(); };
+    }
+    $$('[data-c]', bar).forEach(c => {
+      const ev = c.tagName === 'BUTTON' ? 'click' : (c.tagName === 'SELECT' ? 'change' : 'input');
+      c.addEventListener(ev, () => {
+        const k = c.dataset.c;
+        if (k === 'bentuk') S.setMesh(c.value);
+        if (k === 'proyeksi') S.persp = c.value === '1';
+        if (k === 'tampilan') S.shade = c.value;
+        if (k === 'sy') S.scale.y = +c.value;
+        if (k === 'fov') S.fov = +c.value;
+        if (k === 'spin') { S.spin = !S.spin; c.textContent = S.spin ? 'Hentikan putaran' : 'Putar otomatis'; }
+        S.draw();
+      });
+    });
+  });
+}
+
+function initViz(root) {
+  root = root || document;
+  initCounters(root);
+  $$('[data-viz="bar"]', root).forEach(initBars);
+  $$('[data-viz="line"]', root).forEach(initLine);
+  $$('[data-viz="scatter"]', root).forEach(initScatter);
+  $$('[data-viz="pie"],[data-viz="donut"]', root).forEach(initPie);
+  $$('[data-viz="stacked"]', root).forEach(initStacked);
+  $$('[data-viz="hist"]', root).forEach(initHist);
+  initTables(root); init3D(root);
+  initDraw(root); initSteps(root); initCompare(root); initHotspots(root);
+  $$('[data-reveal]', root).forEach(el => watch(el, e => e.classList.add('in')));
+}
+
+/* =====================================================================
+   16. Keyboard, inisialisasi, API publik
+   ===================================================================== */
+document.addEventListener('keydown', e => {
+  if (!KEYPICK || $('#view-quiz').hidden) return;
+  if (e.target && /INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) return;
+  const k = e.key.toLowerCase();
+  const idx = ['1', '2', '3', '4'].indexOf(k) >= 0 ? +k - 1 : ['a', 'b', 'c', 'd'].indexOf(k);
+  if (idx >= 0) { e.preventDefault(); KEYPICK(idx); }
+});
+
+function init() {
+  if (!$('#view-summary')) console.warn('[KuisKelas] <main id="view-summary"> tidak ditemukan.');
+  buildShell();
+  validate();
+  enhanceSummary();
+  initViz();
+  dailyCheckIn();
+  if (location.hash === '#quiz') showView('quiz');
+}
+
+window.KQ = {
+  version: VERSION,
+  online: () => false,
+  /* KQ.award('nama-unik', 25, 'Label') untuk interaksi khusus materi; sekali per kunci */
+  award: (key, amount, label) => award(key ? MID + ':x:' + key : null, Math.min(100, amount || 0), label),
+  profile: () => JSON.parse(JSON.stringify(P)),
+  toast, confetti, showView, goSection,
+  /* Pasang ulang komponen visual pada elemen yang baru dibuat lab */
+  viz: el => initViz(el || document),
+  /* Peragaan 3D untuk lab khusus: KQ.scene3d(canvas, {mesh:'bola'|{v,f}, spin:true}) */
+  scene3d, meshes: MESH
+};
+
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+else init();
+})();
+
+</script>
+
+<script>
+(function () {
+  const $ = s => document.querySelector(s);
+  const idn = (n, d = 0) => Number(n).toLocaleString('id-ID', { maximumFractionDigits: d });
+
+  /* ---------- Penjelajah: penguji pernyataan ---------- */
+  const SAMPLES = [
+    'Saya ingin meneliti Artificial Intelligence',
+    'Saya ingin membuat aplikasi deteksi kendaraan',
+    'Saya ingin menggunakan YOLO untuk mendeteksi kendaraan',
+    'Saya ingin mengetahui apakah model computer vision tertentu dapat mendeteksi secara akurat pada kondisi malam',
+    'Mahasiswa banyak menggunakan ChatGPT',
+    'Aplikasi absensi mahasiswa masih kurang bagus',
+    'Saya ingin membuat chatbot untuk mahasiswa',
+    'Saya ingin menggunakan YOLO 26 untuk mendeteksi produk retail',
+    'Belum diketahui apakah chatbot LLM memberikan jawaban konsisten pada pertanyaan yang ambigu',
+    'Belum diketahui bagaimana performa object detection saat ukuran objek sangat kecil di pencahayaan bervariasi'
+  ];
+  const LV = {
+    topik: ['Topik', '#C4162F'], produk: ['Produk', '#D86A00'], teknologi: ['Teknologi', '#B98400'],
+    fenomena: ['Fenomena', '#1368CE'], riset: ['Masalah riset', '#26890C'], kosong: ['-', '#888']
+  };
+  function analyze(t) {
+    const s = t.toLowerCase();
+    const unknown = /belum diketahui|ingin mengetahui|apakah|bagaimana|seberapa|sejauh mana|pengaruh/.test(s);
+    const product = /(membuat|membangun|mengembangkan|merancang)\s+(aplikasi|sistem|website|situs|chatbot|platform|alat|game)/.test(s);
+    const tech = /(menggunakan|memakai|menerapkan|mengimplementasikan)\s+\S+/.test(s);
+    const topic = /meneliti/.test(s) && s.split(/\s+/).length < 9;
+    const evid = /akura|konsist|performa|presisi|precision|recall|map\b|f1|waktu|latensi|kesalahan|error|kecepatan|tingkat|skor|efektif/.test(s);
+    const it = /model|algoritma|deteksi|mendeteksi|detection|klasifikasi|data|llm|chatbot|vision|jaringan|komputasi|basis data|prediksi|segmentasi|pengenalan/.test(s);
+    const cond = /pada|saat|ketika|kondisi|di\s/.test(s);
+    let lv = 'fenomena';
+    if (!s.trim()) lv = 'kosong';
+    else if (unknown) lv = 'riset';
+    else if (product) lv = 'produk';
+    else if (tech) lv = 'teknologi';
+    else if (topic) lv = 'topik';
+    return { lv, unknown, evid: evid && unknown, it, cond };
+  }
+  const ex = $('#exIn');
+  if (ex) {
+    const pre = $('#exPresets');
+    SAMPLES.forEach((t, i) => {
+      const b = document.createElement('button'); b.type = 'button';
+      b.textContent = (i + 1) + '. ' + (t.length > 34 ? t.slice(0, 32) + '…' : t);
+      b.title = t;
+      b.addEventListener('click', () => { ex.value = t; run(); });
+      pre.appendChild(b);
+    });
+    const ok = v => v ? 'Lolos ✓' : 'Belum ✗';
+    function run() {
+      const r = analyze(ex.value);
+      $('#exSw').style.background = LV[r.lv][1];
+      $('#exLv').textContent = LV[r.lv][0];
+      $('#exU').textContent = ok(r.unknown);
+      $('#exE').textContent = r.evid ? 'Lolos ✓' : (r.unknown ? 'Perlu metrik' : 'Belum ✗');
+      $('#exT').textContent = r.it ? 'Lolos ✓' : 'Belum ✗';
+      const v = $('#exV');
+      v.classList.toggle('ion', r.lv !== 'riset');
+      const msg = {
+        kosong: 'Ketik sebuah pernyataan untuk diuji.',
+        topik: 'Masih topik: wilayahnya terlalu luas. Sebut objek, kondisi spesifik, dan apa yang belum diketahui.',
+        produk: 'Ini rencana membuat produk. Tanyakan: setelah produknya jadi, pengetahuan baru apa yang dihasilkan? Itu calon unknown-nya.',
+        teknologi: 'Teknologi dipilih lebih dulu: waspadai jebakan teknologi. Mulai dari masalahnya, lalu jadikan teknologi ini salah satu yang dibandingkan.',
+        fenomena: 'Ini fenomena atau keluhan, bahan bagus untuk hook. Ubah menjadi gagasan, lalu cari apa yang belum diketahui darinya.',
+        riset: r.evid && r.it ? 'Sudah berbentuk masalah riset dan menyebut ukuran serta persoalan komputasi. Lanjutkan ke matriks literatur untuk membuktikan gap-nya.'
+          : r.it ? 'Sudah ada unknown dan sisi TI, tetapi ukuran keberhasilannya belum tegas. Tambahkan metrik (akurasi, konsistensi, waktu, dan sejenisnya).'
+          : 'Sudah ada unknown, tetapi persoalan komputasinya belum terlihat. Jelaskan data atau algoritma apa yang menjadi tantangan.'
+      }[r.lv];
+      v.textContent = msg + (r.lv === 'riset' && !r.cond ? ' Tambahkan juga kondisi spesifiknya (pada/saat…).' : '');
+    }
+    ex.addEventListener('input', run); run();
+  }
+
+  /* ---------- Lab: urutan tahap ---------- */
+  const STAGES = ['Idea generation', 'Gap identification', 'The IT context', 'Validation & evidence'];
+  const ob = $('#ordBtns');
+  if (ob) {
+    let seq = [];
+    const shuffled = [2, 0, 3, 1];
+    const paint = () => {
+      const sq = $('#ordSeq');
+      sq.innerHTML = seq.length ? seq.map((k, i) => `<span class="${k === i ? 'good' : 'bad'}">${i + 1}. ${STAGES[k]}</span>`).join('')
+        : '<span style="background:transparent;color:var(--muted)">Urutanmu muncul di sini</span>';
+      ob.querySelectorAll('button').forEach(b => b.classList.toggle('used', seq.includes(+b.dataset.k)));
+      const v = $('#ordV');
+      const wrong = seq.filter((k, i) => k !== i).length;
+      v.classList.toggle('ion', wrong > 0);
+      if (!seq.length) v.textContent = 'Mulai dari tahap yang menurutmu paling awal.';
+      else if (wrong) v.textContent = 'Ada ' + wrong + ' tahap yang salah posisi. Ingat: gagasan dulu, lalu cari yang belum diketahui, bingkai secara TI, baru buktikan.';
+      else if (seq.length < 4) v.textContent = 'Sejauh ini benar. Lanjutkan.';
+      else { v.textContent = 'Tepat! Fenomena → gagasan → kesenjangan → bingkai TI → bukti.'; window.KQ && KQ.award('urutan-tahap-benar', 10, 'Urutan tahap tepat'); }
+    };
+    shuffled.forEach(k => {
+      const b = document.createElement('button'); b.type = 'button'; b.dataset.k = k; b.textContent = STAGES[k];
+      b.addEventListener('click', () => { if (!seq.includes(k) && seq.length < 4) { seq.push(k); paint(); } });
+      ob.appendChild(b);
+    });
+    $('#ordReset').addEventListener('click', () => { seq = []; paint(); });
+    paint();
+  }
+
+  /* ---------- Lab: isi kanvas ---------- */
+  const ids = ['cvObj', 'cvCond', 'cvMatter', 'cvAppr', 'cvMetric', 'cvData'];
+  if ($('#cvObj')) {
+    const labels = ['Problem', 'Unknown', 'Matter', 'IT approach', 'Metrik', 'Data'];
+    const draw = () => {
+      const val = ids.map(i => $('#' + i).value.trim());
+      const n = val.filter(Boolean).length;
+      $('#cvMats').innerHTML = labels.map((l, i) => `<div class="mat"><span class="sw" style="height:22px;background:${val[i] ? '#26890C' : 'var(--line)'}"></span><b>${l}</b><span>${val[i] ? 'terisi' : 'kosong'}</span></div>`).join('');
+      const [o, c, m, a, me, d] = val;
+      const rq = $('#cvRQ');
+      rq.innerHTML = '<b>Research question:</b> <span></span>';
+      rq.querySelector('span').textContent = o && a
+        ? `Seberapa baik ${a} melakukan ${o}${c ? ' ' + c : ''}${me ? ', diukur dengan ' + me : ''}${d ? ', menggunakan data ' + d : ''}?`
+        : 'isi minimal problem dan IT approach.';
+      const v = $('#cvV');
+      const miss = labels.filter((_, i) => !val[i]);
+      v.classList.toggle('ion', n < 6);
+      if (!c) v.textContent = 'Kolom unknown kosong: pertanyaan ini gagal uji the unknown. Kondisi apa yang belum diketahui?';
+      else if (!me || !d) v.textContent = 'Belum ada metrik atau data: gagal evidence test, masalah masih terlalu abstrak.';
+      else if (!m) v.textContent = 'Kanvas hampir lengkap, tetapi matter kosong. Siapa yang dirugikan bila pertanyaan ini tidak terjawab?';
+      else if (n < 6) v.textContent = 'Masih kosong: ' + miss.join(', ') + '.';
+      else { v.textContent = 'Kanvas lengkap (' + idn(n) + '/6). Research question di atas siap diuji dengan So What?.'; }
+    };
+    ids.forEach(i => $('#' + i).addEventListener('input', draw));
+    $('#cvMetric').addEventListener('change', draw);
+    draw();
+  }
+
+  /* ---------- Lab: tebak lalu cek So What? ---------- */
+  const SW = [
+    { t: 'Belum ada aplikasi absensi berbasis QR di kampus ini, jadi saya membuatnya', a: [0, 0, 0], why: 'Belum ada aplikasi bukan gap; tidak ada metrik; tidak ada persoalan komputasi yang diteliti.' },
+    { t: 'Belum diketahui apakah chatbot LLM menjawab konsisten pada pertanyaan ambigu, diukur dengan tingkat kesepakatan jawaban berulang', a: [1, 1, 1], why: 'Ada unknown, metrik jelas, dan tantangannya ada pada perilaku model bahasa.' },
+    { t: 'Belum diketahui bagaimana performa deteksi objek berukuran sangat kecil pada pencahayaan bervariasi', a: [1, 0, 1], why: 'Unknown dan sisi komputasinya jelas, tetapi metrik dan datanya belum disebut: perlu ditajamkan (misalnya mAP pada dataset objek kecil).' },
+    { t: 'Belum diketahui warna poster favorit mahasiswa, data dari kuesioner 200 orang', a: [1, 1, 0], why: 'Ada unknown dan data, tetapi tidak ada tantangan pengolahan data atau algoritma: bukan riset TI.' },
+    { t: 'Saya ingin menggunakan YOLO 26 untuk mendeteksi produk retail', a: [0, 0, 1], why: 'Ada tugas komputasi (deteksi), tetapi tidak menyebut yang belum diketahui maupun cara membuktikan: jebakan teknologi.' }
+  ];
+  const ss = $('#swSel');
+  if (ss) {
+    SW.forEach((x, i) => { const o = document.createElement('option'); o.value = i; o.textContent = x.t; ss.appendChild(o); });
+    const boxes = ['#swU', '#swE', '#swT'].map(s => $(s));
+    const names = ['The unknown', 'Evidence test', 'IT test'];
+    const reset = () => { $('#swMats').innerHTML = ''; $('#swV').textContent = 'Tebakanmu belum dicek.'; $('#swV').classList.remove('ion'); };
+    ss.addEventListener('change', () => { boxes.forEach(b => b.checked = false); reset(); });
+    boxes.forEach(b => b.addEventListener('change', reset));
+    $('#swGo').addEventListener('click', () => {
+      const x = SW[+ss.value];
+      let right = 0;
+      $('#swMats').innerHTML = x.a.map((ans, i) => {
+        const g = boxes[i].checked ? 1 : 0; if (g === ans) right++;
+        return `<div class="mat"><span class="sw" style="height:28px;background:${ans ? '#26890C' : '#C4162F'}"></span><b>${names[i]}: ${ans ? 'lolos' : 'gagal'}</b><span>Tebakanmu ${g === ans ? 'benar ✓' : 'keliru ✗'}</span></div>`;
+      }).join('');
+      const v = $('#swV');
+      v.classList.toggle('ion', right < 3);
+      v.textContent = (right === 3 ? 'Ketiga tebakan tepat. ' : right + ' dari 3 tebakan tepat. ') + x.why;
+      if (right === 3 && window.KQ) KQ.award('so-what-' + ss.value, 5, 'Uji So What? tepat');
+    });
+  }
+})();
+</script>
+</body>
+</html>
