@@ -10,13 +10,20 @@ export function MaterialsFilters({ courses }: { courses: { id: string; title: st
   const router = useRouter();
   const params = useSearchParams();
   const [q, setQ] = useState(params.get('q') ?? '');
-  const [_, startTransition] = useTransition();
+  const [, startTransition] = useTransition();
+
+  /* Filter baru selalu kembali ke halaman 1 */
+  function apply(next: URLSearchParams) {
+    next.delete('page');
+    startTransition(() => router.replace(`/materials?${next.toString()}`));
+  }
 
   useEffect(() => {
+    if (q === (params.get('q') ?? '')) return;
     const t = setTimeout(() => {
       const next = new URLSearchParams(params.toString());
       if (q) next.set('q', q); else next.delete('q');
-      startTransition(() => router.replace(`/materials?${next.toString()}`));
+      apply(next);
     }, 300);
     return () => clearTimeout(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -38,7 +45,7 @@ export function MaterialsFilters({ courses }: { courses: { id: string; title: st
         onValueChange={(v) => {
           const next = new URLSearchParams(params.toString());
           if (v && v !== 'all') next.set('courseId', v); else next.delete('courseId');
-          startTransition(() => router.replace(`/materials?${next.toString()}`));
+          apply(next);
         }}
       >
         <SelectTrigger className="w-full sm:w-60"><SelectValue placeholder="All courses" /></SelectTrigger>
@@ -54,7 +61,7 @@ export function MaterialsFilters({ courses }: { courses: { id: string; title: st
         onValueChange={(v) => {
           const next = new URLSearchParams(params.toString());
           next.set('sort', v);
-          startTransition(() => router.replace(`/materials?${next.toString()}`));
+          apply(next);
         }}
       >
         <SelectTrigger className="w-full sm:w-44"><SelectValue /></SelectTrigger>

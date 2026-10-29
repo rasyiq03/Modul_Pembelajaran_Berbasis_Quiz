@@ -12,7 +12,6 @@ export function SiteFooter() {
         <div className="flex items-center gap-4">
           <Link href="/courses" className="hover:text-foreground">Courses</Link>
           <Link href="/materials" className="hover:text-foreground">Materials</Link>
-          <Link href="/join" className="hover:text-foreground">Join a Quiz</Link>
         </div>
         <div className="text-xs">
           Built for university interactive learning.

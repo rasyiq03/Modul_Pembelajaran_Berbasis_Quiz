@@ -1,8 +1,7 @@
 import Link from 'next/link';
-import { ArrowRight, BookOpen, Boxes, ClipboardList, KeyRound, ListChecks, Radio, Trophy, Users, TrendingUp } from 'lucide-react';
+import { BookOpen, Boxes, ClipboardList, ListChecks, Radio, Trophy, Users, TrendingUp } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { adminStats, avgScore, recentAttempts } from '@/lib/admin/queries';
 import { PageHeader, EmptyState } from '@/components/site/page-parts';
@@ -11,17 +10,17 @@ export const dynamic = 'force-dynamic';
 
 export default async function AdminOverviewPage() {
   const [stats, avg, attempts] = await Promise.all([adminStats(), avgScore(), recentAttempts(8)]);
-  const cards = [
+  /* href hanya untuk halaman yang sudah ada */
+  const cards: { label: string; value: number | string; icon: typeof BookOpen; href?: string }[] = [
     { label: 'Courses', value: stats.courses, icon: BookOpen, href: '/admin/courses' },
     { label: 'Published materials', value: stats.publishedMaterials, icon: Boxes, href: '/admin/materials' },
-    { label: 'Published questions', value: stats.publishedQuestions, icon: ListChecks, href: '/admin/questions' },
-    { label: 'Published quizzes', value: stats.publishedQuizzes, icon: ClipboardList, href: '/admin/quizzes' },
-    { label: 'Active enrollments', value: stats.activeEnrollments, icon: Users, href: '/admin/keys' },
-    { label: 'Graded attempts', value: stats.gradedAttempts, icon: TrendingUp, href: '/admin/results' },
-    { label: 'Active sessions', value: stats.activeSessions, icon: Radio, href: '/admin/sessions' },
-    { label: 'Participants', value: stats.participants, icon: Users, href: '/admin/sessions' },
-    { label: 'Avg. score', value: `${avg}%`, icon: Trophy, href: '/admin/results' },
-    { label: 'Enrollment keys', value: 'Manage', icon: KeyRound, href: '/admin/keys' },
+    { label: 'Published questions', value: stats.publishedQuestions, icon: ListChecks },
+    { label: 'Published quizzes', value: stats.publishedQuizzes, icon: ClipboardList },
+    { label: 'Active enrollments', value: stats.activeEnrollments, icon: Users },
+    { label: 'Graded attempts', value: stats.gradedAttempts, icon: TrendingUp },
+    { label: 'Active sessions', value: stats.activeSessions, icon: Radio },
+    { label: 'Participants', value: stats.participants, icon: Users },
+    { label: 'Avg. score', value: `${avg}%`, icon: Trophy },
   ];
 
   return (
@@ -29,9 +28,9 @@ export default async function AdminOverviewPage() {
       <PageHeader title="Overview" description="Real metrics from your database across courses, materials, quizzes, and sessions." />
 
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
-        {cards.map((c) => (
-          <Link key={c.label} href={c.href} className="block">
-            <Card className="h-full transition-shadow hover:shadow-md">
+        {cards.map((c) => {
+          const card = (
+            <Card className={c.href ? 'h-full transition-shadow hover:shadow-md' : 'h-full'}>
               <CardContent className="flex items-center justify-between p-4">
                 <div>
                   <div className="text-xs text-muted-foreground">{c.label}</div>
@@ -42,17 +41,15 @@ export default async function AdminOverviewPage() {
                 </span>
               </CardContent>
             </Card>
-          </Link>
-        ))}
+          );
+          return c.href ? <Link key={c.label} href={c.href} className="block">{card}</Link> : <div key={c.label}>{card}</div>;
+        })}
       </div>
 
       <Card>
-        <CardHeader className="flex-row items-center justify-between space-y-0">
-          <div>
-            <CardTitle>Recent quiz attempts</CardTitle>
-            <CardDescription>Latest graded/submitted attempts across all quizzes.</CardDescription>
-          </div>
-          <Button asChild variant="link" size="sm"><Link href="/admin/results">All results <ArrowRight className="h-4 w-4" /></Link></Button>
+        <CardHeader>
+          <CardTitle>Recent quiz attempts</CardTitle>
+          <CardDescription>Latest graded/submitted attempts across all quizzes.</CardDescription>
         </CardHeader>
         <CardContent>
           {attempts.length === 0 ? (

@@ -12,7 +12,7 @@ export const revalidate = 0;
 export const metadata = { title: 'Materials · KuisKelas' };
 
 export default async function MaterialsPage({ searchParams }: { searchParams: { q?: string; courseId?: string; sort?: string; page?: string } }) {
-  const page = Number(searchParams.page || 1);
+  const page = Math.max(1, Math.floor(Number(searchParams.page)) || 1);
   const [courses, { items, total }] = await Promise.all([
     getPublishedCourses(),
     searchPublishedMaterials({

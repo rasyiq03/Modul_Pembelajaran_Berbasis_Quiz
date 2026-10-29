@@ -82,5 +82,5 @@ Format soal di `window.COURSE.questions`:
 
 ## Catatan
 
-- `pcd-01` dan `pcd-02` masih memakai format kuis lama (tanpa mesin KuisKelas). Keduanya tetap bisa dipakai offline, dan KuisKelas Online tetap bisa membuat room dari soalnya. Fitur profil, XP, dan lencana di file itu baru aktif setelah dipindah ke format `window.COURSE`.
+- Semua materi di repo ini memakai mesin KuisKelas (`window.COURSE`). File format kuis lama (`const Q = [...]`) tetap bisa dipakai lewat **Pakai file materi…** di KuisKelas Online, tetapi tanpa profil, XP, dan lencana.
 - Beberapa `COURSE.id` tidak sama dengan nama filenya (misalnya `kwu-03` ber-id `kwu-01-design-thinking`). Id dipakai sebagai kunci progres baca dan XP. Mengubahnya membuat progres lama di perangkat siswa tidak terbaca lagi, jadi biarkan kecuali memang ingin mulai dari nol.

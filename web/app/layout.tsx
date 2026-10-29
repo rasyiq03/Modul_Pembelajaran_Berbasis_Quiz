@@ -4,6 +4,7 @@ import { Montserrat, Source_Serif_4 } from 'next/font/google';
 import { AuthProvider } from '@/lib/supabase/auth-provider';
 import { SiteHeader } from '@/components/site/site-header';
 import { SiteFooter } from '@/components/site/site-footer';
+import { Toaster } from '@/components/ui/toaster';
 
 /* Huruf yang sama dengan materi: Montserrat untuk judul & kontrol, Source Serif 4 untuk bacaan */
 const heading = Montserrat({ subsets: ['latin'], weight: ['500', '600', '700', '800'], variable: '--font-head', display: 'swap' });
@@ -24,6 +25,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <main className="flex-1">{children}</main>
             <SiteFooter />
           </div>
+          <Toaster />
         </AuthProvider>
       </body>
     </html>

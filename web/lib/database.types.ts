@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 // Tipe skema yang ditulis tangan, mengikuti supabase/migrations/2026102800*.sql.
 // Relasi diketik longgar (any) agar select bertingkat tetap bisa dipakai tanpa file hasil generate.
 // Bila Supabase CLI tersedia: `npx supabase gen types typescript --linked > lib/database.types.ts`.

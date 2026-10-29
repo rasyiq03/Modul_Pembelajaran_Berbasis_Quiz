@@ -77,7 +77,10 @@ export async function searchPublishedMaterials(opts: {
     .select('*, courses(id, title, slug), material_tags(tag)', { count: 'exact' })
     .eq('status', 'published');
 
-  if (opts.q) query = query.or(`title.ilike.%${opts.q}%,description.ilike.%${opts.q}%`);
+  /* Teks pencarian disisipkan ke filter .or() PostgREST: buang karakter sintaks filter (, . ( ) : " \)
+     dan wildcard (% * _) agar pengguna tidak bisa menambah kondisi sendiri. */
+  const q = (opts.q ?? '').replace(/[,.():"\\%*_]/g, ' ').trim().slice(0, 100);
+  if (q) query = query.or(`title.ilike.%${q}%,description.ilike.%${q}%`);
   if (opts.courseId) query = query.eq('course_id', opts.courseId);
   query = opts.sort === 'title' ? query.order('title', { ascending: true }) : query.order('updated_at', { ascending: false });
   query = query.range(from, to);

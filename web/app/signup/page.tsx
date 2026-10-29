@@ -62,7 +62,7 @@ function SignUpForm() {
         <Card>
           <CardHeader>
             <CardTitle>Sign up</CardTitle>
-            <CardDescription>Create a student account to enroll in materials and track your quiz history.</CardDescription>
+            <CardDescription>Create a student account to unlock materials with an enrollment key.</CardDescription>
           </CardHeader>
           <CardContent>
             {sent && (

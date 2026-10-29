@@ -100,6 +100,36 @@
       "questions": 35
     },
     {
+      "path": "Metodologi Penelitian/metopen-01-pengantar.html",
+      "folder": "Metodologi Penelitian",
+      "file": "metopen-01-pengantar.html",
+      "title": "Metodologi Penelitian 1",
+      "format": "kuiskelas",
+      "id": "metpen-01-masalah-penelitian",
+      "short": "Metodologi Penelitian",
+      "questions": 30
+    },
+    {
+      "path": "Metodologi Penelitian/metopen-02-research-question.html",
+      "folder": "Metodologi Penelitian",
+      "file": "metopen-02-research-question.html",
+      "title": "Research Question, Hipotesis, dan Variabel",
+      "format": "kuiskelas",
+      "id": "metpen-04-research-question",
+      "short": "Metodologi Penelitian",
+      "questions": 32
+    },
+    {
+      "path": "Metodologi Penelitian/metopen-03-research-problem.html",
+      "folder": "Metodologi Penelitian",
+      "file": "metopen-03-research-problem.html",
+      "title": "Merumuskan Masalah Riset",
+      "format": "kuiskelas",
+      "id": "metpen-01-merumuskan-masalah-riset",
+      "short": "Merumuskan Masalah Riset",
+      "questions": 35
+    },
+    {
       "path": "Metodologi Penelitian/metopen-04-paradigma-penelitian.html",
       "folder": "Metodologi Penelitian",
       "file": "metopen-04-paradigma-penelitian.html",
@@ -117,26 +147,6 @@
       "format": "kuiskelas",
       "id": "metopen-05-penelusuran-literatur-slr",
       "short": "Metodologi Penelitian",
-      "questions": 35
-    },
-    {
-      "path": "Pengolahan Citra Digital/pcd-01-pengantar.html",
-      "folder": "Pengolahan Citra Digital",
-      "file": "pcd-01-pengantar.html",
-      "title": "PCD dan Computer Vision",
-      "format": "legacy",
-      "id": "",
-      "short": "PCD dan Computer Vision",
-      "questions": 35
-    },
-    {
-      "path": "Pengolahan Citra Digital/pcd-02-akuisisi-format-ukuran-citra.html",
-      "folder": "Pengolahan Citra Digital",
-      "file": "pcd-02-akuisisi-format-ukuran-citra.html",
-      "title": "PCD: Akuisisi, Format, dan Ukuran Citra",
-      "format": "legacy",
-      "id": "",
-      "short": "PCD: Akuisisi, Format, dan Ukuran Citra",
       "questions": 35
     },
     {

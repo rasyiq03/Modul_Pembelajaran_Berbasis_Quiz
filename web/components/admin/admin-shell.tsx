@@ -3,23 +3,14 @@
 import { ReactNode, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import {
-  BarChart3, BookOpen, Boxes, ClipboardList, FileInput, KeyRound, LayoutDashboard,
-  ListChecks, Radio, Settings, ChevronLeft,
-} from 'lucide-react';
+import { BookOpen, Boxes, LayoutDashboard, ChevronLeft } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
+/* Hanya halaman yang sudah ada; key, bank soal, kuis, sesi, dan hasil menyusul di langkah 2 */
 const adminLinks = [
   { href: '/admin', label: 'Overview', icon: LayoutDashboard },
   { href: '/admin/courses', label: 'Courses', icon: BookOpen },
   { href: '/admin/materials', label: 'Materials', icon: Boxes },
-  { href: '/admin/keys', label: 'Enrollment Keys', icon: KeyRound },
-  { href: '/admin/questions', label: 'Question Bank', icon: ListChecks },
-  { href: '/admin/quizzes', label: 'Quiz Builder', icon: ClipboardList },
-  { href: '/admin/sessions', label: 'Live Sessions', icon: Radio },
-  { href: '/admin/results', label: 'Results', icon: BarChart3 },
-  { href: '/admin/import-export', label: 'Import/Export', icon: FileInput },
-  { href: '/admin/settings', label: 'Settings', icon: Settings },
 ];
 
 export function AdminShell({ children }: { children: ReactNode }) {

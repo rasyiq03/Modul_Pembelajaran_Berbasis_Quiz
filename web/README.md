@@ -33,16 +33,21 @@ Salin `.env.example` ke `.env.local` untuk pengembangan, dan isi variabel yang s
 | `SUPABASE_SERVICE_ROLE_KEY` | **rahasia** | dipakai route `/m/...` untuk mengambil isi materi dari bucket privat setelah akses diperiksa |
 | `MATERIAL_TOKEN_SECRET` | **rahasia** | minimal 32 karakter, buat dengan `openssl rand -hex 32` |
 
+Tanpa dua variabel rahasia itu situs tetap jalan, tetapi halaman materi dan route `/m` gagal (500) dengan pesan yang menyebut variabel yang kurang di log server.
+
 ## Menjalankan
+
+Butuh Node.js 18.17 atau lebih baru.
 
 ```bash
 npm install
 npm run dev        # http://localhost:3000
+npm run lint
 npm run typecheck
-npm run build
+npm run build      # lint dan typecheck ikut dijalankan; build gagal bila ada error
 ```
 
-Deploy ke Netlify: set *Base directory* = `web`. `netlify.toml` di folder ini sudah memakai `@netlify/plugin-nextjs`.
+Deploy ke Netlify: set *Base directory* = `web`. `netlify.toml` di folder ini sudah memakai `@netlify/plugin-nextjs`. Header keamanan (`X-Frame-Options`, HSTS, `nosniff`, `Referrer-Policy`, `Permissions-Policy`) diatur di `next.config.js`.
 
 ## Model keamanan
 
@@ -69,6 +74,6 @@ Selesai di langkah 1 (fondasi):
 Belum dibuat (langkah 2):
 - halaman admin untuk key, bank soal, penyusun kuis, sesi live, dan hasil;
 - halaman pengguna `/quizzes`, `/join`, `/dashboard`;
-- impor 27 materi & soal dari repo ini (langkah 3).
+- impor 28 materi & soal dari repo ini (langkah 3).
 
-Menu yang menautkan halaman-halaman itu saat ini masih berujung 404.
+Navigasi hanya menautkan halaman yang sudah ada. Tambahkan tautan di `components/site/site-header.tsx` dan `components/admin/admin-shell.tsx` begitu halaman langkah 2 selesai. Komponen shadcn/ui yang tidak terpakai sudah dibuang. Tambahkan lagi bila perlu dengan `npx shadcn@latest add <nama>`.

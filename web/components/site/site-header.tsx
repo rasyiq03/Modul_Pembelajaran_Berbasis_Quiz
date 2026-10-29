@@ -3,39 +3,24 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
-import { Menu, X, LogOut, User, LayoutDashboard, BookOpen, History } from 'lucide-react';
+import { Menu, X, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetClose } from '@/components/ui/sheet';
 import { useAuth } from '@/lib/supabase/auth-provider';
 import { cn } from '@/lib/utils';
 import { BrandMark } from '@/components/site/brand-mark';
 
+/* Hanya halaman yang sudah ada; tambahkan di sini saat halaman langkah 2 selesai dibuat */
 const publicLinks = [
   { href: '/', label: 'Home' },
   { href: '/courses', label: 'Courses' },
   { href: '/materials', label: 'Materials' },
-  { href: '/quizzes', label: 'Quizzes' },
-  { href: '/join', label: 'Join Quiz' },
-];
-
-const authLinks = [
-  { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/dashboard/materials', label: 'My Materials', icon: BookOpen },
-  { href: '/dashboard/history', label: 'Quiz History', icon: History },
-  { href: '/dashboard/profile', label: 'Profile', icon: User },
 ];
 
 const adminLinks = [
   { href: '/admin', label: 'Overview' },
   { href: '/admin/courses', label: 'Courses' },
   { href: '/admin/materials', label: 'Materials' },
-  { href: '/admin/keys', label: 'Enrollment Keys' },
-  { href: '/admin/questions', label: 'Question Bank' },
-  { href: '/admin/quizzes', label: 'Quiz Builder' },
-  { href: '/admin/sessions', label: 'Live Sessions' },
-  { href: '/admin/results', label: 'Results' },
-  { href: '/admin/import-export', label: 'Import/Export' },
-  { href: '/admin/settings', label: 'Settings' },
 ];
 
 export function SiteHeader() {
@@ -71,16 +56,6 @@ export function SiteHeader() {
                 {l.label}
               </Link>
             ))}
-            {isAdmin &&
-              adminLinks.slice(0, 4).map((l) => (
-                <Link
-                  key={l.href}
-                  href={l.href}
-                  className="whitespace-nowrap rounded-full px-3.5 py-1.5 text-[0.8rem] font-bold text-muted-foreground no-underline hover:bg-background/70 hover:text-foreground"
-                >
-                  {l.label}
-                </Link>
-              ))}
           </nav>
         </div>
 
@@ -93,9 +68,6 @@ export function SiteHeader() {
                     <Link href="/admin">Admin</Link>
                   </Button>
                 )}
-                <Button asChild variant="ghost" size="sm">
-                  <Link href="/dashboard">Dashboard</Link>
-                </Button>
                 <span className="text-sm text-muted-foreground">
                   {profile?.display_name || user.email?.split('@')[0]}
                 </span>
@@ -156,19 +128,9 @@ export function SiteHeader() {
                       <div className="px-2 py-2 text-xs font-semibold uppercase text-muted-foreground">
                         Account
                       </div>
-                      {authLinks.map((l) => (
-                        <SheetClose asChild key={l.href}>
-                          <Link
-                            href={l.href}
-                            className={cn(
-                              'flex items-center gap-2 rounded-md px-3 py-2 text-sm',
-                              isActive(l.href) ? 'bg-accent text-accent-foreground' : 'hover:bg-muted',
-                            )}
-                          >
-                            <l.icon className="h-4 w-4" /> {l.label}
-                          </Link>
-                        </SheetClose>
-                      ))}
+                      <p className="px-3 py-1 text-sm text-muted-foreground">
+                        {profile?.display_name || user.email?.split('@')[0]}
+                      </p>
                       <SheetClose asChild>
                         <button
                           onClick={doSignOut}

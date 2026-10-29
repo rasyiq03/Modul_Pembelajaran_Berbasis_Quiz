@@ -45,6 +45,7 @@ export async function GET(_req: NextRequest, { params }: { params: { token: stri
 
   const folder = claims.k === 'full' ? m.content_path : m.preview_path;
   if (!folder) return deny(404, 'Isi materi belum diunggah.');
+  const published = m.status === 'published' && m.courses?.status === 'published';
 
   if (claims.k === 'full') {
     /* Token berumur pendek, tetapi akses tetap diperiksa ulang agar pencabutan berlaku seketika */
@@ -54,9 +55,13 @@ export async function GET(_req: NextRequest, { params }: { params: { token: stri
       db.from('profiles').select('role').eq('id', uid).maybeSingle(),
       db.from('enrollments').select('id').eq('user_id', uid).eq('material_id', m.id).eq('revoked', false).maybeSingle(),
     ]);
-    if (prof?.role !== 'admin' && !enr) return deny(403, 'Akses ke materi lengkap sudah dicabut.');
-  } else {
-    if (m.status !== 'published' || m.courses?.status !== 'published') return deny(404, 'Materi belum dipublikasikan.');
+    if (prof?.role !== 'admin') {
+      if (!enr) return deny(403, 'Akses ke materi lengkap sudah dicabut.');
+      /* Sama dengan RLS halaman materi: peserta hanya membaca materi yang terpublikasi */
+      if (!published) return deny(404, 'Materi belum dipublikasikan.');
+    }
+  } else if (!published) {
+    return deny(404, 'Materi belum dipublikasikan.');
   }
 
   const objectPath = `${folder}/${segs.join('/')}`;

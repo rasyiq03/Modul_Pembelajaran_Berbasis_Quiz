@@ -3,7 +3,7 @@ import { createServerClient } from '@supabase/ssr';
 import { supabaseAnonKey, supabaseUrl } from '@/lib/supabase/clients';
 
 /** Halaman yang wajib login. Pemeriksaan role admin dilakukan di app/admin/layout.tsx. */
-const PROTECTED = ['/dashboard', '/admin'];
+const PROTECTED = ['/admin'];
 
 /**
  * Menyegarkan token sesi Supabase di setiap permintaan dan mengarahkan tamu dari halaman terlindung

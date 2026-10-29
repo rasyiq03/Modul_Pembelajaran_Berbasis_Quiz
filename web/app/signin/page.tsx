@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { BrandMark } from '@/components/site/brand-mark';
@@ -23,10 +23,10 @@ function SignInForm() {
   const { session } = useAuth();
   const supabase = getSupabaseBrowser();
 
-  if (session) {
-    // Already signed in; redirect on next render
-    setTimeout(() => router.replace(next), 0);
-  }
+  /* Sudah login (mis. membuka /signin lewat tautan lama): langsung ke tujuan */
+  useEffect(() => {
+    if (session) router.replace(next);
+  }, [session, next, router]);
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -52,7 +52,7 @@ function SignInForm() {
         <Card>
           <CardHeader>
             <CardTitle>Welcome back</CardTitle>
-            <CardDescription>Sign in to access your dashboard, history, and enrollments.</CardDescription>
+            <CardDescription>Sign in to read the materials you are enrolled in.</CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={onSubmit} className="space-y-4">

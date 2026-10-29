@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { ArrowRight, BookOpen, Compass, GraduationCap, PlayCircle, Sparkles, Trophy, Users } from 'lucide-react';
+import { ArrowRight, BookOpen, Compass, KeyRound, Search, Sparkles, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -24,18 +24,18 @@ export default async function HomePage() {
               <Sparkles className="h-3.5 w-3.5" /> Interactive university learning
             </p>
             <h1 className="max-w-[18ch] text-[clamp(2rem,5.2vw,3.4rem)]">
-              Read rich lecture materials, then test yourself live
+              Read rich lecture materials, then test yourself
             </h1>
             <p className="mt-4 max-w-[60ch] text-lg text-muted-foreground">
               Interactive HTML course notes with calculators, visualizations, and simulations,
-              paired with a question bank and Kahoot-style live quiz sessions.
+              each ending in a Kahoot-style practice quiz.
             </p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Button asChild size="lg">
                 <Link href="/courses">Browse courses <ArrowRight className="ml-1 h-4 w-4" /></Link>
               </Button>
               <Button asChild size="lg" variant="outline">
-                <Link href="/join"><PlayCircle className="mr-1 h-4 w-4" /> Join a quiz</Link>
+                <Link href="/materials"><Search className="mr-1 h-4 w-4" /> Search materials</Link>
               </Button>
             </div>
           </div>
@@ -47,16 +47,14 @@ export default async function HomePage() {
         <div className="mx-auto max-w-2xl text-center">
           <h2 className="text-2xl font-semibold sm:text-3xl">How it works</h2>
           <p className="mt-2 text-sm text-muted-foreground">
-            Four modules that work together: a material library, an isolated HTML reader,
-            a reusable question bank, and live quiz sessions.
+            A material library, an isolated HTML reader, and per-material enrollment keys.
           </p>
         </div>
-        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {[
             { icon: BookOpen, title: 'Material library', text: 'Browse published courses and their interactive materials, each a self-contained HTML document.' },
-            { icon: Compass, title: 'Secure reader', text: 'Materials open in a sandboxed reader. Enroll with a per-material key to unlock the full content.' },
-            { icon: GraduationCap, title: 'Question bank', text: 'A reusable bank spanning multiple types: multiple choice, true/false, matching, ordering, essay.' },
-            { icon: Trophy, title: 'Live quizzes', text: 'Hosts start sessions; guests join with a code and nickname. Server-authoritative scoring.' },
+            { icon: Compass, title: 'Secure reader', text: 'Materials open in a sandboxed reader with their labs and Kahoot-style practice quizzes intact.' },
+            { icon: KeyRound, title: 'Enrollment keys', text: 'Previews are public. Redeem the key from your instructor to unlock the full material.' },
           ].map((f) => (
             <Card key={f.title}>
               <CardHeader>
@@ -156,12 +154,12 @@ export default async function HomePage() {
       <section className="border-t border-border bg-muted/30">
         <div className="container-wide py-16">
           <div className="mx-auto flex max-w-3xl flex-col items-center gap-4 text-center">
-            <h2 className="text-2xl font-semibold sm:text-3xl">Ready to test your understanding?</h2>
+            <h2 className="text-2xl font-semibold sm:text-3xl">Got an enrollment key?</h2>
             <p className="text-sm text-muted-foreground">
-              Join a live quiz with a session code, or sign in to track your history.
+              Create an account, open the material, and redeem your key to read it in full.
             </p>
             <div className="flex flex-col gap-3 sm:flex-row">
-              <Button asChild size="lg"><Link href="/join">Join a quiz</Link></Button>
+              <Button asChild size="lg"><Link href="/signup">Create account</Link></Button>
               <Button asChild size="lg" variant="outline"><Link href="/signin">Sign in</Link></Button>
             </div>
           </div>
