@@ -8,7 +8,6 @@
 /coverage
 *.tsbuildinfo
 next-env.d.ts
-.netlify
 .vercel
 
 # Rahasia lingkungan

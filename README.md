@@ -47,11 +47,20 @@ fungsi database (`SECURITY DEFINER`) dan semua tabel memakai RLS.
 
 ## Menjalankan secara lokal
 
-Butuh Node.js 18.17+ dan proyek Supabase.
+Butuh Node.js 20+ dan proyek Supabase. Buat file `.env.local` di root (sudah diabaikan git):
+
+```bash
+NEXT_PUBLIC_SUPABASE_URL=https://<project-ref>.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=<anon public key>
+SUPABASE_SERVICE_ROLE_KEY=<service_role key>      # rahasia
+MATERIAL_TOKEN_SECRET=<openssl rand -hex 32>      # rahasia, minimal 32 karakter
+```
+
+Nilai Supabase ada di *Project Settings → API*. Bila proyek sudah ditautkan ke Vercel, isi berkas ini
+bisa diambil dengan `vercel env pull .env.local`.
 
 ```bash
 npm ci
-cp .env.example .env.local     # isi SUPABASE_SERVICE_ROLE_KEY dan MATERIAL_TOKEN_SECRET
 npm run dev                    # http://localhost:3000
 ```
 
@@ -62,8 +71,11 @@ Pemeriksaan sebelum deploy: `npm run lint`, `npm run typecheck`, `npm run build`
 1. **SQL Editor:** jalankan semua file `supabase/migrations/*.sql` berurutan (aman diulang), atau
    `supabase db push` bila memakai Supabase CLI.
 2. **Authentication → Sign In / Providers:** aktifkan *Allow anonymous sign-ins* (tamu kuis).
-3. **Authentication → URL Configuration:** isi *Site URL* dengan alamat situs dan tambahkan
-   `<alamat situs>/auth/callback` ke *Redirect URLs*.
+3. **Authentication → URL Configuration:** isi *Site URL* dengan domain produksi (mis.
+   `https://kuiskelas.vercel.app`) dan tambahkan ke *Redirect URLs*:
+   - `https://kuiskelas.vercel.app/auth/callback` (domain produksi, termasuk domain kustom bila ada)
+   - `https://*-<slug-tim-vercel>.vercel.app/**` agar konfirmasi email juga jalan di *preview deployment*
+   - `http://localhost:3000/**` untuk pengembangan lokal
 4. Daftar akun lewat situs, lalu jadikan admin di SQL Editor:
    ```sql
    select public.grant_admin('email@kampus.ac.id');
@@ -78,18 +90,31 @@ Pemeriksaan sebelum deploy: `npm run lint`, `npm run typecheck`, `npm run build`
    untuk tamu. Aman diulang: data dicocokkan lewat slug dan `source_ref`; kuis yang sudah diubah admin
    tidak ditimpa kecuali dengan `--update-quizzes`. Opsi lain: `--only <slug-materi>`, `--dry-run`.
 
-## Deploy (Netlify)
+## Deploy (Vercel)
 
-`netlify.toml` sudah memakai `@netlify/plugin-nextjs`. Atur environment variable di
-*Site configuration → Environment variables*:
+Aplikasi ini Next.js standar, jadi Vercel mendeteksinya otomatis; tidak perlu `vercel.json`.
 
-| Variabel | Keterangan |
-|---|---|
-| `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Publik; nilai bawaan ada di `.env.example` |
-| `SUPABASE_SERVICE_ROLE_KEY` | **Rahasia.** Dipakai server untuk membaca bucket privat materi |
-| `MATERIAL_TOKEN_SECRET` | **Rahasia**, minimal 32 karakter (`openssl rand -hex 32`). Menandatangani URL pembaca |
+1. **Add New → Project** di dashboard Vercel, lalu impor repo ini dari GitHub. Biarkan
+   *Framework Preset* = Next.js dan *Root Directory* = `./` (root repo). Perintah build, instal, dan
+   output memakai bawaan.
+2. **Settings → Environment Variables:** tambahkan variabel berikut untuk *Production* dan
+   *Preview* (juga *Development* bila memakai `vercel env pull`):
 
-Jangan pernah meng-commit `.env.local` atau kunci rahasia.
+   | Variabel | Keterangan |
+   |---|---|
+   | `NEXT_PUBLIC_SUPABASE_URL` | Publik. URL proyek Supabase |
+   | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Publik. *anon public key*; keamanan data dijaga RLS |
+   | `SUPABASE_SERVICE_ROLE_KEY` | **Rahasia** (tandai *Sensitive*). Dipakai server untuk membaca bucket privat materi |
+   | `MATERIAL_TOKEN_SECRET` | **Rahasia** (tandai *Sensitive*), minimal 32 karakter. Menandatangani URL pembaca materi |
+
+   Variabel `NEXT_PUBLIC_*` ditanam saat build; setelah mengubahnya, lakukan *Redeploy*.
+3. **Settings → Functions → Function Region:** pilih region terdekat dengan region proyek Supabase
+   (mis. `sin1` Singapura untuk Supabase `ap-southeast-1`) agar setiap halaman tidak menunggu lama.
+4. Deploy. Setiap push ke `main` menjadi deployment produksi, dan setiap branch/PR mendapat
+   *preview deployment*. Lalu daftarkan domain produksi di Supabase (langkah 3 bagian sebelumnya).
+
+Menjalankan migrasi database dan `npm run content:import` dilakukan dari komputer lokal atau SQL
+Editor, bukan saat build Vercel. Jangan pernah meng-commit `.env.local` atau kunci rahasia.
 
 ## Mengelola konten
 
