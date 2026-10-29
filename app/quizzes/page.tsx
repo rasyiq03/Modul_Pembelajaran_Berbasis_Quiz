@@ -12,7 +12,7 @@ export default async function QuizzesPage() {
   const { data } = await createSupabaseServer().rpc('list_public_quizzes', {});
   const quizzes = (data as PublicQuiz[] | null) ?? [];
   return (
-    <div className="container-wide space-y-8 py-10">
+    <div className="container-wide space-y-8 py-8 sm:py-10">
       <PageHeader
         title="Kuis"
         description="Kuis mandiri bisa dikerjakan kapan saja. Kompetisi live diikuti lewat kode sesi dari pengajar."

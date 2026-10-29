@@ -23,7 +23,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
   const isActive = (href: string) => pathname === href || (href !== '/admin' && pathname.startsWith(href));
 
   return (
-    <div className="container-wide py-6">
+    <div className="container-wide py-8 sm:py-10">
       <div className="lg:grid lg:grid-cols-[210px_1fr] lg:gap-8">
         <aside className="hidden lg:block">
           <nav className="sticky top-20 space-y-1" aria-label="Menu admin">

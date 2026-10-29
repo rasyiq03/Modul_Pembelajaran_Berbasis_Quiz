@@ -14,7 +14,7 @@ export default async function ProfilePage() {
           <dt className="text-muted-foreground">Peran</dt><dd>{profile?.role === 'admin' ? 'Admin' : 'Mahasiswa'}</dd>
           <dt className="text-muted-foreground">Terdaftar</dt><dd>{fmtDate(profile?.created_at)}</dd>
         </dl>
-        <ProfileForm userId={user!.id} displayName={profile?.display_name ?? ''} />
+        <ProfileForm userId={user!.id} displayName={profile?.display_name ?? ''} avatar={profile?.avatar ?? '🦉'} />
       </CardContent>
     </Card>
   );

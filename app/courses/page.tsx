@@ -3,7 +3,7 @@ import { ArrowRight, BookOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { EmptyState } from '@/components/site/page-parts';
+import { EmptyState, PageHeader } from '@/components/site/page-parts';
 import { getPublishedCourses } from '@/lib/catalog/queries';
 
 export const revalidate = 60;
@@ -13,13 +13,11 @@ export const metadata = { title: 'Mata Kuliah · KuisKelas' };
 export default async function CoursesPage() {
   const courses = await getPublishedCourses();
   return (
-    <div className="container-page py-10">
-      <div className="space-y-2 pb-6">
-        <h1 className="text-3xl font-extrabold tracking-tight">Katalog mata kuliah</h1>
-        <p className="text-sm text-muted-foreground">
-          Setiap mata kuliah berisi beberapa materi kuliah interaktif beserta kuis latihannya.
-        </p>
-      </div>
+    <div className="container-wide space-y-6 py-8 sm:py-10">
+      <PageHeader
+        title="Katalog mata kuliah"
+        description="Setiap mata kuliah berisi beberapa materi kuliah interaktif beserta kuis latihannya."
+      />
       {courses.length === 0 ? (
         <EmptyState
           title="Belum ada mata kuliah"

@@ -54,7 +54,7 @@ function SignUpForm() {
   }
 
   return (
-    <div className="container-page py-12">
+    <div className="container-wide py-8 sm:py-10">
       <div className="mx-auto max-w-md">
         <div className="mb-6 flex items-center gap-2">
           <BrandMark />

@@ -1,10 +1,10 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { ArrowLeft, ArrowRight, BookOpen, Lock } from 'lucide-react';
+import { ArrowRight, BookOpen, Lock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { EmptyState } from '@/components/site/page-parts';
+import { EmptyState, PageHeader, SectionHeader } from '@/components/site/page-parts';
 import { getCourseBySlug, getMaterialsForCourse } from '@/lib/catalog/queries';
 
 export const revalidate = 60;
@@ -20,16 +20,15 @@ export default async function CourseDetailPage({ params }: { params: { slug: str
   const materials = await getMaterialsForCourse(course.id);
 
   return (
-    <div className="container-page py-10">
-      <Button asChild variant="ghost" size="sm" className="mb-4">
-        <Link href="/courses"><ArrowLeft className="mr-1 h-4 w-4" /> Semua mata kuliah</Link>
-      </Button>
-      <div className="space-y-2 pb-6">
-        <h1 className="text-3xl font-extrabold tracking-tight">{course.title}</h1>
-        <p className="max-w-3xl text-sm text-muted-foreground">{course.description}</p>
-      </div>
+    <div className="container-wide space-y-6 py-8 sm:py-10">
+      <PageHeader
+        back={{ href: '/courses', label: 'Semua mata kuliah' }}
+        eyebrow="Mata kuliah"
+        title={course.title}
+        description={course.description}
+      />
 
-      <h2 className="mb-3 text-xl font-bold">Materi</h2>
+      <SectionHeader title="Materi" description={`${materials.length} materi`} />
       {materials.length === 0 ? (
         <EmptyState title="Belum ada materi" description="Coba lagi nanti, atau tanyakan pada pengajar." icon={<BookOpen className="h-8 w-8" />} />
       ) : (

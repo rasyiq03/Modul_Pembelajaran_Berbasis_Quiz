@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { AnswerInput, Prompt } from '@/components/quiz/answer-input';
 import { Leaderboard } from '@/components/live/leaderboard';
+import { SessionXp } from '@/components/gamification/session-xp';
 import { getSupabaseBrowser } from '@/lib/supabase/clients';
 import { errorMessage, fmtNum } from '@/lib/labels';
 import { useSessionState } from '@/lib/quiz/use-session-state';
@@ -73,6 +74,7 @@ export function LivePlayer({ sessionId }: { sessionId: string }) {
           <Trophy className="mx-auto h-10 w-10 text-warning" />
           <p className="font-heading text-2xl font-extrabold">Kuis selesai</p>
           {s.me && <p className="text-lg">Skormu <b>{fmtNum(s.me.score, 0)}</b> · {s.me.correct} dari {s.count} benar</p>}
+          {s.me && s.status === 'completed' && <SessionXp sessionId={s.session_id} />}
         </CardContent></Card>
         {s.leaderboard && <Leaderboard rows={s.leaderboard} />}
         <Button asChild variant="outline"><Link href="/quizzes">Lihat kuis lain</Link></Button>

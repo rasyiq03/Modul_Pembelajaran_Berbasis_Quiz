@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import type { Session, User } from '@supabase/supabase-js';
 import { getSupabaseBrowser } from '@/lib/supabase/clients';
 import type { Database } from '@/lib/database.types';
@@ -14,6 +14,8 @@ interface AuthContextValue {
   isAdmin: boolean;
   loading: boolean;
   signOut: () => Promise<void>;
+  /** Muat ulang profil (mis. setelah nama tampilan atau avatar diubah) */
+  refreshProfile: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextValue>({
@@ -23,6 +25,7 @@ const AuthContext = createContext<AuthContextValue>({
   isAdmin: false,
   loading: true,
   signOut: async () => {},
+  refreshProfile: async () => {},
 });
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -54,19 +57,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
   }, [supabase]);
 
+  const userId = session?.user?.id;
+  const loadProfile = useCallback(async () => {
+    if (!userId) return;
+    const { data } = await supabase.from('profiles').select('*').eq('id', userId).maybeSingle();
+    setProfile((data as unknown as Profile) ?? null);
+  }, [userId, supabase]);
+
+  /* Hanya saat pengguna berganti, bukan setiap token disegarkan */
   useEffect(() => {
-    if (!session?.user) return;
+    if (!userId) return;
     setLoading(true);
-    (async () => {
-      const { data } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', session.user.id)
-        .maybeSingle();
-      setProfile((data as unknown as Profile) ?? null);
-      setLoading(false);
-    })();
-  }, [session, supabase]);
+    loadProfile().finally(() => setLoading(false));
+  }, [userId, loadProfile]);
 
   const value = useMemo<AuthContextValue>(
     () => ({
@@ -79,8 +82,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         await supabase.auth.signOut();
         setProfile(null);
       },
+      refreshProfile: loadProfile,
     }),
-    [session, profile, loading, supabase],
+    [session, profile, loading, supabase, loadProfile],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

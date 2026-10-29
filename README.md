@@ -2,8 +2,8 @@
 
 Platform web (Next.js + Supabase) untuk materi kuliah interaktif. Setiap materi adalah satu file HTML
 mandiri berisi rangkuman, lab interaktif, dan kuis bergaya Kahoot. Platform menambahkan akun dan
-admin, katalog, pembaca materi yang aman, enrollment key per materi, bank soal, kuis mandiri, dan
-kuis live dengan kode sesi.
+admin, katalog, pembaca materi yang aman, enrollment key per materi, bank soal, kuis mandiri,
+kuis live dengan kode sesi, serta gamifikasi (XP, level, lencana, hari beruntun, papan peringkat).
 
 File HTML materi tetap bisa dibuka offline (klik dua kali, kirim lewat WhatsApp/LMS). Platform
 membaca isi dan soalnya tanpa mengubah file tersebut.
@@ -13,8 +13,8 @@ membaca isi dan soalnya tanpa mengubah file tersebut.
 ```
 .
 ├── app/                      Next.js App Router (halaman & route handler)
-│   ├── (publik)              /, /courses, /materials, /quizzes, /join, /play/[id], /attempts/[id]
-│   ├── dashboard/            dashboard, riwayat kuis, materi saya, profil (pengguna terdaftar)
+│   ├── (publik)              /, /courses, /materials, /quizzes, /leaderboard, /join, /play/[id], /attempts/[id]
+│   ├── dashboard/            dashboard, pencapaian, riwayat kuis, materi saya, profil (pengguna terdaftar)
 │   ├── admin/                ringkasan, mata kuliah, materi, enrollment key, bank soal, kuis,
 │   │                         sesi live, hasil & analitik, pengguna (khusus admin)
 │   ├── m/[token]/[...path]/  pembaca materi: isi bucket privat dilayani setelah akses diperiksa
@@ -41,9 +41,32 @@ membaca isi dan soalnya tanpa mengubah file tersebut.
 | Kuis | Soal dari satu atau banyak materi, urutan & bobot, batas waktu / waktu per soal, acak soal & opsi, batas percobaan, waktu tampil pembahasan, izin tamu, 5 mode, draf/publikasi/arsip, pratinjau admin |
 | Live | Kode & tautan sesi, tamu dengan nickname, ruang tunggu, kontrol host, sinkron realtime + polling cadangan, skor berbasis kecepatan, papan peringkat, hasil & CSV, pemulihan koneksi |
 | Hasil | Dashboard & riwayat pengguna, detail jawaban + pembahasan, penilaian manual esai, dashboard admin, analitik per kuis & per soal, ekspor CSV |
+| Gamifikasi | XP & 8 level (Pemula sampai Legenda), 12 lencana, hari beruntun, avatar, halaman Pencapaian, papan peringkat (sepanjang waktu / 7 hari), chip level di header, rincian XP di hasil kuis & kuis live, progres bab & lab per materi |
 
 Kunci jawaban tidak pernah dikirim ke peramban sebelum jawaban dikirim; penilaian berjalan di
 fungsi database (`SECURITY DEFINER`) dan semua tabel memakai RLS.
+
+### Gamifikasi
+
+XP dihitung di database (`supabase/migrations/20261030000500_gamification.sql`) dari data yang sudah
+dinilai server, sehingga tidak bisa dipalsukan dari peramban. Setiap sumber XP punya kunci unik per
+pengguna, jadi tidak ada XP ganda. Hanya pengguna terdaftar yang mengumpulkan XP; tamu diajak membuat akun.
+
+| Aktivitas | XP |
+|---|---|
+| Menyelesaikan kuis | +20, sekali per kuis per hari |
+| Soal benar | +10 pertama kali, +2 bila sudah pernah benar |
+| Semua benar (minimal 5 soal) | +30 |
+| Ikut kuis live | +20, podium +50/+30/+20 (minimal 3 peserta) |
+| Menandai bab paham di materi | +20 per bab |
+| Mencoba lab interaktif | +15 per lab |
+| Menyelesaikan latihan solo di materi | +15, sekali per materi per hari |
+| Hadir hari ini | +10 |
+
+Level n butuh `50 × (n − 1) × n` XP (0, 100, 300, 600, 1000, ...). Materi di pembaca platform
+mengirim progres bab/lab ke halaman induk lewat `postMessage`; server hanya menerimanya untuk bab dan
+lab yang tercatat di `materials.sections` / `materials.labs` (diisi `npm run content:import`) dan bila
+pengguna punya akses materi lengkap. XP aktivitas lama ikut dihitung saat migrasi dijalankan.
 
 ## Menjalankan secara lokal
 
@@ -122,11 +145,16 @@ Editor, bukan saat build Vercel. Jangan pernah meng-commit `.env.local` atau kun
   didaftarkan dulu di `content/courses.json`. Lalu jalankan `npm run content:sync` (menyalin mesin
   terbaru ke materi) dan `npm run content:check`.
 - **Mengubah mesin materi:** edit `content/engine/kuiskelas.js` / `.css`, naikkan versinya, lalu
-  `npm run content:sync`. Jangan mengedit blok mesin di dalam file materi.
+  `npm run content:sync`. Jangan mengedit blok mesin di dalam file materi. Sejak v3 mesin tidak lagi
+  menyimpan profil, XP, atau lencana; offline ia hanya mencatat progres bab & lab di perangkat, dan di
+  pembaca platform progres itu diteruskan ke web. `KQ.award()` tetap ada demi kompatibilitas tetapi
+  tidak memberi XP.
 - `npm run content:check` memastikan setiap folder terdaftar, mesin mutakhir, `COURSE.id` unik, dan
   setiap soal valid. Setelah konten berubah, jalankan lagi `npm run content:import`.
 - Materi juga bisa diunggah manual di **Admin → Materi** (HTML pratinjau, HTML lengkap, dan aset).
 
 Format materi (bagian yang dibaca platform): `<title>`, `<p class="lede">` sebagai deskripsi,
-`<section id=… data-toc="…">` sebagai tujuan pembelajaran, dan `window.COURSE = { id, short, title,
+`<section id=… data-toc="…">` di dalam `<article>` sebagai tujuan pembelajaran dan bab yang bisa ditandai
+(kecuali `data-nocheck`), elemen `.lab` / `[data-lab]` sebagai lab (kecuali `data-noxp`; id dari
+`data-lab`, `id`, atau urutan), dan `window.COURSE = { id, short, title,
 questions: [{ q, o: [4 opsi], a: indeks benar, e: pembahasan, topic, hots }] }`.

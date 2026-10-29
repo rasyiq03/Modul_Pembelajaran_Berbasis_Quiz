@@ -11,9 +11,9 @@ export interface Database {
   public: {
     Tables: {
       profiles: Table<
-        { id: string; email: string | null; display_name: string | null; role: 'student' | 'admin'; avatar_url: string | null; created_at: string; updated_at: string },
+        { id: string; email: string | null; display_name: string | null; role: 'student' | 'admin'; avatar_url: string | null; avatar: string; created_at: string; updated_at: string },
         { id: string },
-        { display_name?: string | null; avatar_url?: string | null }
+        { display_name?: string | null; avatar_url?: string | null; avatar?: string }
       >;
       audit_logs: Table<
         { id: string; actor_id: string | null; action: string; target: string | null; detail: any; created_at: string },
@@ -28,12 +28,14 @@ export interface Database {
           id: string; course_id: string; title: string; slug: string; description: string | null;
           learning_objectives: string | null; status: Status; display_order: number; thumbnail_url: string | null;
           preview_path: string | null; content_path: string | null; content_assets: any; source_file: string | null;
+          sections: { id: string; label: string }[]; labs: { id: string; label: string }[];
           created_at: string; updated_at: string;
         },
         {
           id?: string; course_id: string; title: string; slug: string; description?: string | null; learning_objectives?: string | null;
           status?: Status; display_order?: number; thumbnail_url?: string | null; preview_path?: string | null;
           content_path?: string | null; content_assets?: any; source_file?: string | null;
+          sections?: { id: string; label: string }[]; labs?: { id: string; label: string }[];
         }
       >;
       material_tags: Table<{ id: string; material_id: string; tag: string }, { material_id: string; tag: string }>;
@@ -121,6 +123,12 @@ export interface Database {
         },
         never, never
       >;
+      xp_events: Table<
+        { id: number; user_id: string; kind: string; key: string; amount: number; label: string; meta: any; created_at: string },
+        never, never
+      >;
+      user_badges: Table<{ user_id: string; badge: string; source: string | null; earned_at: string }, never, never>;
+      material_progress: Table<{ user_id: string; material_id: string; kind: 'read' | 'lab'; ref: string; created_at: string }, never, never>;
     };
     Functions: {
       is_admin: { Args: Record<string, never>; Returns: boolean };
@@ -147,6 +155,10 @@ export interface Database {
       admin_save_quiz: { Args: { p: any }; Returns: string };
       quiz_stats: { Args: { p_quiz: string }; Returns: any };
       list_public_quizzes: { Args: { p_material?: string | null }; Returns: any };
+      daily_checkin: { Args: Record<string, never>; Returns: { ok: boolean; xp?: number; streak?: number; total?: number; badges?: string[] } };
+      record_material_progress: { Args: { p_material: string; p_kind: 'read' | 'lab' | 'practice'; p_ref?: string | null }; Returns: { ok: boolean; error?: string; xp?: number; total?: number; badges?: string[] } };
+      get_my_progress: { Args: Record<string, never>; Returns: any };
+      xp_leaderboard: { Args: { p_period?: 'all' | 'week'; p_limit?: number }; Returns: any };
     };
     Views: Record<string, never>;
     Enums: Record<string, never>;

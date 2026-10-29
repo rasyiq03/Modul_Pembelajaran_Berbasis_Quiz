@@ -4,6 +4,10 @@ import { CheckCircle2, CircleDashed, XCircle } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { PageHeader } from '@/components/site/page-parts';
+import { XpGainBox } from '@/components/gamification/cards';
+import { XpSync } from '@/components/gamification/level-parts';
+import { gainsFor } from '@/lib/gamification-server';
 import { GradeAnswer } from '@/components/quiz/grade-answer';
 import { Prompt } from '@/components/quiz/answer-input';
 import { getViewer } from '@/lib/auth';
@@ -32,13 +36,21 @@ export default async function AttemptPage({ params }: { params: { id: string } }
   const items = (r.items ?? []) as any[];
   const pending = r.status === 'submitted';
 
+  /* XP & lencana hanya ditampilkan ke pemilik percobaan */
+  const { data: own } = viewer.user
+    ? await supabase.from('quiz_attempts').select('user_id, is_preview').eq('id', params.id).maybeSingle()
+    : { data: null };
+  const mine = !!own && own.user_id === viewer.user?.id;
+  const gains = mine && viewer.isRegistered && !own.is_preview ? await gainsFor({ attempt: params.id }) : null;
+
   return (
-    <div className="container-page space-y-6 py-10">
-      <header className="space-y-2">
-        <p className="eyebrow">Hasil kuis</p>
-        <h1 className="text-[clamp(1.8rem,4vw,2.6rem)]">{r.quiz_title}</h1>
-        <p className="font-heading text-sm text-muted-foreground">Dikirim {fmtDateTime(r.finished_at)}{r.late ? ' · melewati batas waktu' : ''}</p>
-      </header>
+    <div className="container-wide space-y-6 py-8 sm:py-10">
+      <PageHeader
+        back={{ href: `/quizzes/${r.quiz_id}`, label: 'Kembali ke kuis' }}
+        eyebrow="Hasil kuis"
+        title={r.quiz_title}
+        description={`Dikirim ${fmtDateTime(r.finished_at)}${r.late ? ' · melewati batas waktu' : ''}`}
+      />
 
       <Card>
         <CardContent className="grid gap-4 p-6 sm:grid-cols-4">
@@ -48,11 +60,19 @@ export default async function AttemptPage({ params }: { params: { id: string } }
             <div className="mt-1">{pending ? <Badge variant="outline">Menunggu penilaian esai</Badge> : r.passed ? <Badge className="bg-success text-success-foreground">Lulus</Badge> : <Badge variant="destructive">Belum lulus</Badge>}</div>
           </div>
           <div className="flex items-end gap-2 sm:justify-end">
-            <Button asChild variant="outline" size="sm"><Link href={`/quizzes/${r.quiz_id}`}>Kembali ke kuis</Link></Button>
+            <Button asChild variant="outline" size="sm"><Link href={`/quizzes/${r.quiz_id}`}>Coba lagi</Link></Button>
             {viewer.isRegistered && <Button asChild variant="ghost" size="sm"><Link href="/dashboard/history">Riwayat</Link></Button>}
           </div>
         </CardContent>
       </Card>
+
+      {gains && (<><XpSync /><XpGainBox {...gains} /></>)}
+      {mine && !viewer.isRegistered && (
+        <div className="note-box flex flex-wrap items-center justify-between gap-3 text-sm">
+          <span>Kamu mengerjakan sebagai tamu, jadi hasil ini tidak menambah XP. Buat akun agar XP, level, dan lencanamu tersimpan.</span>
+          <Button asChild size="sm"><Link href="/signup">Buat akun</Link></Button>
+        </div>
+      )}
 
       {!r.feedback && <p className="note-box text-sm">Pengajar tidak menampilkan kunci jawaban dan pembahasan untuk kuis ini.</p>}
 

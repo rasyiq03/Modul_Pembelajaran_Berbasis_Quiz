@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { ArrowLeft, Radio } from 'lucide-react';
+import { Radio } from 'lucide-react';
+import { PageHeader } from '@/components/site/page-parts';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { QuizPlayer } from '@/components/quiz/quiz-player';
@@ -26,15 +27,17 @@ export default async function QuizPage({ params }: { params: { id: string } }) {
     : { data: null };
 
   return (
-    <div className="container-page space-y-6 py-10">
-      <Button asChild variant="ghost" size="sm"><Link href="/quizzes"><ArrowLeft className="mr-1 h-4 w-4" /> Semua kuis</Link></Button>
+    <div className="container-wide space-y-6 py-8 sm:py-10">
       <header className="space-y-3">
-        <div className="flex flex-wrap gap-1.5">
-          <Badge variant="secondary">{QUIZ_MODE_LABEL[mode]}</Badge>
-          {quiz.status !== 'published' && <Badge variant="outline">{STATUS_LABEL[quiz.status as Status]}</Badge>}
-        </div>
-        <h1 className="text-[clamp(1.8rem,4vw,2.6rem)]">{quiz.title}</h1>
-        {quiz.description && <p className="max-w-[65ch] text-lg text-muted-foreground">{quiz.description}</p>}
+        <PageHeader
+          back={{ href: '/quizzes', label: 'Semua kuis' }}
+          title={quiz.title}
+          description={quiz.description}
+          meta={<>
+            <Badge variant="secondary">{QUIZ_MODE_LABEL[mode]}</Badge>
+            {quiz.status !== 'published' && <Badge variant="outline">{STATUS_LABEL[quiz.status as Status]}</Badge>}
+          </>}
+        />
         <ul className="flex flex-wrap gap-x-5 gap-y-1 font-heading text-sm text-muted-foreground">
           <li>{QUIZ_MODE_HELP[mode]}</li>
           {s.time_limit_sec ? <li>Batas waktu {Math.round(s.time_limit_sec / 60)} menit</li> : null}

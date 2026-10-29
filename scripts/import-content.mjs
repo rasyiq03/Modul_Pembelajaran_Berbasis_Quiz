@@ -11,7 +11,8 @@
  *
  * Butuh NEXT_PUBLIC_SUPABASE_URL dan SUPABASE_SERVICE_ROLE_KEY (dari environment atau .env.local).
  * Aman diulang: materi dicocokkan lewat (mata kuliah, slug), soal lewat source_ref
- * "<slug-materi>#<nomor>", kuis lewat id deterministik dari slug materi. Kuis yang sudah ada
+ * "<slug-materi>#<nomor>", kuis lewat id deterministik dari slug materi. Bab & lab yang bisa memberi
+ * XP di platform disimpan ke materials.sections / materials.labs. Kuis yang sudah ada
  * tidak diubah (pengaturan buatan admin tetap), kecuali dengan --update-quizzes.
  */
 import { createHash } from 'node:crypto';
@@ -157,6 +158,7 @@ async function main() {
     const material = must(await db.from('materials').upsert({
       course_id: course, slug, title: meta.title, description: meta.description || null,
       learning_objectives: objectives || null, display_order: order, source_file: f.rel,
+      sections: meta.checkpoints, labs: meta.labs,
       ...(PUBLISH ? { status: 'published' } : {}),
     }, { onConflict: 'course_id,slug' }).select('id').single(), `materi ${slug}`);
     const id = material.id;

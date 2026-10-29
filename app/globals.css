@@ -106,6 +106,9 @@
   html {
     color-scheme: light dark;
     scroll-padding-top: 76px;
+    /* Ruang scrollbar selalu disediakan agar header & isi tidak bergeser saat berpindah antara
+       halaman pendek dan panjang */
+    scrollbar-gutter: stable;
   }
   /* Seperti materi: teks bacaan serif, judul & kontrol Montserrat */
   body {
@@ -136,9 +139,6 @@
 }
 
 @layer utilities {
-  .container-page {
-    @apply mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8;
-  }
   .container-wide {
     @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
   }

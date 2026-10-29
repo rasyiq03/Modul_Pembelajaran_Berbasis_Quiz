@@ -3,7 +3,7 @@ import { ArrowRight, BookOpen, Lock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { EmptyState } from '@/components/site/page-parts';
+import { EmptyState, PageHeader } from '@/components/site/page-parts';
 import { getPublishedCourses, searchPublishedMaterials } from '@/lib/catalog/queries';
 import { MaterialsFilters } from '@/components/materials/materials-filters';
 
@@ -26,20 +26,18 @@ export default async function MaterialsPage({ searchParams }: { searchParams: { 
   const totalPages = Math.max(1, Math.ceil(total / 12));
 
   return (
-    <div className="container-page py-10">
-      <div className="space-y-2 pb-6">
-        <h1 className="text-3xl font-extrabold tracking-tight">Perpustakaan materi</h1>
-        <p className="text-sm text-muted-foreground">
-          Pratinjau terbuka untuk umum. Materi lengkap terbuka per materi dengan enrollment key.
-        </p>
-      </div>
+    <div className="container-wide space-y-6 py-8 sm:py-10">
+      <PageHeader
+        title="Perpustakaan materi"
+        description="Pratinjau terbuka untuk umum. Materi lengkap terbuka per materi dengan enrollment key."
+      />
 
       <MaterialsFilters courses={courses.map((c) => ({ id: c.id, title: c.title }))} />
 
-      <p className="mt-4 text-xs text-muted-foreground">{total} materi</p>
+      <p className="font-heading text-xs font-bold text-muted-foreground">{total} materi</p>
 
       {items.length === 0 ? (
-        <div className="mt-4">
+        <div>
           <EmptyState
             title="Tidak ada materi yang cocok"
             description="Coba hapus filter atau cari dengan kata lain."
@@ -47,7 +45,7 @@ export default async function MaterialsPage({ searchParams }: { searchParams: { 
           />
         </div>
       ) : (
-        <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {items.map((m) => (
             <Card key={m.id} className="group flex flex-col hover:shadow-md transition-shadow">
               <CardHeader>
@@ -80,7 +78,7 @@ export default async function MaterialsPage({ searchParams }: { searchParams: { 
       )}
 
       {totalPages > 1 && (
-        <div className="mt-8 flex items-center justify-center gap-2">
+        <div className="flex flex-wrap items-center justify-center gap-2 pt-2">
           {Array.from({ length: totalPages }).map((_, i) => {
             const p = i + 1;
             const next = new URLSearchParams(searchParams as Record<string, string>);

@@ -6,7 +6,7 @@ export const metadata = { title: 'Halaman tidak ditemukan · KuisKelas' };
 
 export default function NotFound() {
   return (
-    <div className="container-page py-16">
+    <div className="container-wide py-8 sm:py-10">
       <EmptyState
         title="Halaman tidak ditemukan"
         description="Halaman yang kamu cari tidak ada, atau kamu tidak punya akses ke halaman ini."

@@ -1,6 +1,8 @@
 /*!
- * KuisKelas engine v2.1.0 (offline)
- * Mesin tampilan materi + kuis gaya Kahoot + profil, XP, dan lencana. Berjalan penuh tanpa internet.
+ * KuisKelas engine v3.0.0 (offline)
+ * Mesin tampilan materi + kuis latihan gaya Kahoot + progres bab & lab. Berjalan penuh tanpa internet.
+ * XP, level, lencana, dan papan peringkat ada di platform web: saat materi dibuka di pembaca platform
+ * (iframe), progres bab/lab dan latihan dikirim ke halaman induk lewat postMessage.
  * Materi cukup menyediakan: window.KQ_CONFIG, window.COURSE, dan <main id="view-summary">.
  * Kuis bersama satu kelas (sesi live dengan kode), enrollment, dan riwayat nilai ada di platform web;
  * soal dari window.COURSE diimpor ke bank soal dengan `npm run content:import`.
@@ -12,16 +14,14 @@
 /* =====================================================================
    0. Konfigurasi & data
    ===================================================================== */
-const VERSION = '2.1.0';
+const VERSION = '3.0.0';
 const CFG = Object.assign({
-  defaultClass: '',
   bots: 12
 }, window.KQ_CONFIG || {});
 const C = window.COURSE || {};
 const Q = (Array.isArray(C.questions) ? C.questions : []).map(q => Object.assign({ time: q.hots ? 40 : 20 }, q));
 const MID = String(C.id || document.title || 'materi').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60) || 'materi';
 const TITLE = C.short || C.title || document.title || 'Materi';
-const CLASS_RE = /^[A-Z0-9-]{2,16}$/;
 
 /* =====================================================================
    1. Utilitas
@@ -54,10 +54,7 @@ const SHAPES = [
 const SHAPE_NAME = ['Segitiga merah', 'Belah ketupat biru', 'Lingkaran kuning', 'Persegi hijau'];
 const SHAPE_COLOR = ['#E21B3C', '#1368CE', '#D89E00', '#26890C'];
 const MOODS = { '': '#46178F', correct: '#26890C', wrong: '#C4162F', timeout: '#1368CE', board: '#2B0B5C' };
-const AVATARS = ['🦊', '🐼', '🐯', '🐸', '🐙', '🦉', '🐧', '🦄', '🐝', '🐳', '🦖', '🐱', '🤖', '👾', '🚀', '🌵'];
 const BOT_NAMES = ['Ayu', 'Bima88', 'Nora', 'Rafi_R', 'Sinta', 'Dimas', 'Lena', 'Citra', 'Fajar404', 'Wulan', 'Gilang', 'Putri.K', 'Bayu_B', 'Rina', 'Kevin', 'Salsa', 'Yoga', 'Tiara'];
-
-const BAD_CLASS = 'Kode kelas hanya boleh huruf kapital, angka, dan tanda minus (2–16 karakter).';
 
 /* =====================================================================
    2. Suara (Web Audio, tanpa file eksternal)
@@ -81,79 +78,46 @@ const sfx = {
   late: () => tone(300, .3, 'triangle', .06),
   join: () => tone(990, .08, 'sine', .05),
   xp: () => { tone(1046, .08, 'sine', .05, 0); tone(1318, .12, 'sine', .05, .07); },
-  level: () => { [523, 659, 784, 1047, 1319].forEach((f, i) => tone(f, .2, 'triangle', .08, i * .1)); },
   end: () => { [523, 659, 784, 1047].forEach((f, i) => tone(f, .22, 'triangle', .08, i * .14)); }
 };
 
 /* =====================================================================
-   3. Profil, XP, level, lencana
+   3. Progres belajar & jembatan platform
+   Offline, progres bab yang ditandai paham dan lab yang dicoba disimpan di perangkat. Di pembaca
+   platform, halaman induk mengirim progres akun (type "init") dan mesin mengirim setiap progres
+   baru ("read", "lab", "practice"); platform yang memvalidasi dan mencatat XP.
    ===================================================================== */
-const P0 = { nickname: '', studentId: '', classCode: CFG.defaultClass ? String(CFG.defaultClass).toUpperCase() : '', avatar: AVATARS[0], xp: 0, badges: [], awarded: {}, games: 0, bestScore: 0, dayStreak: 0, lastDay: '', read: {}, labs: {} };
-let P = Object.assign({}, P0, LS.get('profile', {}));
-P.read = P.read || {}; P.labs = P.labs || {}; P.awarded = P.awarded || {}; P.badges = P.badges || [];
-const saveP = () => { LS.set('profile', P); refreshChip(); };
+const PROG = Object.assign({ read: {}, labs: {} }, LS.get('progress', {}));
+(function migrateV2() {   // progres dari profil v2 tetap terbawa
+  const old = LS.get('profile', null);
+  if (!old || PROG.migrated) return;
+  ['read', 'labs'].forEach(k => Object.entries(old[k] || {}).forEach(([m, o]) => { PROG[k][m] = Object.assign({}, o, PROG[k][m]); }));
+  PROG.migrated = 1; LS.set('progress', PROG);
+})();
+const saveProg = () => LS.set('progress', PROG);
+const doneRead = () => PROG.read[MID] || (PROG.read[MID] = {});
+const doneLabs = () => PROG.labs[MID] || (PROG.labs[MID] = {});
 
-const need = n => 50 * (n - 1) * n;                 // XP minimum untuk level n: 0, 100, 300, 600, 1000, 1500 ...
-const levelOf = x => { let n = 1; while (x >= need(n + 1)) n++; return n; };
-const LV_NAMES = ['Pemula', 'Penjelajah', 'Analis', 'Praktisi', 'Ahli', 'Pakar', 'Master', 'Legenda'];
-const lvName = n => LV_NAMES[Math.min(n, LV_NAMES.length) - 1];
-const lvProgress = x => { const n = levelOf(x), a = need(n), b = need(n + 1); return { n, pct: Math.round((x - a) / (b - a) * 100), toNext: b - x }; };
-
-const BADGES = [
-  ['first', '🎯', 'Langkah pertama', 'Selesaikan satu kuis'],
-  ['streak5', '🔥', 'Beruntun 5', '5 jawaban benar berturut-turut'],
-  ['streak10', '☄️', 'Tak terbendung', '10 benar berturut-turut'],
-  ['perfect', '💎', 'Sempurna', 'Semua soal benar dalam satu permainan'],
-  ['hots', '🧠', 'Pemikir tajam', 'Semua soal HOTS benar dalam satu permainan'],
-  ['speed', '⚡', 'Kilat', 'Rata-rata di bawah 5 detik, akurasi minimal 70%'],
-  ['comeback', '🚀', 'Bangkit', 'Dari luar lima besar menjadi juara 1'],
-  ['reader', '📖', 'Pembaca tuntas', 'Tandai semua bab dalam satu materi'],
-  ['labrat', '🧪', 'Tangan laboratorium', 'Coba semua lab dalam satu materi'],
-  ['day3', '📅', 'Rajin', 'Belajar 3 hari berturut-turut'],
-  ['day7', '🗓️', 'Seminggu penuh', 'Belajar 7 hari berturut-turut'],
-  ['lv5', '🏅', 'Ahli', 'Capai level 5']
-];
-const BADGE = Object.fromEntries(BADGES.map(b => [b[0], b]));
-
-function addXp(amount, label) {
-  amount = Math.max(0, Math.round(amount)); if (!amount) return 0;
-  const before = levelOf(P.xp);
-  P.xp += amount;
-  const after = levelOf(P.xp);
-  saveP();
-  if (label) toast('+' + idn(amount) + ' XP', label, 'xp', '⭐');
-  if (after > before) setTimeout(() => levelUp(after), 500);
-  if (after >= 5) giveBadge('lv5');
-  return amount;
+const EMBED = (() => { try { return window.parent && window.parent !== window; } catch (e) { return true; } })();
+const HOST = { on: false, earn: false };
+function hostSend(type, data) {
+  if (!EMBED) return;
+  try { window.parent.postMessage(Object.assign({ source: 'kuiskelas', type, id: MID, version: VERSION }, data || {}), '*'); } catch (e) { }
 }
-/* XP sekali saja per kunci (misal membaca bab yang sama tidak memberi XP dua kali) */
-function award(key, amount, label) {
-  if (key) { if (P.awarded[key]) return 0; P.awarded[key] = 1; }
-  return addXp(amount, label);
-}
-function giveBadge(id) {
-  if (!BADGE[id] || P.badges.includes(id)) return false;
-  P.badges.push(id); saveP();
-  const b = BADGE[id];
-  setTimeout(() => { toast('Lencana baru: ' + b[2], b[3], 'lv', b[1]); sfx.xp(); }, 300);
-  return true;
-}
-function profileReady() {
-  return !!P.nickname;
-}
-function dailyCheckIn() {
-  const t = today();
-  if (P.lastDay === t) return;
-  const y = new Date(); y.setDate(y.getDate() - 1);
-  P.dayStreak = P.lastDay === today(y) ? (P.dayStreak || 0) + 1 : 1;
-  P.lastDay = t;
-  saveP();
-  setTimeout(() => {
-    award('day:' + t, 10, P.dayStreak > 1 ? 'Hadir ' + P.dayStreak + ' hari berturut-turut' : 'Hadir hari ini');
-    if (P.dayStreak >= 3) giveBadge('day3');
-    if (P.dayStreak >= 7) giveBadge('day7');
-  }, 1200);
-}
+window.addEventListener('message', e => {
+  if (!EMBED || e.source !== window.parent) return;
+  const d = e.data || {};
+  if (d.source !== 'kuiskelas-host') return;
+  if (d.type === 'init') {
+    HOST.on = true; HOST.earn = !!d.earn;
+    (Array.isArray(d.read) ? d.read : []).forEach(id => { doneRead()[id] = 1; });
+    (Array.isArray(d.labs) ? d.labs : []).forEach(id => { doneLabs()[id] = 1; });
+    refreshProgress();
+  } else if (d.type === 'ack' && d.ok && d.xp > 0) {
+    sfx.xp();
+  }
+});
+const xpHint = n => HOST.earn ? ` (+${n} XP)` : '';
 
 /* =====================================================================
    4. Umpan balik visual: toast, level up, confetti
@@ -166,17 +130,6 @@ function toast(title, sub, kind = '', icon = '') {
   box.appendChild(el);
   while (box.children.length > 3) box.firstChild.remove();
   setTimeout(() => { el.classList.add('out'); setTimeout(() => el.remove(), 320); }, 3200);
-}
-function levelUp(n) {
-  sfx.level(); confetti();
-  const o = document.createElement('div');
-  o.className = 'lvup'; o.setAttribute('role', 'dialog'); o.setAttribute('aria-label', 'Naik level');
-  o.innerHTML = `<div><p>Naik level!</p><span class="big">Lv ${n}</span><p>Gelar baru: ${esc(lvName(n))}</p><button class="kq-btn light">Lanjut</button></div>`;
-  document.body.appendChild(o);
-  const close = () => o.remove();
-  o.querySelector('button').addEventListener('click', close);
-  o.querySelector('button').focus({ preventScroll: true });
-  setTimeout(close, 4500);
 }
 function confetti() {
   if (reduceMotion()) return;
@@ -221,10 +174,6 @@ function buildShell() {
           <button class="tab" role="tab" data-view="summary" aria-selected="true">Rangkuman</button>
           <button class="tab" role="tab" data-view="quiz" aria-selected="false">Kuis</button>
         </div>
-        <button class="me-chip" id="meChip" aria-haspopup="dialog" aria-label="Profil dan pencapaian">
-          <span class="me-av" id="meAv"></span>
-          <span class="me-lv"><b id="meLv"></b><span class="me-bar"><i id="meBar"></i></span></span>
-        </button>
       </div>
     </div>`;
   document.body.insertBefore(header, document.body.firstChild);
@@ -247,27 +196,13 @@ function buildShell() {
 
   const t = document.createElement('div'); t.id = 'kqToasts'; t.className = 'kq-toasts'; t.setAttribute('aria-live', 'polite');
   document.body.appendChild(t);
-  const d = document.createElement('dialog'); d.id = 'kqDlg'; d.className = 'kq-dlg';
-  document.body.appendChild(d);
 
   $$('.tab').forEach(b => b.addEventListener('click', () => showView(b.dataset.view)));
-  $('#meChip').addEventListener('click', openProfile);
   $('#muteBtn').addEventListener('click', e => {
     soundOn = !soundOn; LS.set('sound', soundOn);
     e.currentTarget.textContent = 'Suara: ' + (soundOn ? 'nyala' : 'mati');
     e.currentTarget.setAttribute('aria-pressed', String(!soundOn));
   });
-  refreshChip();
-}
-function refreshChip() {
-  const av = $('#meAv'); if (!av) return;
-  const lp = lvProgress(P.xp);
-  av.textContent = P.avatar;
-  $('#meLv').textContent = 'Lv ' + lp.n + ' ' + lvName(lp.n);
-  $('#meBar').style.width = lp.pct + '%';
-  $('#meChip').title = (P.nickname || 'Profil') + ': level ' + lp.n + ' (' + lvName(lp.n) + ')';
-  const pr = $('#tocProg');
-  if (pr) paintReadProgress();
 }
 
 function showView(v) {
@@ -303,23 +238,18 @@ function enhanceSummary() {
   }
 
   SECTIONS = secs.filter(s => !s.hasAttribute('data-nocheck') && !s.querySelector('#bank'));
-  const done = P.read[MID] || {};
   SECTIONS.forEach(s => {
-    const h = s.querySelector('h2');
     const ck = document.createElement('div');
-    ck.className = 'ck' + (done[s.id] ? ' done' : '');
-    ck.innerHTML = done[s.id]
-      ? `<span>Bab ini sudah kamu tandai paham.</span><button disabled>Selesai ✓</button>`
-      : `<span>Sudah paham isi bab ini?</span><button type="button">Tandai paham (+20 XP)</button>`;
+    ck.className = 'ck';
     s.appendChild(ck);
-    const btn = ck.querySelector('button:not([disabled])');
-    if (btn) btn.addEventListener('click', () => {
-      P.read[MID] = P.read[MID] || {}; P.read[MID][s.id] = 1;
-      award(MID + ':read:' + s.id, 20, 'Bab selesai: ' + (h ? plain(h.textContent).slice(0, 48) : s.id));
-      ck.className = 'ck done';
-      ck.innerHTML = `<span>Bab ini sudah kamu tandai paham.</span><button disabled>Selesai ✓</button>`;
-      sfx.xp(); paintReadProgress();
-      if (SECTIONS.every(x => P.read[MID][x.id])) { if (giveBadge('reader')) confetti(); }
+    ck.addEventListener('click', e => {
+      if (!e.target.closest('button:not([disabled])')) return;
+      const h = s.querySelector('h2');
+      doneRead()[s.id] = 1; saveProg();
+      hostSend('read', { ref: s.id });
+      if (!HOST.on) toast('Bab ditandai paham', h ? plain(h.textContent).slice(0, 48) : s.id, 'xp', '✓');
+      sfx.xp(); refreshProgress();
+      if (SECTIONS.every(x => doneRead()[x.id])) confetti();
     });
   });
 
@@ -328,29 +258,26 @@ function enhanceSummary() {
     pr.className = 'prog'; pr.id = 'tocProg';
     const b = toc.querySelector('b');
     b ? b.after(pr) : toc.prepend(pr);
-    paintReadProgress();
   }
 
-  /* Lab: 3 interaksi pertama = lab dianggap dicoba (+15 XP sekali) */
+  /* Lab: 3 interaksi pertama = lab dianggap dicoba. Id lab: data-lab, id, atau "lab<urutan>"
+     (scripts/lib/content.mjs memakai aturan yang sama untuk materials.labs di platform). */
   LABS = $$('#view-summary .lab, #view-summary [data-lab]').filter(l => !l.hasAttribute('data-noxp'));
   LABS.forEach((lab, i) => {
     const id = lab.dataset.lab || lab.id || ('lab' + (i + 1));
     lab.dataset.lab = id;
-    const tried = (P.labs[MID] || {})[id];
     const h = lab.querySelector('h4, h3, h2');
-    if (h) { const pill = document.createElement('span'); pill.className = 'lab-xp'; pill.textContent = tried ? 'Dicoba ✓' : '+15 XP'; h.prepend(pill); }
-    if (tried) { lab.classList.add('tried'); return; }
+    if (h) { const pill = document.createElement('span'); pill.className = 'lab-xp'; h.prepend(pill); }
     let n = 0;
     const hit = () => {
-      if (++n < 3 || lab.classList.contains('tried')) return;
-      lab.classList.add('tried');
-      P.labs[MID] = P.labs[MID] || {}; P.labs[MID][id] = 1;
-      const pill = lab.querySelector('.lab-xp'); if (pill) pill.textContent = 'Dicoba ✓';
-      award(MID + ':lab:' + id, 15, 'Lab dicoba: ' + (h ? plain(h.textContent).replace(/^\+15 XP|Dicoba ✓/, '').trim().slice(0, 40) : id));
-      if (LABS.every(l => (P.labs[MID] || {})[l.dataset.lab])) giveBadge('labrat');
+      if (++n < 3 || doneLabs()[id]) return;
+      doneLabs()[id] = 1; saveProg();
+      hostSend('lab', { ref: id });
+      refreshProgress();
     };
     ['input', 'click', 'change'].forEach(ev => lab.addEventListener(ev, e => { if (e.target !== lab) hit(); }));
   });
+  refreshProgress();
 
   /* Bank soal */
   const bank = $('#bank');
@@ -372,9 +299,24 @@ function enhanceSummary() {
     map.forEach((_, id) => { const el = document.getElementById(id); if (el) io.observe(el); });
   }
 }
-function paintReadProgress() {
+/* Gambar ulang checkpoint bab, label lab, dan bilah progres (juga setelah platform mengirim progres akun) */
+function refreshProgress() {
+  const done = doneRead();
+  SECTIONS.forEach(s => {
+    const ck = s.querySelector(':scope > .ck'); if (!ck) return;
+    const ok = !!done[s.id];
+    ck.className = 'ck' + (ok ? ' done' : '');
+    ck.innerHTML = ok
+      ? `<span>Bab ini sudah kamu tandai paham.</span><button disabled>Selesai ✓</button>`
+      : `<span>Sudah paham isi bab ini?</span><button type="button">Tandai paham${xpHint(20)}</button>`;
+  });
+  LABS.forEach(lab => {
+    const ok = !!doneLabs()[lab.dataset.lab];
+    lab.classList.toggle('tried', ok);
+    const pill = lab.querySelector('.lab-xp');
+    if (pill) { pill.textContent = ok ? 'Dicoba ✓' : (HOST.earn ? '+15 XP' : 'Lab'); }
+  });
   const pr = $('#tocProg'); if (!pr) return;
-  const done = P.read[MID] || {};
   const n = SECTIONS.filter(s => done[s.id]).length;
   pr.innerHTML = `Progres baca ${n}/${SECTIONS.length}<div class="me-bar"><i style="width:${SECTIONS.length ? n / SECTIONS.length * 100 : 0}%"></i></div>`;
   $$('#view-summary nav.toc a').forEach(a => a.classList.toggle('done', !!done[a.getAttribute('href').slice(1)]));
@@ -411,74 +353,6 @@ function validate() {
 }
 
 /* =====================================================================
-   8. Dialog profil & pencapaian
-   ===================================================================== */
-function avatarPicker(cur) {
-  return `<div class="avs" role="group" aria-label="Pilih avatar">${AVATARS.map(a => `<button type="button" data-av="${a}" aria-pressed="${a === cur}" aria-label="Avatar ${a}">${a}</button>`).join('')}</div>`;
-}
-function bindAvatarPicker(root, onPick) {
-  $$('[data-av]', root).forEach(b => b.addEventListener('click', () => {
-    $$('[data-av]', root).forEach(x => x.setAttribute('aria-pressed', 'false'));
-    b.setAttribute('aria-pressed', 'true'); onPick(b.dataset.av);
-  }));
-}
-function readProfileForm(root) {
-  const v = s => ($(s, root) ? $(s, root).value : '').trim();
-  return { nickname: v('[name=nick]').slice(0, 24), studentId: v('[name=nim]').slice(0, 24), classCode: v('[name=cls]').toUpperCase().replace(/\s+/g, '-').slice(0, 16) };
-}
-function openProfile() {
-  const d = $('#kqDlg');
-  const lp = lvProgress(P.xp);
-  let av = P.avatar;
-  const readN = Object.values(P.read).reduce((s, o) => s + Object.keys(o).length, 0);
-  d.innerHTML = `
-    <form class="dlg-in" method="dialog">
-      <div class="dlg-head">
-        <span class="me-av" id="dlgAv">${P.avatar}</span>
-        <div><h3>${esc(P.nickname || 'Profil baru')}</h3><p>Level ${lp.n}: ${esc(lvName(lp.n))}${P.classCode ? ' | Kelas ' + esc(P.classCode) : ''}</p></div>
-        <button class="dlg-x" value="close" aria-label="Tutup">Tutup</button>
-      </div>
-      <div class="lvbox">
-        <div class="row"><span>${idn(P.xp)} XP</span><span>${idn(lp.toNext)} XP lagi ke level ${lp.n + 1}</span></div>
-        <div class="me-bar"><i style="width:${lp.pct}%"></i></div>
-      </div>
-      <div class="dstats">
-        <div><b>${P.games}</b><span>Permainan</span></div>
-        <div><b>${idn(P.bestScore)}</b><span>Skor terbaik</span></div>
-        <div><b>${P.dayStreak || 0}</b><span>Hari beruntun</span></div>
-        <div><b>${readN}</b><span>Bab dipahami</span></div>
-      </div>
-      <p class="sec-t">Lencana ${P.badges.length}/${BADGES.length}</p>
-      <div class="badges">${BADGES.map(b => `<div class="bdg ${P.badges.includes(b[0]) ? '' : 'locked'}" title="${esc(b[3])}"><span class="ic">${b[1]}</span>${esc(b[2])}<small>${esc(b[3])}</small></div>`).join('')}</div>
-      <p class="sec-t">Identitas</p>
-      ${avatarPicker(P.avatar)}
-      <div class="pform">
-        <label class="full">Nama panggilan<input name="nick" maxlength="24" value="${esc(P.nickname)}" autocomplete="nickname"></label>
-        <label>NIM / ID siswa<input name="nim" maxlength="24" value="${esc(P.studentId)}" autocomplete="off"></label>
-        <label>Kode kelas<input name="cls" maxlength="16" value="${esc(P.classCode)}" placeholder="misal TI-2A" autocomplete="off"></label>
-      </div>
-      <p class="err" id="dlgErr"></p>
-      <div class="dlg-act">
-        <button type="button" class="btn-s danger" id="dlgReset">Hapus profil di perangkat ini</button>
-        <button type="button" class="btn-s" id="dlgSave">Simpan profil</button>
-      </div>
-    </form>`;
-  bindAvatarPicker(d, a => { av = a; $('#dlgAv').textContent = a; });
-  $('#dlgSave').addEventListener('click', () => {
-    const f = readProfileForm(d);
-    if (!f.nickname) { $('#dlgErr').textContent = 'Isi nama panggilan terlebih dahulu.'; return; }
-    if (f.classCode && !CLASS_RE.test(f.classCode)) { $('#dlgErr').textContent = BAD_CLASS; return; }
-    Object.assign(P, f, { avatar: av }); saveP();
-    d.close(); toast('Profil tersimpan', P.nickname + (P.classCode ? ' | ' + P.classCode : ''), '', P.avatar);
-  });
-  $('#dlgReset').addEventListener('click', () => {
-    if (!confirm('Hapus profil, XP, dan lencana di perangkat ini? Tindakan ini tidak bisa dibatalkan.')) return;
-    P = Object.assign({}, P0, { read: {}, labs: {}, awarded: {}, badges: [] }); LS.set('profile', P); refreshChip(); d.close();
-    location.reload();
-  });
-  if (typeof d.showModal === 'function') d.showModal(); else d.setAttribute('open', '');
-}
-/* =====================================================================
    9. Panggung kuis: layar awal, profil singkat
    ===================================================================== */
 let KEYPICK = null;   // fungsi pemilih jawaban aktif (untuk tombol 1–4 / A–D)
@@ -492,62 +366,24 @@ function draw(html, mood, title) {
   const f = $('#kq-root [data-focus]'); if (f && !q.hidden) f.focus({ preventScroll: true });
 }
 const on = (sel, fn, ev = 'click') => { const el = $(sel); if (el) el.addEventListener(ev, fn); return el; };
-function whoami() {
-  const lp = lvProgress(P.xp);
-  return `<button class="whoami" id="whoBtn" aria-label="Buka profil"><span class="me-av">${P.avatar}</span><span style="text-align:left">${esc(P.nickname)}<small>Lv ${lp.n} ${esc(lvName(lp.n))} | ${idn(P.xp)} XP</small><span class="me-bar"><i style="width:${lp.pct}%"></i></span></span></button>`;
-}
-
 const Quiz = {
   home() {
     Solo.abort();
-    if (!profileReady()) return this.gate(() => this.home());
     const nH = Q.filter(x => x.hots).length;
     draw(`
       <div class="kq-center">
         <div class="kq-logo">${esc(TITLE)}</div>
-        ${whoami()}
-        <p class="kq-sub">${Q.length} soal: ${Q.length - nH} reguler${nH ? ` dan ${nH} HOTS dengan poin ganda` : ''}. Makin cepat menjawab benar, makin besar poinnya. Setiap permainan menambah XP profilmu.</p>
+        <p class="kq-sub">${Q.length} soal: ${Q.length - nH} reguler${nH ? ` dan ${nH} HOTS dengan poin ganda` : ''}. Makin cepat menjawab benar, makin besar poinnya.</p>
         <div class="modes one">
           <button class="mode c0" id="mSolo" data-focus>${SHAPES[0].replace('<svg', '<svg class="shape"')}<b>Latihan solo</b><span>Bertanding melawan ${CFG.bots} bot. Cocok untuk belajar mandiri kapan saja, juga tanpa internet.</span></button>
         </div>
-        <p class="offline-note">Ingin kuis bersama satu kelas? Pengajar bisa membuka sesi live dengan kode di platform KuisKelas.</p>
+        <p class="offline-note">${HOST.on
+          ? 'Kuis berpoin yang menambah XP dan kuis live bersama kelas ada di menu Kuis platform.'
+          : 'XP, level, lencana, dan kuis live bersama kelas ada di platform KuisKelas.'}</p>
       </div>`, '', TITLE);
-    on('#whoBtn', openProfile);
     on('#mSolo', () => Solo.lobby());
-  },
-
-  /* Formulir profil singkat di panggung kuis */
-  gate(next) {
-    let av = P.avatar;
-    draw(`
-      <div class="kq-center">
-        <div class="kq-logo" style="font-size:clamp(1.8rem,5vw,2.6rem)">Buat profil</div>
-        <p class="kq-sub">Profil tersimpan di perangkat ini dan mengumpulkan XP, level, serta lencana dari semua materi.</p>
-        <div class="kq-form" id="gateForm">
-          ${avatarPicker(av)}
-          <input type="text" name="nick" maxlength="24" placeholder="Nama panggilan" value="${esc(P.nickname)}" aria-label="Nama panggilan" autocomplete="nickname" data-focus>
-          <div class="row2">
-            <input type="text" name="nim" maxlength="24" placeholder="NIM (opsional)" value="${esc(P.studentId)}" aria-label="NIM atau ID siswa" autocomplete="off">
-            <input type="text" name="cls" maxlength="16" placeholder="Kode kelas (opsional)" value="${esc(P.classCode)}" aria-label="Kode kelas" autocomplete="off">
-          </div>
-          <small class="help">Kode kelas diberikan pengajar, misalnya TI-2A. Huruf, angka, dan tanda minus.</small>
-          <p class="err" id="gErr"></p>
-          <button class="kq-btn" id="gSave">Simpan dan lanjut</button>
-        </div>
-      </div>`, '', 'Profil');
-    const root = $('#gateForm');
-    bindAvatarPicker(root, a => { av = a; });
-    const save = () => {
-      const f = readProfileForm(root);
-      const err = $('#gErr');
-      if (!f.nickname) return err.textContent = 'Isi nama panggilan terlebih dahulu.';
-      if (f.classCode && !CLASS_RE.test(f.classCode)) return err.textContent = BAD_CLASS;
-      Object.assign(P, f, { avatar: av }); saveP();
-      next();
-    };
-    on('#gSave', save);
-    $$('input', root).forEach(i => i.addEventListener('keydown', e => { if (e.key === 'Enter') save(); }));
   }
+
 };
 
 /* =====================================================================
@@ -571,7 +407,7 @@ const Solo = {
         <p class="kq-sub">Kamu melawan ${CFG.bots} bot dengan kemampuan berbeda. Tekan 1–4 atau A–D di keyboard sesuai urutan warna.</p>
         <div class="kq-form">
           <label class="opt"><input type="checkbox" id="optShuffle" ${shuffle ? 'checked' : ''}> Acak posisi jawaban tiap soal</label>
-          <button class="kq-btn" id="startBtn" data-focus>Mulai sebagai ${esc(P.nickname)}</button>
+          <button class="kq-btn" id="startBtn" data-focus>Mulai</button>
           <button class="kq-btn ghost" id="backBtn" style="color:#46178F;background:#eee8fa">Kembali</button>
         </div>
       </div>`, '', 'Latihan solo');
@@ -584,7 +420,7 @@ const Solo = {
     this.perm = Q.map(() => sh ? shuffle4() : [0, 1, 2, 3]);
     const names = (Array.isArray(C.bots) && C.bots.length ? C.bots : BOT_NAMES).slice().sort(() => Math.random() - .5);
     this.bots = Array.from({ length: CFG.bots }, (_, k) => ({ name: names[k % names.length] + (k >= names.length ? '_' + k : ''), skill: .4 + Math.random() * .5, speed: .12 + Math.random() * .5, score: 0, prev: 0, streak: 0 }));
-    this.me = { name: P.nickname, score: 0, prev: 0, streak: 0, best: 0, correct: 0, time: 0, answered: 0, log: [], worst: 1 };
+    this.me = { name: 'Kamu', score: 0, prev: 0, streak: 0, best: 0, correct: 0, time: 0, answered: 0, log: [], worst: 1 };
     this.i = 0;
     sfx.start();
     this.introQ();
@@ -614,7 +450,7 @@ const Solo = {
       <div class="answers" id="answers">
         ${p.map((orig, d) => `<button class="ans c${d}" data-d="${d}" aria-label="${SHAPE_NAME[d]}: ${esc(plain(q.o[orig]))}">${SHAPES[d]}<span>${rich(q.o[orig])}</span></button>`).join('')}
       </div>
-      <div class="kq-foot"><span>${esc(P.avatar + ' ' + this.me.name)}</span><span>Skor ${idn(this.me.score)}${this.me.streak > 1 ? ' | Beruntun ×' + this.me.streak : ''}</span></div>`,
+      <div class="kq-foot"><span>${esc(this.me.name)}</span><span>Skor ${idn(this.me.score)}${this.me.streak > 1 ? ' | Beruntun ×' + this.me.streak : ''}</span></div>`,
       '', `Soal ${this.i + 1}/${Q.length}`);
     $$('.ans').forEach(b => b.addEventListener('click', () => this.pick(+b.dataset.d)));
     KEYPICK = d => this.pick(d);
@@ -683,7 +519,7 @@ const Solo = {
 
   ranking() {
     const all = this.bots.map(b => ({ name: b.name, score: b.score, prev: b.prev, me: false }));
-    all.push({ name: P.avatar + ' ' + this.me.name, score: this.me.score, prev: this.me.prev, me: true });
+    all.push({ name: this.me.name, score: this.me.score, prev: this.me.prev, me: true });
     return all.sort((a, b) => b.score - a.score || (a.me ? -1 : 1));
   },
 
@@ -701,29 +537,8 @@ const Solo = {
     const acc = Math.round(me.correct / Q.length * 100);
     const avgT = me.answered ? me.time / me.answered : 0;
 
-    /* XP: soal yang pertama kali benar +10, ulangan +2, selesai +20, podium bonus */
-    let firstRight = 0, repeatRight = 0;
-    me.log.forEach(l => { if (!l.ok) return; const k = MID + ':q:' + l.i; if (!P.awarded[k]) { P.awarded[k] = 1; firstRight++; } else repeatRight++; });
-    const rows = [['Selesai bermain', 20]];
-    if (firstRight) rows.push([`${firstRight} soal benar pertama kali`, firstRight * 10]);
-    if (repeatRight) rows.push([`${repeatRight} soal benar (ulangan)`, repeatRight * 2]);
-    const pod = [0, 40, 25, 15][myRank] || 0;
-    if (pod) rows.push([`Podium peringkat ${myRank}`, pod]);
-    const lvBefore = levelOf(P.xp);
-    const gained = rows.reduce((s, x) => s + x[1], 0);
-    P.games++; P.bestScore = Math.max(P.bestScore, me.score);
-    addXp(gained);
-
-    const earned = [];
-    const tryB = id => { if (giveBadge(id)) earned.push(id); };
-    tryB('first');
-    if (me.best >= 5) tryB('streak5');
-    if (me.best >= 10) tryB('streak10');
-    if (me.correct === Q.length) tryB('perfect');
-    const hotsIdx = Q.map((q, i) => q.hots ? i : -1).filter(i => i >= 0);
-    if (hotsIdx.length && hotsIdx.every(i => me.log[i] && me.log[i].ok)) tryB('hots');
-    if (me.answered && avgT < 5 && acc >= 70) tryB('speed');
-    if (myRank === 1 && me.worst > 5) tryB('comeback');
+    /* Di platform, latihan selesai dicatat (+15 XP sekali per materi per hari) */
+    hostSend('practice', { correct: me.correct, total: Q.length, rank: myRank });
     if (myRank <= 3) confetti();
 
     const msg = myRank === 1 ? 'Juara 1! Pemahamanmu sudah kuat.' : (myRank <= 3 ? 'Masuk podium, sedikit lagi ke puncak.' : (acc >= 70 ? 'Pemahamanmu bagus; percepat lagi jawabanmu.' : 'Baca lagi bab yang ditandai di bawah, lalu coba lagi.'));
@@ -738,8 +553,7 @@ const Solo = {
           <div><b>×${me.best}</b><span>Beruntun terbaik</span></div>
           <div><b>${me.answered ? avgT.toFixed(1).replace('.', ',') + ' dtk' : '-'}</b><span>Rata-rata waktu</span></div>
         </div>
-        ${xpBoxHtml(rows, lvBefore)}
-        ${earned.length ? `<div class="newb">${earned.map(id => `<span>${BADGE[id][1]} ${esc(BADGE[id][2])}</span>`).join('')}</div>` : ''}
+        <p class="offline-note">${HOST.earn ? 'Latihan ini tercatat di profil platformmu (+15 XP sekali per hari).' : 'Kumpulkan XP, level, dan lencana lewat kuis di platform KuisKelas.'}</p>
         ${masteryHtml(me.log)}
         ${reviewHtml(me.log)}
         <div class="btnrow">
@@ -748,7 +562,6 @@ const Solo = {
           <button class="kq-btn ghost" id="toSum">Kembali ke rangkuman</button>
         </div>
       </div>`, 'board', 'Hasil akhir');
-    animateXpBox();
     bindMastery();
     on('#again', () => this.lobby());
     on('#toHome', () => Quiz.home());
@@ -780,18 +593,6 @@ function animateBoard() {
 function podiumHtml(r) {
   const top = [r[1], r[0], r[2]], cls = ['p2', 'p1', 'p3'], pos = [2, 1, 3];
   return `<div class="podium">${top.map((x, k) => x ? `<div class="pod ${cls[k]}"><span class="nm">${esc(x.name)}${x.me ? ' (kamu)' : ''}</span><span>${idn(x.score)}</span><div class="bl">${pos[k]}</div></div>` : '<div class="pod"></div>').join('')}</div>`;
-}
-function xpBoxHtml(rows, lvBefore) {
-  const lp = lvProgress(P.xp), tot = rows.reduce((s, x) => s + x[1], 0);
-  return `<div class="xpbox" aria-label="XP yang didapat">
-    ${rows.map(x => `<div class="row"><span>${esc(x[0])}</span><span>+${idn(x[1])} XP</span></div>`).join('')}
-    <div class="row tot"><span>Total</span><span>+${idn(tot)} XP</span></div>
-    <div class="me-bar"><i data-w="${lp.pct}" style="width:${lp.n > lvBefore ? 0 : Math.max(0, lp.pct - Math.round(tot / Math.max(1, need(lp.n + 1) - need(lp.n)) * 100))}%"></i></div>
-    <span class="lvl">Level ${lp.n} ${esc(lvName(lp.n))}${lp.n > lvBefore ? ' (naik level!)' : ''} | ${idn(lp.toNext)} XP lagi ke level ${lp.n + 1}</span>
-  </div>`;
-}
-function animateXpBox() {
-  requestAnimationFrame(() => requestAnimationFrame(() => $$('.xpbox .me-bar i').forEach(el => el.style.width = el.dataset.w + '%')));
 }
 /* Penguasaan per topik soal; topik lemah diberi tautan ke bab (q.ref) */
 function masteryHtml(log) {
@@ -1531,16 +1332,17 @@ function init() {
   validate();
   enhanceSummary();
   initViz();
-  dailyCheckIn();
   if (location.hash === '#quiz') showView('quiz');
+  hostSend('ready');
 }
 
 window.KQ = {
   version: VERSION,
-  online: () => false,
-  /* KQ.award('nama-unik', 25, 'Label') untuk interaksi khusus materi; sekali per kunci */
-  award: (key, amount, label) => award(key ? MID + ':x:' + key : null, Math.min(100, amount || 0), label),
-  profile: () => JSON.parse(JSON.stringify(P)),
+  /* true bila dibuka di pembaca platform KuisKelas */
+  online: () => HOST.on,
+  /* Kompatibel dengan materi lama: XP kini dicatat platform, jadi KQ.award tidak menambah apa pun */
+  award: () => 0,
+  profile: () => ({ nickname: '' }),
   toast, confetti, showView, goSection,
   /* Pasang ulang komponen visual pada elemen yang baru dibuat lab */
   viz: el => initViz(el || document),

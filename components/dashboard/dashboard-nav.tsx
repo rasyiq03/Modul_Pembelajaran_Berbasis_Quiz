@@ -6,6 +6,7 @@ import { cn } from '@/lib/utils';
 
 const LINKS = [
   { href: '/dashboard', label: 'Ringkasan' },
+  { href: '/dashboard/achievements', label: 'Pencapaian' },
   { href: '/dashboard/materials', label: 'Materi saya' },
   { href: '/dashboard/history', label: 'Riwayat kuis' },
   { href: '/dashboard/profile', label: 'Profil' },

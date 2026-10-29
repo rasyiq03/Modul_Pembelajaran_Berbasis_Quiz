@@ -10,12 +10,14 @@ import { useAuth } from '@/lib/supabase/auth-provider';
 import { cn } from '@/lib/utils';
 import { BrandMark } from '@/components/site/brand-mark';
 import { ADMIN_LINKS } from '@/components/admin/admin-shell';
+import { LevelChip } from '@/components/gamification/level-parts';
 
+/* Logo sudah menuju beranda, jadi "Beranda" hanya ada di menu ponsel */
 const publicLinks = [
-  { href: '/', label: 'Beranda' },
   { href: '/courses', label: 'Mata Kuliah' },
   { href: '/materials', label: 'Materi' },
   { href: '/quizzes', label: 'Kuis' },
+  { href: '/leaderboard', label: 'Peringkat' },
   { href: '/join', label: 'Gabung Kuis' },
 ];
 
@@ -71,15 +73,18 @@ export function SiteHeader() {
 
         <div className="flex items-center gap-2">
           <div className="hidden lg:flex lg:items-center lg:gap-2">
-            {loading ? null : user ? (
+            {loading ? (
+              /* Tempat tombol disiapkan selama sesi dibaca agar header tidak melompat */
+              <div className="h-9 w-[9.5rem]" aria-hidden />
+            ) : user ? (
               <>
                 {isAdmin && (
                   <Button asChild variant="ghost" size="sm"><Link href="/admin">Admin</Link></Button>
                 )}
                 <Button asChild variant="ghost" size="sm"><Link href="/dashboard">Dashboard</Link></Button>
-                <span className="max-w-[10rem] truncate text-sm text-muted-foreground">{name}</span>
-                <Button variant="outline" size="sm" onClick={doSignOut}>
-                  <LogOut className="mr-1 h-4 w-4" /> Keluar
+                <LevelChip />
+                <Button variant="outline" size="icon" className="h-9 w-9" onClick={doSignOut} title={`Keluar (${name})`}>
+                  <LogOut className="h-4 w-4" /><span className="sr-only">Keluar</span>
                 </Button>
               </>
             ) : (
@@ -107,13 +112,16 @@ export function SiteHeader() {
                   </SheetClose>
                 </div>
                 <nav className="flex-1 space-y-0.5 overflow-y-auto p-2">
+                  {user && <SheetClose asChild><div className="px-2 pb-2"><LevelChip className="w-full" /></div></SheetClose>}
                   <p className="eyebrow px-3 py-2">Jelajahi</p>
+                  {mobileLink('/', 'Beranda')}
                   {publicLinks.map((l) => mobileLink(l.href, l.label))}
 
                   {user && (
                     <>
                       <p className="eyebrow px-3 pb-2 pt-4">Akun · {name}</p>
                       {mobileLink('/dashboard', 'Dashboard')}
+                      {mobileLink('/dashboard/achievements', 'Pencapaian')}
                       {mobileLink('/dashboard/history', 'Riwayat kuis')}
                       {mobileLink('/dashboard/profile', 'Profil')}
                       <SheetClose asChild>

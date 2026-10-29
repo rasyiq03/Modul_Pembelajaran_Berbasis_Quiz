@@ -13,6 +13,7 @@ export function SiteFooter() {
           <Link href="/courses" className="hover:text-foreground">Mata Kuliah</Link>
           <Link href="/materials" className="hover:text-foreground">Materi</Link>
           <Link href="/quizzes" className="hover:text-foreground">Kuis</Link>
+          <Link href="/leaderboard" className="hover:text-foreground">Peringkat</Link>
           <Link href="/join" className="hover:text-foreground">Gabung Kuis</Link>
         </nav>
         <div className="text-xs">Modul pembelajaran interaktif berbasis kuis.</div>

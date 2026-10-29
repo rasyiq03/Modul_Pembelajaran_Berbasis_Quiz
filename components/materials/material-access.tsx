@@ -3,9 +3,8 @@ import { KeyRound, Lock, CheckCircle2, LogIn, Maximize2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { RedeemKey } from '@/components/materials/redeem-key';
+import { MaterialFrame } from '@/components/materials/material-progress';
 
-/* Sama dengan header CSP route /m: materi berjalan di origin terisolasi, tanpa akses ke sesi web */
-const SANDBOX = 'allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox allow-modals allow-downloads';
 
 /** FR-15/16/20: pratinjau publik untuk semua, materi lengkap hanya untuk yang ter-enroll (atau admin) */
 export function MaterialAccess({
@@ -43,7 +42,7 @@ export function MaterialAccess({
           )}
         </div>
         {readerSrc ? (
-          <iframe key={readerSrc} title="Materi" src={readerSrc} className="material-iframe" sandbox={SANDBOX} referrerPolicy="no-referrer" />
+          <MaterialFrame src={readerSrc} />
         ) : (
           <div className="grid min-h-[40vh] place-items-center p-10 text-center text-sm text-muted-foreground">
             {hasAccess ? 'Materi lengkap belum diunggah.' : 'Pratinjau untuk materi ini belum tersedia.'}

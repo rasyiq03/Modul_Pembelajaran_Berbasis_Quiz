@@ -6,11 +6,13 @@ import { AttemptList } from '@/components/dashboard/attempt-list';
 import { getViewer } from '@/lib/auth';
 import { myAttempts, myMaterials } from '@/lib/dashboard';
 import { fmtNum } from '@/lib/labels';
+import { getMyProgress } from '@/lib/gamification-server';
+import { BadgeGrid, LevelCard } from '@/components/gamification/cards';
 
 /** FR-61: ringkasan aktivitas belajar */
 export default async function DashboardPage() {
-  const { user } = await getViewer();
-  const [materials, attempts] = await Promise.all([myMaterials(user!.id), myAttempts(user!.id)]);
+  const { user, profile } = await getViewer();
+  const [materials, attempts, progress] = await Promise.all([myMaterials(user!.id), myAttempts(user!.id), getMyProgress()]);
   const graded = attempts.filter((a) => a.status === 'graded');
   const avg = graded.length ? graded.reduce((t, a) => t + Number(a.percent), 0) / graded.length : null;
   const passed = graded.filter((a) => a.passed).length;
@@ -22,6 +24,15 @@ export default async function DashboardPage() {
   ];
   return (
     <div className="space-y-6">
+      {progress && (
+        <>
+          <LevelCard progress={progress} avatar={profile?.avatar ?? '🦉'} name={profile?.display_name || user!.email!.split('@')[0]} />
+          <Card>
+            <CardHeader className="flex-row items-center justify-between space-y-0"><CardTitle className="text-lg">Lencana terbaru</CardTitle><Link href="/dashboard/achievements" className="font-heading text-sm">Semua pencapaian</Link></CardHeader>
+            <CardContent><BadgeGrid earned={progress.badges} compact /></CardContent>
+          </Card>
+        </>
+      )}
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {stats.map((s) => (
           <Card key={s.label}><CardContent className="flex items-center justify-between p-4">
