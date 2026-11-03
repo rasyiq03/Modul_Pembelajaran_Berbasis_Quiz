@@ -1,8 +1,8 @@
-# KuisKelas: Modul Pembelajaran Berbasis Kuis
+# StudyStudio: Catatan Kuliah Interaktif Berbasis Kuis
 
 Platform web (Next.js + Supabase) untuk materi kuliah interaktif. Setiap materi adalah satu file HTML
 mandiri berisi rangkuman, lab interaktif, dan kuis bergaya Kahoot. Platform menambahkan akun dan
-admin, katalog, pembaca materi yang aman, enrollment key per materi, bank soal, kuis mandiri, dan
+admin, katalog, pembaca materi layar penuh yang aman, langganan dengan tingkat akses per materi, bank soal, kuis mandiri, dan
 kuis live dengan kode sesi.
 
 File HTML materi tetap bisa dibuka offline (klik dua kali, kirim lewat WhatsApp/LMS). Platform
@@ -13,10 +13,12 @@ membaca isi dan soalnya tanpa mengubah file tersebut.
 ```
 .
 ├── app/                      Next.js App Router (halaman & route handler)
-│   ├── (publik)              /, /courses, /materials, /quizzes, /join, /play/[id], /attempts/[id]
-│   ├── dashboard/            dashboard, riwayat kuis, materi saya, profil (pengguna terdaftar)
-│   ├── admin/                ringkasan, mata kuliah, materi, enrollment key, bank soal, kuis,
-│   │                         sesi live, hasil & analitik, pengguna (khusus admin)
+│   ├── (site)/               halaman berheader & footer situs:
+│   │   ├── …                 /, /courses, /courses/[slug], /materials, /quizzes, /join, /play/[id], /attempts/[id]
+│   │   ├── dashboard/        ringkasan, langganan, riwayat kuis, profil (pengguna terdaftar)
+│   │   └── admin/            ringkasan, mata kuliah, materi, langganan, bank soal, kuis, sesi live,
+│   │                         hasil & analitik, pengguna (khusus admin)
+│   ├── (reader)/             /courses/[slug]/[material]: pembaca materi layar penuh (tanpa header situs)
 │   ├── m/[token]/[...path]/  pembaca materi: isi bucket privat dilayani setelah akses diperiksa
 │   └── auth/callback/        tautan konfirmasi email Supabase
 ├── components/               komponen UI (ui/ = shadcn), admin/, quiz/, live/, materials/, site/
@@ -35,8 +37,9 @@ membaca isi dan soalnya tanpa mengubah file tersebut.
 | Area | Isi |
 |---|---|
 | Akun | Daftar, masuk/keluar, profil & ganti kata sandi, peran admin (diberikan lewat SQL), tamu anonim untuk kuis |
-| Materi | Katalog & pencarian, detail dengan tujuan pembelajaran, pratinjau publik, materi lengkap hanya untuk yang ter-enroll, pembaca HTML ter-sandbox (lab & kuis tertanam tetap jalan), unggah HTML + aset, status draf/terpublikasi/diarsipkan |
-| Enrollment key | Satu key untuk satu materi; masa berlaku & batas pemakaian; cabut key; cabut/pulihkan akses per pengguna; key disimpan sebagai hash |
+| Materi | Katalog & pencarian, pembaca layar penuh ter-sandbox (lab & kuis tertanam tetap jalan) dengan navigasi antarmateri, panel info/kuis, dan mode layar penuh; pratinjau otomatis; unggah HTML + aset; status draf/terpublikasi/diarsipkan |
+| Tingkat akses | Per materi: **Terbuka** (semua orang, termasuk tamu), **Wajib masuk** (pengguna terdaftar), **Langganan** (pelanggan aktif, bawaan). Diubah admin langsung dari daftar materi. Yang belum berhak melihat pratinjau |
+| Langganan | Pengguna mengajukan langganan (dengan pesan); admin menyetujui dengan masa berlaku (tanpa batas, 1/6/12 bulan, atau tanggal tertentu), menolak dengan alasan, memperpanjang, atau mencabut; perpanjangan diajukan ulang oleh pengguna; lencana jumlah pengajuan di menu admin |
 | Bank soal | 7 jenis (pilihan tunggal, pilihan jamak, benar/salah, jawaban singkat, esai, menjodohkan, mengurutkan), kunci & pembahasan, materi/topik/kesulitan/tag, duplikasi, impor & ekspor CSV |
 | Kuis | Soal dari satu atau banyak materi, urutan & bobot, batas waktu / waktu per soal, acak soal & opsi, batas percobaan, waktu tampil pembahasan, izin tamu, 5 mode, draf/publikasi/arsip, pratinjau admin |
 | Live | Kode & tautan sesi, tamu dengan nickname, ruang tunggu, kontrol host, sinkron realtime + polling cadangan, skor berbasis kecepatan, papan peringkat, hasil & CSV, pemulihan koneksi |
@@ -70,10 +73,16 @@ Pemeriksaan sebelum deploy: `npm run lint`, `npm run typecheck`, `npm run build`
 
 1. **SQL Editor:** jalankan semua file `supabase/migrations/*.sql` berurutan (aman diulang), atau
    `supabase db push` bila memakai Supabase CLI.
+
+   **Memperbarui proyek yang sudah berjalan ke langganan:** cukup jalankan
+   `20261030000500_subscriptions.sql`. Migrasi ini menambah tingkat akses per materi (semua materi
+   lama menjadi *Langganan*), membuat tabel `subscriptions`, mengubah pemegang enrollment aktif menjadi
+   pengajuan langganan yang menunggu persetujuan, lalu **menghapus** tabel & fungsi enrollment key.
+   Setelah itu jalankan `npm run content:import` agar semua pratinjau dibuat ulang dengan format baru.
 2. **Authentication → Sign In / Providers:** aktifkan *Allow anonymous sign-ins* (tamu kuis).
 3. **Authentication → URL Configuration:** isi *Site URL* dengan domain produksi (mis.
-   `https://kuiskelas.vercel.app`) dan tambahkan ke *Redirect URLs*:
-   - `https://kuiskelas.vercel.app/auth/callback` (domain produksi, termasuk domain kustom bila ada)
+   `https://studystudio.vercel.app`) dan tambahkan ke *Redirect URLs*:
+   - `https://studystudio.vercel.app/auth/callback` (domain produksi, termasuk domain kustom bila ada)
    - `https://*-<slug-tim-vercel>.vercel.app/**` agar konfirmasi email juga jalan di *preview deployment*
    - `http://localhost:3000/**` untuk pengembangan lokal
 4. Daftar akun lewat situs, lalu jadikan admin di SQL Editor:
@@ -88,7 +97,13 @@ Pemeriksaan sebelum deploy: `npm run lint`, `npm run typecheck`, `npm run build`
    dan pratinjau di bucket privat `materials`, soal dari `window.COURSE` setiap materi (sebagai soal
    pilihan tunggal ber-`source_ref` `<slug>#<nomor>`), serta satu kuis mandiri per materi yang terbuka
    untuk tamu. Aman diulang: data dicocokkan lewat slug dan `source_ref`; kuis yang sudah diubah admin
-   tidak ditimpa kecuali dengan `--update-quizzes`. Opsi lain: `--only <slug-materi>`, `--dry-run`.
+   tidak ditimpa kecuali dengan `--update-quizzes`. Opsi lain: `--only <slug-materi>`, `--dry-run`,
+   `--access public|member|subscriber` (menyetel tingkat akses materi yang diimpor; tanpa opsi ini
+   tingkat akses yang diatur admin tidak diubah).
+
+   Pratinjau dibuat otomatis (`lib/materials/preview.mjs`): dokumen materi asli dengan mesin tetap aktif,
+   bagian pertama terbuka, bagian lain terkunci (judulnya tetap di daftar isi), dan 5 soal contoh. Isi
+   bagian terkunci dan soal lainnya tidak ikut terkirim.
 
 ## Deploy (Vercel)
 
@@ -125,7 +140,8 @@ Editor, bukan saat build Vercel. Jangan pernah meng-commit `.env.local` atau kun
   `npm run content:sync`. Jangan mengedit blok mesin di dalam file materi.
 - `npm run content:check` memastikan setiap folder terdaftar, mesin mutakhir, `COURSE.id` unik, dan
   setiap soal valid. Setelah konten berubah, jalankan lagi `npm run content:import`.
-- Materi juga bisa diunggah manual di **Admin → Materi** (HTML pratinjau, HTML lengkap, dan aset).
+- Materi juga bisa diunggah manual di **Admin → Materi** (HTML lengkap, aset, dan opsional HTML pratinjau;
+  bila pratinjau dikosongkan, dibuat otomatis dari HTML lengkap).
 
 Format materi (bagian yang dibaca platform): `<title>`, `<p class="lede">` sebagai deskripsi,
 `<section id=… data-toc="…">` sebagai tujuan pembelajaran, dan `window.COURSE = { id, short, title,

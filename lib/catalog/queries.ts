@@ -1,3 +1,4 @@
+import { cache } from 'react';
 import { createSupabaseServer } from '@/lib/supabase/server';
 import type { Database } from '@/lib/database.types';
 
@@ -26,7 +27,8 @@ export async function getPublishedCourses(): Promise<CourseWithCounts[]> {
   })) as CourseWithCounts[];
 }
 
-export async function getCourseBySlug(slug: string): Promise<CourseRow | null> {
+/* cache(): generateMetadata dan halaman memakai hasil yang sama dalam satu permintaan */
+export const getCourseBySlug = cache(async (slug: string): Promise<CourseRow | null> => {
   const supabase = createSupabaseServer();
   const { data } = await supabase
     .from('courses')
@@ -35,7 +37,7 @@ export async function getCourseBySlug(slug: string): Promise<CourseRow | null> {
     .eq('status', 'published')
     .maybeSingle();
   return (data as unknown as CourseRow) ?? null;
-}
+});
 
 export async function getMaterialsForCourse(courseId: string): Promise<MaterialWithCourse[]> {
   const supabase = createSupabaseServer();
@@ -89,7 +91,7 @@ export async function searchPublishedMaterials(opts: {
   return { items: ((data as unknown as MaterialWithCourse[]) ?? []) as MaterialWithCourse[], total: count ?? 0 };
 }
 
-export async function getMaterialBySlug(courseSlug: string, materialSlug: string) {
+export const getMaterialBySlug = cache(async (courseSlug: string, materialSlug: string) => {
   const supabase = createSupabaseServer();
   const { data: course } = await supabase
     .from('courses')
@@ -107,7 +109,7 @@ export async function getMaterialBySlug(courseSlug: string, materialSlug: string
     .maybeSingle();
 
   return { course: courseRow, material: ((material as unknown as MaterialWithCourse) ?? null) as MaterialWithCourse | null };
-}
+});
 
 export async function getPublishedQuizzes() {
   const supabase = createSupabaseServer();

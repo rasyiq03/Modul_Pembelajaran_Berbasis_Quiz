@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Loader2, Plus, Pencil, Trash2, Upload, FileText, Link2 } from 'lucide-react';
+import { Loader2, Plus, Pencil, Trash2, FileText, Link2, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
@@ -10,13 +10,14 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { STATUS_LABEL } from '@/lib/labels';
+import { ACCESS_LEVEL_HELP, ACCESS_LEVEL_LABEL, ACCESS_LEVELS, STATUS_LABEL } from '@/lib/labels';
+import type { AccessLevel } from '@/lib/database.types';
 import { useToast } from '@/hooks/use-toast';
 import { getSupabaseBrowser } from '@/lib/supabase/clients';
 
 type CourseOpt = { id: string; title: string; slug: string };
 type Material = {
-  id: string; title: string; slug: string; status: string; display_order: number;
+  id: string; title: string; slug: string; status: string; access_level: AccessLevel; display_order: number;
   course_id: string; preview_path: string | null; content_path: string | null;
   description: string | null; learning_objectives: string | null; material_tags: { tag: string }[];
   updated_at: string; courses: CourseOpt | null;
@@ -37,6 +38,7 @@ export function MaterialsAdminClient({ materials, courses }: { materials: Materi
   const [description, setDescription] = useState('');
   const [objectives, setObjectives] = useState('');
   const [status, setStatus] = useState<'draft' | 'published' | 'archived'>('draft');
+  const [level, setLevel] = useState<AccessLevel>('subscriber');
   const [displayOrder, setDisplayOrder] = useState(0);
   const [tags, setTags] = useState('');
 
@@ -52,14 +54,14 @@ export function MaterialsAdminClient({ materials, courses }: { materials: Materi
 
   function reset() {
     setEditing(null); setTitle(''); setSlug(''); setCourseId(''); setDescription(''); setObjectives('');
-    setStatus('draft'); setDisplayOrder(0); setTags(''); setPreviewFile(null); setContentFile(null); setAssetFiles([]);
+    setStatus('draft'); setLevel('subscriber'); setDisplayOrder(0); setTags(''); setPreviewFile(null); setContentFile(null); setAssetFiles([]);
   }
   function startCreate() { reset(); setOpen(true); }
   function startEdit(m: Material) {
     setEditing(m); setTitle(m.title); setSlug(m.slug); setCourseId(m.course_id);
     setDescription(m.description ?? ''); setObjectives(m.learning_objectives ?? '');
     setTags((m.material_tags ?? []).map((t) => t.tag).join(', '));
-    setStatus(m.status as 'draft' | 'published' | 'archived'); setDisplayOrder(m.display_order);
+    setStatus(m.status as 'draft' | 'published' | 'archived'); setLevel(m.access_level); setDisplayOrder(m.display_order);
     setOpen(true);
   }
 
@@ -68,6 +70,22 @@ export function MaterialsAdminClient({ materials, courses }: { materials: Materi
     const { error } = await supabase.storage.from(BUCKET).upload(path, file, { upsert: true, contentType });
     if (error) toast({ title: 'Gagal mengunggah', description: `${file.name}: ${error.message}`, variant: 'destructive' });
     return !error;
+  }
+
+  /* Pratinjau otomatis (lib/materials/preview.mjs): bagian pertama terbuka, sisanya terkunci, beberapa soal contoh */
+  async function generatePreview(id: string, quiet = false): Promise<boolean> {
+    const res = await fetch(`/admin/materials/${id}/preview`, { method: 'POST' });
+    const body = await res.json().catch(() => ({}));
+    if (!res.ok) toast({ title: 'Pratinjau otomatis gagal', description: body.error ?? res.statusText, variant: 'destructive' });
+    else if (!quiet) toast({ title: 'Pratinjau dibuat ulang' });
+    return res.ok;
+  }
+
+  async function setAccess(m: Material, value: AccessLevel) {
+    const { error } = await supabase.from('materials').update({ access_level: value }).eq('id', m.id);
+    if (error) return toast({ title: 'Gagal mengubah tingkat akses', description: error.message, variant: 'destructive' });
+    toast({ title: `${m.title}: ${ACCESS_LEVEL_LABEL[value]}`, description: ACCESS_LEVEL_HELP[value] });
+    router.refresh();
   }
 
   function fail(title: string, description?: string) {
@@ -83,7 +101,7 @@ export function MaterialsAdminClient({ materials, courses }: { materials: Materi
     const payload = {
       course_id: courseId, title, slug: slug || slugify(title),
       description: description || null, learning_objectives: objectives || null,
-      status, display_order: displayOrder,
+      status, access_level: level, display_order: displayOrder,
     };
     let id: string;
     if (editing) {
@@ -121,6 +139,10 @@ export function MaterialsAdminClient({ materials, courses }: { materials: Materi
       const { error } = await supabase.from('materials').update(paths).eq('id', id);
       if (error) return fail('Gagal menyimpan lokasi berkas', error.message);
     }
+    if (contentFile && !previewFile) {
+      setProgress('Membuat pratinjau otomatis…');
+      await generatePreview(id, true);
+    }
 
     const tagList = Array.from(new Set(tags.split(',').map((t) => t.trim().toLowerCase()).filter(Boolean)));
     await supabase.from('material_tags').delete().eq('material_id', id);
@@ -132,7 +154,7 @@ export function MaterialsAdminClient({ materials, courses }: { materials: Materi
   }
 
   async function remove(m: Material) {
-    if (!confirm(`Hapus materi "${m.title}"? Data materi, enrollment, dan key-nya ikut terhapus; berkas di Storage tetap ada.`)) return;
+    if (!confirm(`Hapus materi "${m.title}"? Data materinya ikut terhapus; berkas di Storage tetap ada.`)) return;
     const { error } = await supabase.from('materials').delete().eq('id', m.id);
     if (error) return toast({ title: 'Gagal menghapus', description: error.message, variant: 'destructive' });
     toast({ title: 'Materi dihapus' });
@@ -150,7 +172,7 @@ export function MaterialsAdminClient({ materials, courses }: { materials: Materi
             <DialogHeader>
               <DialogTitle>{editing ? 'Ubah materi' : 'Materi baru'}</DialogTitle>
               <DialogDescription>
-                Unggah pratinjau (untuk semua pengunjung) dan HTML lengkap (hanya untuk yang ter-enroll). Keduanya disimpan privat dan dilayani pembaca setelah pemeriksaan akses. Rujuk aset di HTML lengkap sebagai <code>./assets/nama.ext</code>; pratinjau sebaiknya mandiri. Materi dari repo diimpor otomatis lewat <code>npm run content:import</code>.
+                Unggah HTML lengkap; siapa yang boleh membacanya ditentukan tingkat akses. Yang belum berhak melihat pratinjau, yang dibuat otomatis bila tidak diunggah sendiri. Semua berkas disimpan privat dan dilayani pembaca setelah pemeriksaan akses. Rujuk aset di HTML lengkap sebagai <code>./assets/nama.ext</code>. Materi dari repo diimpor otomatis lewat <code>npm run content:import</code>.
               </DialogDescription>
             </DialogHeader>
             <div className="max-h-[60vh] space-y-3 overflow-y-auto pr-1">
@@ -186,6 +208,16 @@ export function MaterialsAdminClient({ materials, courses }: { materials: Materi
                   </Select>
                 </div>
               </div>
+              <div className="space-y-2">
+                <Label>Tingkat akses</Label>
+                <Select value={level} onValueChange={(v) => setLevel(v as AccessLevel)}>
+                  <SelectTrigger><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    {ACCESS_LEVELS.map((l) => <SelectItem key={l} value={l}>{ACCESS_LEVEL_LABEL[l]}</SelectItem>)}
+                  </SelectContent>
+                </Select>
+                <p className="text-xs text-muted-foreground">{ACCESS_LEVEL_HELP[level]}</p>
+              </div>
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-2">
                   <Label htmlFor="o">Urutan tampil</Label>
@@ -206,14 +238,14 @@ export function MaterialsAdminClient({ materials, courses }: { materials: Materi
               </div>
 
               <div className="rounded-md border border-dashed border-border p-3">
-                <div className="mb-2 text-sm font-medium">HTML pratinjau publik</div>
-                <p className="mb-2 text-xs text-muted-foreground">Tampil untuk semua orang. Menggantikan pratinjau yang sudah ada.</p>
+                <div className="mb-2 text-sm font-medium">HTML pratinjau (opsional)</div>
+                <p className="mb-2 text-xs text-muted-foreground">Untuk yang belum berhak membaca materi lengkap. Kosongkan agar dibuat otomatis dari HTML lengkap (bagian pertama terbuka, bagian lain terkunci, 5 soal contoh).</p>
                 <Input type="file" accept=".html,.htm" onChange={(e) => setPreviewFile(e.target.files?.[0] ?? null)} />
               </div>
 
               <div className="rounded-md border border-dashed border-border p-3">
                 <div className="mb-2 text-sm font-medium">HTML lengkap (terlindungi)</div>
-                <p className="mb-2 text-xs text-muted-foreground">Hanya untuk pengguna ter-enroll dan admin. Gunakan <code>./assets/...</code> untuk aset relatif.</p>
+                <p className="mb-2 text-xs text-muted-foreground">Dibaca penuh sesuai tingkat akses; admin selalu bisa membacanya. Gunakan <code>./assets/...</code> untuk aset relatif.</p>
                 <Input type="file" accept=".html,.htm" onChange={(e) => setContentFile(e.target.files?.[0] ?? null)} />
               </div>
 
@@ -259,7 +291,18 @@ export function MaterialsAdminClient({ materials, courses }: { materials: Materi
                     {m.content_path && <span className="inline-flex items-center gap-1"><Link2 className="h-3 w-3" /> lengkap</span>}
                   </div>
                 </div>
-                <div className="flex gap-2">
+                <div className="flex flex-wrap items-center gap-2">
+                  <Select value={m.access_level} onValueChange={(v) => setAccess(m, v as AccessLevel)}>
+                    <SelectTrigger className="h-9 w-[9.5rem]" aria-label={`Tingkat akses ${m.title}`}><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      {ACCESS_LEVELS.map((l) => <SelectItem key={l} value={l}>{ACCESS_LEVEL_LABEL[l]}</SelectItem>)}
+                    </SelectContent>
+                  </Select>
+                  {m.content_path && (
+                    <Button size="sm" variant="ghost" onClick={() => generatePreview(m.id).then((ok) => ok && router.refresh())} title="Buat ulang pratinjau otomatis dari HTML lengkap">
+                      <RefreshCw className="mr-1 h-3.5 w-3.5" /> Pratinjau
+                    </Button>
+                  )}
                   <Button size="sm" variant="outline" onClick={() => startEdit(m)}><Pencil className="mr-1 h-3.5 w-3.5" /> Ubah</Button>
                   <Button size="sm" variant="ghost" onClick={() => remove(m)} className="text-destructive"><Trash2 className="mr-1 h-3.5 w-3.5" /> Hapus</Button>
                 </div>

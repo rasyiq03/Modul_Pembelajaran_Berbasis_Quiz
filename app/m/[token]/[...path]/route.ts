@@ -21,7 +21,8 @@ const SANDBOX = 'sandbox allow-scripts allow-forms allow-popups allow-popups-to-
 const deny = (status: number, msg: string) =>
   new NextResponse(msg, { status, headers: { 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'no-store' } });
 
-export async function GET(_req: NextRequest, { params }: { params: { token: string; path: string[] } }) {
+export async function GET(_req: NextRequest, props: { params: Promise<{ token: string; path: string[] }> }) {
+  const params = await props.params;
   const claims = verifyReaderToken(params.token);
   if (!claims) return deny(403, 'Tautan materi tidak valid atau sudah kedaluwarsa. Muat ulang halaman materi.');
 
@@ -48,18 +49,10 @@ export async function GET(_req: NextRequest, { params }: { params: { token: stri
   const published = m.status === 'published' && m.courses?.status === 'published';
 
   if (claims.k === 'full') {
-    /* Token berumur pendek, tetapi akses tetap diperiksa ulang agar pencabutan berlaku seketika */
-    const uid = claims.u;
-    if (!uid) return deny(403, 'Akses ditolak.');
-    const [{ data: prof }, { data: enr }] = await Promise.all([
-      db.from('profiles').select('role').eq('id', uid).maybeSingle(),
-      db.from('enrollments').select('id').eq('user_id', uid).eq('material_id', m.id).eq('revoked', false).maybeSingle(),
-    ]);
-    if (prof?.role !== 'admin') {
-      if (!enr) return deny(403, 'Akses ke materi lengkap sudah dicabut.');
-      /* Sama dengan RLS halaman materi: peserta hanya membaca materi yang terpublikasi */
-      if (!published) return deny(404, 'Materi belum dipublikasikan.');
-    }
+    /* Token berumur pendek, tetapi akses tetap diperiksa ulang (aturan yang sama dengan halaman materi)
+       agar perubahan tingkat akses, langganan yang dicabut, atau kedaluwarsa berlaku seketika */
+    const { data: ok, error } = await db.rpc('can_read_material', { p_material: m.id, p_user: claims.u });
+    if (error || ok !== true) return deny(403, 'Akses ke materi lengkap sudah berakhir. Muat ulang halaman materi.');
   } else if (!published) {
     return deny(404, 'Materi belum dipublikasikan.');
   }

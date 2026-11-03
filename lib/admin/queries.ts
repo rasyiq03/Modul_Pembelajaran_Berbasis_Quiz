@@ -1,13 +1,16 @@
 import { createSupabaseServer } from '@/lib/supabase/server';
+import type { AccessLevel, SubscriptionStatus } from '@/lib/database.types';
 
 export async function adminStats() {
   const supabase = createSupabaseServer();
-  const [courses, materials, questions, quizzes, enrollments, attempts, sessions, participants] = await Promise.all([
+  const [courses, materials, questions, quizzes, subscribers, pending, attempts, sessions, participants] = await Promise.all([
     supabase.from('courses').select('*', { count: 'exact', head: true }),
     supabase.from('materials').select('*', { count: 'exact', head: true }).eq('status', 'published'),
     supabase.from('questions').select('*', { count: 'exact', head: true }).eq('status', 'published'),
     supabase.from('quizzes').select('*', { count: 'exact', head: true }).eq('status', 'published'),
-    supabase.from('enrollments').select('*', { count: 'exact', head: true }).eq('revoked', false),
+    supabase.from('subscriptions').select('*', { count: 'exact', head: true }).eq('status', 'active')
+      .or(`expires_at.is.null,expires_at.gt.${new Date().toISOString()}`),
+    pendingSubscriptionCount(),
     supabase.from('quiz_attempts').select('*', { count: 'exact', head: true }).eq('status', 'graded').eq('is_preview', false),
     supabase.from('quiz_sessions').select('*', { count: 'exact', head: true }).eq('status', 'active'),
     supabase.from('quiz_participants').select('*', { count: 'exact', head: true }),
@@ -17,11 +20,31 @@ export async function adminStats() {
     publishedMaterials: materials.count ?? 0,
     publishedQuestions: questions.count ?? 0,
     publishedQuizzes: quizzes.count ?? 0,
-    activeEnrollments: enrollments.count ?? 0,
+    activeSubscribers: subscribers.count ?? 0,
+    pendingSubscriptions: pending,
     gradedAttempts: attempts.count ?? 0,
     activeSessions: sessions.count ?? 0,
     participants: participants.count ?? 0,
   };
+}
+
+/** Pengajuan langganan yang menunggu keputusan admin (lencana di menu admin) */
+export async function pendingSubscriptionCount() {
+  const { count } = await createSupabaseServer().from('subscriptions').select('*', { count: 'exact', head: true }).eq('status', 'pending');
+  return count ?? 0;
+}
+
+export async function adminListSubscriptions() {
+  const { data } = await createSupabaseServer()
+    .from('subscriptions')
+    .select('id, user_id, status, message, admin_note, expires_at, reviewed_at, created_at, profiles(email, display_name)')
+    .order('created_at', { ascending: false })
+    .limit(1000);
+  return (data as unknown as Array<{
+    id: string; user_id: string; status: SubscriptionStatus; message: string | null; admin_note: string | null;
+    expires_at: string | null; reviewed_at: string | null; created_at: string;
+    profiles: { email: string | null; display_name: string | null } | null;
+  }>) ?? [];
 }
 
 export async function avgScore() {
@@ -69,42 +92,14 @@ export async function adminListMaterials() {
   const supabase = createSupabaseServer();
   const { data } = await supabase
     .from('materials')
-    .select('id, title, slug, status, display_order, course_id, preview_path, content_path, source_file, description, learning_objectives, updated_at, courses(id, title, slug), material_tags(tag)')
+    .select('id, title, slug, status, access_level, display_order, course_id, preview_path, content_path, source_file, description, learning_objectives, updated_at, courses(id, title, slug), material_tags(tag)')
     .order('updated_at', { ascending: false });
   return (data as unknown as Array<{
-    id: string; title: string; slug: string; status: string; display_order: number;
+    id: string; title: string; slug: string; status: string; access_level: AccessLevel; display_order: number;
     course_id: string; preview_path: string | null; content_path: string | null; source_file: string | null;
     description: string | null; learning_objectives: string | null; material_tags: { tag: string }[];
     updated_at: string;
     courses: { id: string; title: string; slug: string } | null;
-  }>) ?? [];
-}
-
-export async function adminListKeys() {
-  const supabase = createSupabaseServer();
-  const { data } = await supabase
-    .from('enrollment_keys')
-    .select('id, key_prefix, material_id, expires_at, max_uses, uses_count, revoked, note, created_at, materials(title)')
-    .order('created_at', { ascending: false });
-  return (data as unknown as Array<{
-    id: string; key_prefix: string; material_id: string; expires_at: string | null;
-    max_uses: number | null; uses_count: number; revoked: boolean; note: string | null;
-    created_at: string;
-    materials: { title: string } | null;
-  }>) ?? [];
-}
-
-export async function adminListEnrollments() {
-  const supabase = createSupabaseServer();
-  const { data } = await supabase
-    .from('enrollments')
-    .select('id, user_id, material_id, source, created_at, revoked, materials(title), profiles(email)')
-    .order('created_at', { ascending: false });
-  return (data as unknown as Array<{
-    id: string; user_id: string; material_id: string; source: string | null;
-    created_at: string; revoked: boolean;
-    materials: { title: string } | null;
-    profiles: { email: string } | null;
   }>) ?? [];
 }
 

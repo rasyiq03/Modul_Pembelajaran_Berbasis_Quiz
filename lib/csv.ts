@@ -1,8 +1,14 @@
 /** CSV sederhana (RFC 4180): koma, kutip ganda, baris baru di dalam sel. */
 
-export function toCsv(rows: (string | number | boolean | null | undefined)[][]): string {
+/**
+ * guardFormulas: untuk CSV berisi teks dari peserta (nama, nickname). Teks yang diawali = + - @
+ * diberi awalan ' agar Excel/Sheets tidak menjalankannya sebagai rumus (CSV injection).
+ * Jangan dipakai untuk CSV yang akan diimpor ulang (bank soal), karena isinya ikut berubah.
+ */
+export function toCsv(rows: (string | number | boolean | null | undefined)[][], opts: { guardFormulas?: boolean } = {}): string {
   const cell = (v: unknown) => {
-    const s = v == null ? '' : String(v);
+    let s = v == null ? '' : String(v);
+    if (opts.guardFormulas && typeof v === 'string' && /^[=+\-@\t\r]/.test(s)) s = `'${s}`;
     return /[",\n\r]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
   };
   // BOM agar Excel membaca UTF-8 dengan benar

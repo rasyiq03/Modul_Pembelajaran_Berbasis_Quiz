@@ -3,14 +3,14 @@
 import { ReactNode } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { BarChart3, BookOpen, Boxes, ClipboardList, KeyRound, LayoutDashboard, ListChecks, Radio, Users } from 'lucide-react';
+import { BarChart3, BookOpen, Boxes, ClipboardList, Crown, LayoutDashboard, ListChecks, Radio, Users } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export const ADMIN_LINKS = [
   { href: '/admin', label: 'Ringkasan', icon: LayoutDashboard },
   { href: '/admin/courses', label: 'Mata kuliah', icon: BookOpen },
   { href: '/admin/materials', label: 'Materi', icon: Boxes },
-  { href: '/admin/keys', label: 'Enrollment key', icon: KeyRound },
+  { href: '/admin/subscriptions', label: 'Langganan', icon: Crown },
   { href: '/admin/questions', label: 'Bank soal', icon: ListChecks },
   { href: '/admin/quizzes', label: 'Kuis', icon: ClipboardList },
   { href: '/admin/sessions', label: 'Sesi live', icon: Radio },
@@ -18,9 +18,16 @@ export const ADMIN_LINKS = [
   { href: '/admin/users', label: 'Pengguna', icon: Users },
 ];
 
-export function AdminShell({ children }: { children: ReactNode }) {
+/** pendingSubscriptions: jumlah pengajuan langganan yang menunggu, tampil sebagai lencana di menu */
+export function AdminShell({ children, pendingSubscriptions = 0 }: { children: ReactNode; pendingSubscriptions?: number }) {
   const pathname = usePathname();
   const isActive = (href: string) => pathname === href || (href !== '/admin' && pathname.startsWith(href));
+  const badge = (href: string, on: boolean) =>
+    href === '/admin/subscriptions' && pendingSubscriptions > 0 ? (
+      <span className={cn('ml-auto rounded-full px-1.5 text-[0.7rem] font-extrabold leading-5 tabular-nums', on ? 'bg-primary-foreground text-primary' : 'bg-primary text-primary-foreground')}>
+        {pendingSubscriptions}<span className="sr-only"> pengajuan menunggu</span>
+      </span>
+    ) : null;
 
   return (
     <div className="container-wide py-6">
@@ -38,7 +45,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
                   isActive(l.href) ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:bg-secondary hover:text-foreground',
                 )}
               >
-                <l.icon className="h-4 w-4 shrink-0" /> {l.label}
+                <l.icon className="h-4 w-4 shrink-0" /> {l.label}{badge(l.href, isActive(l.href))}
               </Link>
             ))}
           </nav>
@@ -56,7 +63,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
                   isActive(l.href) ? 'bg-primary text-primary-foreground' : 'bg-secondary text-foreground',
                 )}
               >
-                <l.icon className="h-3.5 w-3.5" /> {l.label}
+                <l.icon className="h-3.5 w-3.5" /> {l.label}{badge(l.href, isActive(l.href))}
               </Link>
             ))}
           </div>

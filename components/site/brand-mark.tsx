@@ -1,12 +1,13 @@
-/* Logo: empat bentuk jawaban Kahoot dari panggung kuis materi (segitiga, belah ketupat, lingkaran, persegi) */
+/* Logo: empat bentuk jawaban Kahoot (segitiga, belah ketupat, lingkaran, persegi) berbingkai tinta */
 export function BrandMark({ className = 'h-9 w-9' }: { className?: string }) {
   return (
     <svg viewBox="0 0 36 36" className={className} aria-hidden="true">
-      <rect width="36" height="36" rx="8" className="fill-primary" />
-      <path d="M10.5 5.5 15.5 14.5h-10z" fill="#E21B3C" />
-      <path d="M25.5 5 30 9.5 25.5 14 21 9.5z" fill="#1368CE" />
-      <circle cx="10.5" cy="25.5" r="4.6" fill="#F5B301" />
-      <rect x="21" y="21" width="9" height="9" rx="1" fill="#26890C" />
+      <g stroke="hsl(var(--ink))" strokeWidth="1.6" strokeLinejoin="round">
+        <path d="M9.5 3 16.5 15.5h-14z" fill="#E21B3C" />
+        <path d="M26.5 2.5 33.5 9.5 26.5 16.5 19.5 9.5z" fill="#1368CE" />
+        <circle cx="9.5" cy="26.5" r="6.5" fill="#FFC93C" />
+        <rect x="20" y="20" width="13" height="13" rx="1.5" fill="#26890C" />
+      </g>
     </svg>
   );
 }

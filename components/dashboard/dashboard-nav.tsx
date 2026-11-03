@@ -6,7 +6,7 @@ import { cn } from '@/lib/utils';
 
 const LINKS = [
   { href: '/dashboard', label: 'Ringkasan' },
-  { href: '/dashboard/materials', label: 'Materi saya' },
+  { href: '/dashboard/subscription', label: 'Langganan' },
   { href: '/dashboard/history', label: 'Riwayat kuis' },
   { href: '/dashboard/profile', label: 'Profil' },
 ];

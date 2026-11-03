@@ -1072,7 +1072,7 @@ window.COURSE = {
 <!-- KUISKELAS:ENGINE-JS -->
 <script>
 /*!
- * KuisKelas engine v2.1.0 (offline)
+ * KuisKelas engine v2.1.1 (offline)
  * Mesin tampilan materi + kuis gaya Kahoot + profil, XP, dan lencana. Berjalan penuh tanpa internet.
  * Materi cukup menyediakan: window.KQ_CONFIG, window.COURSE, dan <main id="view-summary">.
  * Kuis bersama satu kelas (sesi live dengan kode), enrollment, dan riwayat nilai ada di platform web;
@@ -1085,7 +1085,7 @@ window.COURSE = {
 /* =====================================================================
    0. Konfigurasi & data
    ===================================================================== */
-const VERSION = '2.1.0';
+const VERSION = '2.1.1';
 const CFG = Object.assign({
   defaultClass: '',
   bots: 12
@@ -1583,7 +1583,7 @@ const Quiz = {
         <div class="modes one">
           <button class="mode c0" id="mSolo" data-focus>${SHAPES[0].replace('<svg', '<svg class="shape"')}<b>Latihan solo</b><span>Bertanding melawan ${CFG.bots} bot. Cocok untuk belajar mandiri kapan saja, juga tanpa internet.</span></button>
         </div>
-        <p class="offline-note">Ingin kuis bersama satu kelas? Pengajar bisa membuka sesi live dengan kode di platform KuisKelas.</p>
+        <p class="offline-note">Ingin kuis bersama satu kelas? Pengajar bisa membuka sesi live dengan kode di platform StudyStudio.</p>
       </div>`, '', TITLE);
     on('#whoBtn', openProfile);
     on('#mSolo', () => Solo.lobby());

@@ -63,7 +63,7 @@ export function HostConsole({ sessionId }: { sessionId: string }) {
     if (!results) return;
     const rows = [['Peringkat', 'Nama tampilan', 'Email', 'Tamu', 'Skor', 'Benar', 'Dijawab', 'Bergabung']];
     results.participants.forEach((p: any, i: number) => rows.push([String(i + 1), p.nickname, p.email ?? '', p.is_guest ? 'ya' : 'tidak', String(p.score), String(p.correct), String(p.answered), p.joined_at]));
-    const blob = new Blob([toCsv(rows)], { type: 'text/csv;charset=utf-8' });
+    const blob = new Blob([toCsv(rows, { guardFormulas: true })],{ type: 'text/csv;charset=utf-8' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob); a.download = `sesi-${s?.code ?? sessionId}.csv`; a.click();
     setTimeout(() => URL.revokeObjectURL(a.href), 1000);

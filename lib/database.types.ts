@@ -5,6 +5,9 @@
 export type QuestionType = 'single_choice' | 'multiple_select' | 'true_false' | 'short_answer' | 'essay' | 'matching' | 'ordering';
 export type QuizMode = 'self_paced' | 'interactive_practice' | 'live_competition' | 'timed_assessment' | 'self_paced_assessment';
 export type Status = 'draft' | 'published' | 'archived';
+/** Siapa yang boleh membaca materi lengkap: semua orang, pengguna terdaftar, atau pelanggan */
+export type AccessLevel = 'public' | 'member' | 'subscriber';
+export type SubscriptionStatus = 'pending' | 'active' | 'rejected' | 'revoked' | 'cancelled';
 type Table<Row, Insert, Update = Partial<Insert>> = { Row: Row; Insert: Insert; Update: Update; Relationships: [] };
 
 export interface Database {
@@ -26,33 +29,24 @@ export interface Database {
       materials: Table<
         {
           id: string; course_id: string; title: string; slug: string; description: string | null;
-          learning_objectives: string | null; status: Status; display_order: number; thumbnail_url: string | null;
+          learning_objectives: string | null; status: Status; access_level: AccessLevel; display_order: number; thumbnail_url: string | null;
           preview_path: string | null; content_path: string | null; content_assets: any; source_file: string | null;
           created_at: string; updated_at: string;
         },
         {
           id?: string; course_id: string; title: string; slug: string; description?: string | null; learning_objectives?: string | null;
-          status?: Status; display_order?: number; thumbnail_url?: string | null; preview_path?: string | null;
+          status?: Status; access_level?: AccessLevel; display_order?: number; thumbnail_url?: string | null; preview_path?: string | null;
           content_path?: string | null; content_assets?: any; source_file?: string | null;
         }
       >;
       material_tags: Table<{ id: string; material_id: string; tag: string }, { material_id: string; tag: string }>;
-      enrollment_keys: Table<
+      subscriptions: Table<
         {
-          id: string; material_id: string; key_hash: string; key_prefix: string; expires_at: string | null;
-          max_uses: number | null; uses_count: number; revoked: boolean; note: string | null; created_by: string | null; created_at: string;
-        },
-        never,
-        { revoked?: boolean; note?: string | null; expires_at?: string | null; max_uses?: number | null }
-      >;
-      enrollments: Table<
-        {
-          id: string; user_id: string; material_id: string; source: string; key_id: string | null;
-          revoked: boolean; revoked_at: string | null; revoked_by: string | null; created_at: string;
+          id: string; user_id: string; status: SubscriptionStatus; message: string | null; admin_note: string | null;
+          expires_at: string | null; reviewed_by: string | null; reviewed_at: string | null; created_at: string; updated_at: string;
         },
         never, never
       >;
-      enrollment_redemptions: Table<{ id: string; key_id: string; user_id: string; material_id: string; created_at: string }, never, never>;
       questions: Table<
         {
           id: string; type: QuestionType; prompt: string; media_url: string | null; topic: string | null;
@@ -126,10 +120,13 @@ export interface Database {
       is_admin: { Args: Record<string, never>; Returns: boolean };
       is_registered: { Args: Record<string, never>; Returns: boolean };
       has_material_access: { Args: { p_material: string }; Returns: boolean };
+      can_read_material: { Args: { p_material: string; p_user: string | null }; Returns: boolean };
       set_user_role: { Args: { p_user: string; p_role: 'student' | 'admin' }; Returns: undefined };
-      create_enrollment_key: { Args: { p_material: string; p_expires_at?: string | null; p_max_uses?: number | null; p_note?: string | null }; Returns: { id: string; key: string } };
-      redeem_enrollment_key: { Args: { p_key: string }; Returns: { ok: boolean; error?: string; already?: boolean; material_id?: string; material_title?: string } };
-      set_enrollment_revoked: { Args: { p_enrollment: string; p_revoked: boolean }; Returns: undefined };
+      request_subscription: { Args: { p_message?: string | null }; Returns: { ok: boolean; id?: string; error?: 'login_required' | 'already_pending' | 'already_active' } };
+      cancel_subscription_request: { Args: Record<string, never>; Returns: { ok: boolean } };
+      review_subscription: { Args: { p_id: string; p_approve: boolean; p_expires_at?: string | null; p_note?: string | null }; Returns: undefined };
+      set_subscription_expiry: { Args: { p_id: string; p_expires_at: string | null }; Returns: undefined };
+      revoke_subscription: { Args: { p_id: string; p_note?: string | null }; Returns: undefined };
       start_quiz_attempt: { Args: { p_quiz: string; p_nickname?: string | null }; Returns: any };
       check_practice_answer: { Args: { p_attempt: string; p_question: string; p_response: any }; Returns: any };
       submit_quiz_attempt: { Args: { p_attempt: string; p_responses: any }; Returns: any };

@@ -4,23 +4,24 @@ import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import type { Database } from '@/lib/database.types';
 import { supabaseAnonKey, supabaseUrl } from '@/lib/supabase/clients';
 
-/* Next 14 menyimpan hasil fetch() di Data Cache secara bawaan. Data Supabase bergantung pada siapa
-   yang login dan bisa berubah kapan saja (mis. enrollment dicabut), jadi jangan pernah di-cache. */
+/* Data Supabase bergantung pada siapa yang login dan bisa berubah kapan saja (mis. langganan
+   dicabut), jadi hasil fetch() jangan pernah masuk Data Cache. */
 const noStoreFetch: typeof fetch = (input, init) => fetch(input, { ...init, cache: 'no-store' });
 
 /**
  * Klien untuk server component, server action, dan route handler. Membaca sesi dari cookie,
  * jadi query berjalan sebagai pengguna yang login dan RLS berlaku untuknya.
+ * cookies() di Next 15 async; @supabase/ssr menerima getAll/setAll async sehingga fungsi ini tetap sinkron.
  */
 export function createSupabaseServer(): SupabaseClient<Database> {
-  const cookieStore = cookies();
   return createServerClient<Database>(supabaseUrl, supabaseAnonKey, {
     global: { fetch: noStoreFetch },
     cookies: {
-      getAll() {
-        return cookieStore.getAll();
+      async getAll() {
+        return (await cookies()).getAll();
       },
-      setAll(toSet) {
+      async setAll(toSet) {
+        const cookieStore = await cookies();
         try {
           toSet.forEach(({ name, value, options }) => cookieStore.set(name, value, options));
         } catch {

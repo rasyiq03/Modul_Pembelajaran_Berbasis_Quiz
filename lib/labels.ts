@@ -1,4 +1,4 @@
-import type { QuestionType, QuizMode, Status } from '@/lib/database.types';
+import type { AccessLevel, QuestionType, QuizMode, Status } from '@/lib/database.types';
 
 export const STATUS_LABEL: Record<Status, string> = { draft: 'Draf', published: 'Terpublikasi', archived: 'Diarsipkan' };
 
@@ -37,6 +37,23 @@ export const FEEDBACK_LABEL = {
 export type Feedback = keyof typeof FEEDBACK_LABEL;
 
 export const DIFFICULTY_LABEL = { easy: 'Mudah', medium: 'Sedang', hard: 'Sulit' } as const;
+
+export const ACCESS_LEVEL_LABEL: Record<AccessLevel, string> = { public: 'Terbuka', member: 'Wajib masuk', subscriber: 'Langganan' };
+export const ACCESS_LEVEL_HELP: Record<AccessLevel, string> = {
+  public: 'Semua orang, termasuk tamu tanpa akun, membaca materi lengkap.',
+  member: 'Materi lengkap terbuka untuk semua pengguna yang masuk dengan akun.',
+  subscriber: 'Materi lengkap hanya untuk pelanggan aktif; yang lain melihat pratinjau.',
+};
+export const ACCESS_LEVELS = Object.keys(ACCESS_LEVEL_LABEL) as AccessLevel[];
+
+export const SUBSCRIPTION_STATUS_LABEL = {
+  pending: 'Menunggu persetujuan',
+  active: 'Aktif',
+  expired: 'Kedaluwarsa',
+  rejected: 'Ditolak',
+  revoked: 'Dicabut',
+  cancelled: 'Dibatalkan',
+} as const;
 
 /** Galat dari fungsi database (RAISE 'KODE: pesan') → kalimat untuk pengguna */
 const ERRORS: Record<string, string> = {

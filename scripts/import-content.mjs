@@ -1,13 +1,15 @@
 #!/usr/bin/env node
 /**
- * Impor konten repo (content/) ke Supabase: mata kuliah, materi (HTML lengkap + pratinjau
- * publik ke bucket privat "materials"), bank soal dari window.COURSE, dan satu kuis mandiri
- * per materi.
+ * Impor konten repo (content/) ke Supabase: mata kuliah, materi (HTML lengkap + pratinjau otomatis
+ * ke bucket privat "materials"), bank soal dari window.COURSE, dan satu kuis mandiri per materi.
  *
  *   npm run content:import                  impor/perbarui; materi & kuis baru berstatus draf
  *   npm run content:import -- --publish     sekaligus publikasikan mata kuliah, materi, dan kuis
  *   npm run content:import -- --only stat-04-diagram-pohon   hanya materi tertentu (bisa diulang)
  *   npm run content:import -- --dry-run     tampilkan rencana tanpa menulis apa pun
+ *   npm run content:import -- --access public|member|subscriber   setel tingkat akses materi yang diimpor
+ *                                           (tanpa opsi ini, tingkat akses yang diatur admin tidak diubah;
+ *                                           materi baru memakai bawaan database, yaitu subscriber)
  *
  * Butuh NEXT_PUBLIC_SUPABASE_URL dan SUPABASE_SERVICE_ROLE_KEY (dari environment atau .env.local).
  * Aman diulang: materi dicocokkan lewat (mata kuliah, slug), soal lewat source_ref
@@ -19,6 +21,7 @@ import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { createClient } from '@supabase/supabase-js';
 import { ROOT, read, loadCourses, listMaterialFiles, parseMaterial, materialSlug, CSS_RE } from './lib/content.mjs';
+import { buildPreview } from '../lib/materials/preview.mjs';
 
 const args = process.argv.slice(2);
 const flag = (f) => args.includes(f);
@@ -26,6 +29,11 @@ const only = args.flatMap((a, i) => (a === '--only' && args[i + 1] ? [args[i + 1
 const PUBLISH = flag('--publish');
 const DRY = flag('--dry-run');
 const UPDATE_QUIZZES = flag('--update-quizzes');
+const ACCESS = args[args.indexOf('--access') + 1];
+if (flag('--access') && !['public', 'member', 'subscriber'].includes(ACCESS)) {
+  console.error('--access harus public, member, atau subscriber');
+  process.exit(1);
+}
 const BUCKET = 'materials';
 
 function loadEnv() {
@@ -46,51 +54,6 @@ function stableId(name) {
   h[8] = (h[8] & 0x3f) | 0x80;
   const x = h.subarray(0, 16).toString('hex');
   return `${x.slice(0, 8)}-${x.slice(8, 12)}-${x.slice(12, 16)}-${x.slice(16, 20)}-${x.slice(20)}`;
-}
-
-const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
-
-/**
- * Pratinjau publik (FR-15): <head> materi (gaya tanpa skrip) + hero + bagian pertama + ajakan
- * menukar enrollment key. Semua <script> dan atribut on* dibuang; isi lengkap tidak ikut terkirim.
- */
-function buildPreview(html, meta) {
-  const head = (html.match(/<head>([\s\S]*?)<\/head>/) || [, ''])[1]
-    .replace(/<script[\s\S]*?<\/script>/g, '');
-  const hero = (html.match(/<div class="hero">[\s\S]*?<\/div>/) || [`<div class="hero"><h1>${esc(meta.title)}</h1></div>`])[0];
-  const first = (html.match(/<section id="(?!bank-soal)[\w-]+"[^>]*>[\s\S]*?<\/section>/) || [''])[0];
-  const toc = meta.sections.map((s) => `<li>${esc(s.label)}</li>`).join('');
-  const clean = (s) => s.replace(/<script[\s\S]*?<\/script>/g, '').replace(/\son\w+\s*=\s*("[^"]*"|'[^']*'|[^\s>]+)/g, '');
-  return `<!DOCTYPE html>
-<html lang="id">
-<head>
-${head.trim()}
-<style>
-.kk-preview-note{margin:28px 0;padding:18px 20px;border:1.5px solid var(--warn-line,#C99A1B);background:var(--warn,#FBF3D9);border-radius:8px;font-family:var(--font-head,system-ui)}
-.kk-preview-note b{display:block;font-size:1rem;margin-bottom:6px}
-.kk-preview-note ol{margin:10px 0 0 18px;padding:0;font-size:.88rem;line-height:1.6}
-</style>
-</head>
-<body>
-<main id="view-summary">
-  <div class="wrap">
-    ${clean(hero)}
-    <div class="doc" style="display:block">
-      <article>
-${clean(first)}
-        <div class="kk-preview-note">
-          <b>Ini pratinjau materi.</b>
-          Materi lengkap berisi ${meta.sections.length} bagian, penjelajah interaktif, dan ${meta.questions.length} soal latihan.
-          Masuk lalu tukar enrollment key dari pengajar untuk membukanya.
-          <ol>${toc}</ol>
-        </div>
-      </article>
-    </div>
-  </div>
-</main>
-</body>
-</html>
-`;
 }
 
 function questionRows(slug, questions) {
@@ -158,12 +121,16 @@ async function main() {
       course_id: course, slug, title: meta.title, description: meta.description || null,
       learning_objectives: objectives || null, display_order: order, source_file: f.rel,
       ...(PUBLISH ? { status: 'published' } : {}),
+      ...(flag('--access') ? { access_level: ACCESS } : {}),
     }, { onConflict: 'course_id,slug' }).select('id').single(), `materi ${slug}`);
     const id = material.id;
     const put = async (path, body) => must(await db.storage.from(BUCKET).upload(path, Buffer.from(body, 'utf8'), { upsert: true, contentType: 'text/html; charset=utf-8' }), `unggah ${path}`);
     await put(`${id}/full/index.html`, html);
-    await put(`${id}/preview/index.html`, buildPreview(html, meta));
-    must(await db.from('materials').update({ content_path: `${id}/full`, preview_path: `${id}/preview` }).eq('id', id), `path ${slug}`);
+    /* Pratinjau = materi asli dengan bagian pertama terbuka, bagian lain terkunci, dan beberapa soal contoh */
+    const preview = buildPreview(html);
+    if (preview) await put(`${id}/preview/index.html`, preview);
+    else console.warn(`  peringatan: pratinjau ${f.rel} tidak bisa dibuat otomatis`);
+    must(await db.from('materials').update({ content_path: `${id}/full`, preview_path: preview ? `${id}/preview` : null }).eq('id', id), `path ${slug}`);
 
     /* 3. Bank soal: pakai id lama bila source_ref sudah ada (mis. dari impor CSV admin) */
     const existing = must(await db.from('questions').select('id, source_ref').like('source_ref', `${slug}#%`), `soal ${slug}`);

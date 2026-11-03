@@ -3,98 +3,121 @@
 @tailwind utilities;
 
 /*
-  Token warna disamakan dengan mesin materi (engine/kuiskelas.css):
-  --bg #F4F5FA · --surface #FFF · --ink #161A3C · --muted #5B6285 · --line #D9DCEC
-  --accent #46178F · --soft #EEE8FA · fokus #F5B301 · warna Kahoot merah/biru/kuning/hijau.
-  Mode gelap mengikuti sistem, seperti materi; data-theme="light|dark" memaksa salah satunya.
+  Tema soft-brutalism: latar krem, tinta hitam, garis 2px dan bayangan offset pada kartu & tombol,
+  aksen warna bentuk Kahoot. Isi materi (iframe) tetap memakai tema mesin materi sendiri.
+  Mode gelap mengikuti sistem; data-theme="light|dark" di <html> memaksa salah satunya.
 */
 @layer base {
   :root {
-    --background: 230 37% 97%;
-    --foreground: 234 46% 16%;
+    --background: 40 100% 95%;
+    --foreground: 0 0% 10%;
     --card: 0 0% 100%;
-    --card-foreground: 234 46% 16%;
+    --card-foreground: 0 0% 10%;
     --popover: 0 0% 100%;
-    --popover-foreground: 234 46% 16%;
-    --primary: 264 72% 33%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 260 64% 95%;
-    --secondary-foreground: 234 46% 16%;
-    --muted: 260 64% 95%;
-    --muted-foreground: 230 19% 44%;
-    --accent: 260 64% 95%;
-    --accent-foreground: 264 72% 33%;
-    --destructive: 351 80% 43%;
+    --popover-foreground: 0 0% 10%;
+    --primary: 0 0% 10%;
+    --primary-foreground: 40 100% 95%;
+    --secondary: 40 100% 91%;
+    --secondary-foreground: 0 0% 10%;
+    --muted: 40 100% 91%;
+    --muted-foreground: 37 10% 33%;
+    --accent: 43 100% 62%;
+    --accent-foreground: 0 0% 10%;
+    --destructive: 350 79% 50%;
     --destructive-foreground: 0 0% 100%;
     --success: 108 84% 29%;
     --success-foreground: 0 0% 100%;
-    --warning: 44 76% 45%;
-    --warning-foreground: 0 0% 100%;
-    --warning-soft: 46 81% 92%;
-    --border: 231 33% 89%;
-    --input: 231 33% 89%;
-    --ring: 44 99% 48%;
+    --warning: 44 100% 36%;
+    --warning-foreground: 0 0% 10%;
+    --warning-soft: 44 100% 87%;
+    --border: 36 30% 80%;
+    --input: 0 0% 10%;
+    --ring: 43 100% 62%;
+    /* Garis tebal & bayangan offset soft-brutalism */
+    --ink: 0 0% 10%;
+    --yellow: 43 100% 62%;
+    --violet: 264 72% 33%;
+    --cover-violet: 264 84% 93%;
+    --cover-blue: 213 81% 92%;
+    --cover-green: 101 47% 88%;
+    --cover-red: 349 82% 92%;
     /* Warna Kahoot dari panggung kuis materi */
     --chart-1: 350 79% 50%;
     --chart-2: 213 83% 44%;
     --chart-3: 44 100% 42%;
     --chart-4: 108 84% 29%;
     --chart-5: 264 72% 33%;
-    --radius: 0.5rem;
+    --radius: 0.75rem;
   }
 
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme='light']) {
-      --background: 235 44% 10%;
-      --foreground: 232 71% 96%;
-      --card: 235 42% 15%;
-      --card-foreground: 232 71% 96%;
-      --popover: 235 42% 15%;
-      --popover-foreground: 232 71% 96%;
-      --primary: 260 77% 78%;
-      --primary-foreground: 259 69% 14%;
-      --secondary: 249 46% 22%;
-      --secondary-foreground: 232 71% 96%;
-      --muted: 249 46% 22%;
-      --muted-foreground: 231 30% 73%;
-      --accent: 249 46% 22%;
-      --accent-foreground: 260 77% 78%;
+      --background: 37 23% 8%;
+      --foreground: 38 52% 91%;
+      --card: 37 19% 11%;
+      --card-foreground: 38 52% 91%;
+      --popover: 37 19% 11%;
+      --popover-foreground: 38 52% 91%;
+      --primary: 38 52% 91%;
+      --primary-foreground: 37 23% 8%;
+      --secondary: 37 28% 14%;
+      --secondary-foreground: 38 52% 91%;
+      --muted: 37 28% 14%;
+      --muted-foreground: 36 18% 68%;
+      --accent: 42 81% 54%;
+      --accent-foreground: 0 0% 10%;
       --destructive: 351 75% 62%;
-      --destructive-foreground: 259 69% 14%;
+      --destructive-foreground: 0 0% 10%;
       --success: 108 55% 55%;
-      --success-foreground: 259 69% 14%;
-      --warning: 45 57% 55%;
-      --warning-foreground: 259 69% 14%;
-      --warning-soft: 48 48% 12%;
-      --border: 235 36% 26%;
-      --input: 235 36% 26%;
+      --success-foreground: 0 0% 10%;
+      --warning: 45 70% 55%;
+      --warning-foreground: 0 0% 10%;
+      --warning-soft: 45 40% 15%;
+      --border: 36 15% 25%;
+      --input: 38 52% 91%;
+      --ring: 42 81% 54%;
+      --ink: 38 52% 91%;
+      --yellow: 42 81% 54%;
+      --violet: 260 77% 78%;
+      --cover-violet: 262 34% 23%;
+      --cover-blue: 214 43% 19%;
+      --cover-green: 106 37% 15%;
+      --cover-red: 345 35% 20%;
       --chart-5: 260 77% 78%;
     }
   }
   :root[data-theme='dark'] {
-    --background: 235 44% 10%;
-    --foreground: 232 71% 96%;
-    --card: 235 42% 15%;
-    --card-foreground: 232 71% 96%;
-    --popover: 235 42% 15%;
-    --popover-foreground: 232 71% 96%;
-    --primary: 260 77% 78%;
-    --primary-foreground: 259 69% 14%;
-    --secondary: 249 46% 22%;
-    --secondary-foreground: 232 71% 96%;
-    --muted: 249 46% 22%;
-    --muted-foreground: 231 30% 73%;
-    --accent: 249 46% 22%;
-    --accent-foreground: 260 77% 78%;
+    --background: 37 23% 8%;
+    --foreground: 38 52% 91%;
+    --card: 37 19% 11%;
+    --card-foreground: 38 52% 91%;
+    --popover: 37 19% 11%;
+    --popover-foreground: 38 52% 91%;
+    --primary: 38 52% 91%;
+    --primary-foreground: 37 23% 8%;
+    --secondary: 37 28% 14%;
+    --secondary-foreground: 38 52% 91%;
+    --muted: 37 28% 14%;
+    --muted-foreground: 36 18% 68%;
+    --accent: 42 81% 54%;
+    --accent-foreground: 0 0% 10%;
     --destructive: 351 75% 62%;
-    --destructive-foreground: 259 69% 14%;
+    --destructive-foreground: 0 0% 10%;
     --success: 108 55% 55%;
-    --success-foreground: 259 69% 14%;
-    --warning: 45 57% 55%;
-    --warning-foreground: 259 69% 14%;
-    --warning-soft: 48 48% 12%;
-    --border: 235 36% 26%;
-    --input: 235 36% 26%;
+    --success-foreground: 0 0% 10%;
+    --warning: 45 70% 55%;
+    --warning-foreground: 0 0% 10%;
+    --warning-soft: 45 40% 15%;
+    --border: 36 15% 25%;
+    --input: 38 52% 91%;
+    --ring: 42 81% 54%;
+    --ink: 38 52% 91%;
+    --yellow: 42 81% 54%;
+    --violet: 260 77% 78%;
+    --cover-violet: 262 34% 23%;
+    --cover-blue: 214 43% 19%;
+    --cover-green: 106 37% 15%;
+    --cover-red: 345 35% 20%;
     --chart-5: 260 77% 78%;
   }
 }
@@ -123,7 +146,7 @@
   }
   h1 {
     @apply font-extrabold;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.03em;
   }
   a {
     @apply text-primary;
@@ -143,39 +166,47 @@
     @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
   }
   .surface-card {
-    @apply rounded-lg border-[1.5px] border-border bg-card;
+    @apply rounded-xl border-2 border-ink bg-card shadow-brutal;
   }
-  /* Kotak catatan bergaris kiri (.note di materi) */
+  /* Kartu/tombol yang bisa ditekan: terangkat saat hover, amblas saat diklik */
+  .press {
+    @apply transition-[transform,box-shadow] duration-100 hover:-translate-x-0.5 hover:-translate-y-0.5 hover:shadow-brutal-lg active:translate-x-[3px] active:translate-y-[3px] active:shadow-brutal-xs;
+  }
   .note-box {
-    @apply rounded-r-md border-l-4 border-primary bg-secondary px-4 py-3;
+    @apply rounded-lg border-2 border-ink bg-secondary px-4 py-3;
   }
   .note-box-warn {
-    @apply rounded-r-md border-l-4 border-warning px-4 py-3;
+    @apply rounded-lg border-2 border-ink px-4 py-3;
     background: hsl(var(--warning-soft));
   }
-  /* Pil seperti tab materi */
+  /* Grup pil (tab): pil aktif berlatar tinta */
   .pill-tabs {
-    @apply gap-1.5 rounded-full bg-secondary p-1;   /* tampilan (flex) diatur di elemen, mis. hidden md:inline-flex */
+    @apply gap-1 rounded-full border-2 border-ink bg-card p-1;   /* tampilan (flex) diatur di elemen */
   }
   .eyebrow {
     @apply font-heading text-xs font-bold uppercase tracking-[0.12em] text-muted-foreground;
   }
+  .sticker {
+    @apply inline-block rotate-[6deg] rounded-full border-2 border-ink bg-kahoot-red px-3 py-1 font-heading text-xs font-extrabold text-white shadow-brutal-sm;
+  }
   .focus-ring {
     @apply outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background;
   }
+  .cover-violet { background: hsl(var(--cover-violet)); }
+  .cover-blue { background: hsl(var(--cover-blue)); }
+  .cover-green { background: hsl(var(--cover-green)); }
+  .cover-red { background: hsl(var(--cover-red)); }
+}
+
+/* Sorotan stabilo kuning seperti contoh */
+mark {
+  background: hsl(var(--yellow));
+  color: #1a1a1a;
+  padding: 0 0.12em;
+  border-radius: 6px;
 }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
-}
-
-/* Iframe pembaca materi: materi membawa latar & mode gelapnya sendiri */
-.material-iframe {
-  display: block;
-  width: 100%;
-  height: 78vh;
-  min-height: 520px;
-  border: 0;
-  background: hsl(var(--background));
 }

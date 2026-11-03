@@ -45,22 +45,24 @@ export function SiteHeader() {
   );
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-border bg-background">
-      <div className="container-wide flex h-16 items-center justify-between gap-4">
-        <div className="flex items-center gap-6">
+    <header className="sticky top-0 z-40 w-full bg-background/90 py-3 backdrop-blur supports-[backdrop-filter]:bg-background/75">
+      {/* Bar mengambang berbingkai tinta */}
+      <div className="container-wide">
+      <div className="flex h-14 items-center justify-between gap-3 rounded-xl border-2 border-ink bg-card px-2.5 shadow-brutal sm:px-3.5">
+        <div className="flex min-w-0 items-center gap-5">
           <Link href="/" className="flex items-center gap-2.5 font-heading text-foreground no-underline">
             <BrandMark />
-            <span className="hidden text-base font-extrabold tracking-tight sm:inline">KuisKelas</span>
+            <span className="hidden text-lg font-extrabold tracking-tight sm:inline">StudyStudio</span>
           </Link>
-          <nav className="pill-tabs hidden lg:inline-flex" aria-label="Navigasi utama">
+          <nav className="hidden gap-1 lg:flex" aria-label="Navigasi utama">
             {publicLinks.map((l) => (
               <Link
                 key={l.href}
                 href={l.href}
                 aria-current={isActive(l.href) ? 'page' : undefined}
                 className={cn(
-                  'whitespace-nowrap rounded-full px-3.5 py-1.5 text-[0.8rem] font-bold no-underline transition-colors',
-                  isActive(l.href) ? 'bg-primary text-primary-foreground' : 'text-foreground hover:bg-background/70',
+                  'whitespace-nowrap rounded-full border-2 px-3.5 py-1.5 font-heading text-[0.9rem] font-bold no-underline transition-colors',
+                  isActive(l.href) ? 'border-ink bg-primary text-primary-foreground' : 'border-transparent text-foreground hover:border-ink',
                 )}
               >
                 {l.label}
@@ -77,9 +79,14 @@ export function SiteHeader() {
                   <Button asChild variant="ghost" size="sm"><Link href="/admin">Admin</Link></Button>
                 )}
                 <Button asChild variant="ghost" size="sm"><Link href="/dashboard">Dashboard</Link></Button>
-                <span className="max-w-[10rem] truncate text-sm text-muted-foreground">{name}</span>
-                <Button variant="outline" size="sm" onClick={doSignOut}>
-                  <LogOut className="mr-1 h-4 w-4" /> Keluar
+                <Link href="/dashboard/subscription" title="Akun & langganan"
+                  className="flex max-w-[12rem] items-center gap-2 rounded-full border-2 border-ink py-1 pl-1 pr-3 font-heading text-sm font-bold text-[#1A1A1A] no-underline"
+                  style={{ background: 'hsl(var(--yellow))' }}>
+                  <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full border-2 border-[#1A1A1A] bg-white text-xs uppercase" aria-hidden="true">{(name ?? '?').slice(0, 1)}</span>
+                  <span className="truncate">{name}</span>
+                </Link>
+                <Button variant="ghost" size="icon" onClick={doSignOut} title="Keluar" aria-label="Keluar">
+                  <LogOut className="h-4 w-4" />
                 </Button>
               </>
             ) : (
@@ -114,6 +121,7 @@ export function SiteHeader() {
                     <>
                       <p className="eyebrow px-3 pb-2 pt-4">Akun · {name}</p>
                       {mobileLink('/dashboard', 'Dashboard')}
+                      {mobileLink('/dashboard/subscription', 'Langganan')}
                       {mobileLink('/dashboard/history', 'Riwayat kuis')}
                       {mobileLink('/dashboard/profile', 'Profil')}
                       <SheetClose asChild>
@@ -142,6 +150,7 @@ export function SiteHeader() {
             </SheetContent>
           </Sheet>
         </div>
+      </div>
       </div>
     </header>
   );

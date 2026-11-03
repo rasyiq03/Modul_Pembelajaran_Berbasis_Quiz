@@ -165,7 +165,7 @@ export function QuizPlayer({
               <Prompt html={q.prompt} />
               {q.points != null && <span className="shrink-0 rounded-full bg-secondary px-2.5 py-0.5 font-heading text-xs font-bold">{q.points} poin</span>}
             </div>
-            {q.media_url && /* eslint-disable-next-line @next/next/no-img-element */ <img src={q.media_url} alt="" className="max-h-72 rounded-md border" />}
+            {q.media_url && /* eslint-disable-next-line @next/next/no-img-element */ <img src={q.media_url} alt="Gambar pendukung soal" loading="lazy" decoding="async" className="max-h-72 rounded-md border" />}
             <AnswerInput
               question={q}
               value={answers[q.id]}

@@ -21,7 +21,15 @@ const config: Config = {
         'gradient-conic':
           'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
       },
+      /* Bayangan offset tanpa blur (soft-brutalism) */
+      boxShadow: {
+        'brutal-xs': '1px 1px 0 0 hsl(var(--ink))',
+        'brutal-sm': '3px 3px 0 0 hsl(var(--ink))',
+        brutal: '4px 4px 0 0 hsl(var(--ink))',
+        'brutal-lg': '6px 6px 0 0 hsl(var(--ink))',
+      },
       borderRadius: {
+        xl: 'calc(var(--radius) + 4px)',
         lg: 'var(--radius)',
         md: 'calc(var(--radius) - 2px)',
         sm: 'calc(var(--radius) - 4px)',
@@ -68,6 +76,8 @@ const config: Config = {
         },
         /* Empat warna bentuk Kahoot di panggung kuis materi */
         kahoot: { red: '#E21B3C', blue: '#1368CE', yellow: '#D89E00', green: '#26890C' },
+        ink: 'hsl(var(--ink))',
+        violet: 'hsl(var(--violet))',
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',

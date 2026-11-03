@@ -12,6 +12,13 @@ const securityHeaders = [
 const nextConfig = {
   poweredByHeader: false,
   images: { unoptimized: true },
+  /* Halaman enrollment key digantikan langganan */
+  async redirects() {
+    return [
+      { source: '/dashboard/materials', destination: '/dashboard/subscription', permanent: true },
+      { source: '/admin/keys', destination: '/admin/subscriptions', permanent: true },
+    ];
+  },
   async headers() {
     return [
       { source: '/((?!m/).*)', headers: securityHeaders },

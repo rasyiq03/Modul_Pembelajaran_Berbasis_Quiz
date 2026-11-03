@@ -1,34 +1,42 @@
 import { getViewer } from '@/lib/auth';
 import { createSupabaseServer } from '@/lib/supabase/server';
+import { getViewerTier } from '@/lib/subscriptions';
+import { accessLevel, type ViewerTier } from '@/lib/access';
 import { issueReaderToken, readerUrl } from '@/lib/materials/reader-token';
+import type { AccessLevel } from '@/lib/database.types';
 
 export type MaterialAccess = {
-  hasAccess: boolean;
-  reason: 'admin' | 'enrolled' | 'none';
-  isRegistered: boolean;
-  /** URL iframe: materi lengkap bila punya akses, selain itu preview (null bila belum diunggah) */
-  readerSrc: string | null;
+  level: AccessLevel;
+  tier: ViewerTier;
+  /** Boleh membaca materi lengkap (diputuskan database: has_material_access) */
+  canRead: boolean;
+  /** Yang tampil di pembaca; null bila belum ada berkas yang bisa ditampilkan */
   showing: 'full' | 'preview' | null;
+  /** URL iframe bertoken, diterbitkan hanya setelah akses diperiksa */
+  readerSrc: string | null;
 };
 
 /**
- * FR-11/12/26: semua orang boleh melihat preview materi terpublikasi; HTML lengkap hanya untuk admin
- * dan pemilik enrollment aktif. Keputusan diambil di server; klien hanya menerima URL bertoken.
+ * Materi lengkap terbuka sesuai tingkat aksesnya (terbuka, wajib masuk, langganan); selain itu
+ * pratinjau. Keputusan diambil di server; klien hanya menerima URL bertoken.
  */
-export async function getMaterialAccess(material: { id: string; preview_path: string | null; content_path: string | null }): Promise<MaterialAccess> {
-  const viewer = await getViewer();
-  let reason: MaterialAccess['reason'] = 'none';
-  if (viewer.isAdmin) reason = 'admin';
-  else if (viewer.isRegistered) {
-    const { data } = await createSupabaseServer().rpc('has_material_access', { p_material: material.id });
-    if (data) reason = 'enrolled';
-  }
-  const hasAccess = reason !== 'none';
-  if (hasAccess && material.content_path) {
-    return { hasAccess, reason, isRegistered: viewer.isRegistered, showing: 'full', readerSrc: readerUrl(issueReaderToken(material.id, 'full', viewer.user!.id)) };
+export async function getMaterialAccess(material: {
+  id: string; access_level?: AccessLevel | null; preview_path: string | null; content_path: string | null;
+}): Promise<MaterialAccess> {
+  const [viewer, tier, { data }] = await Promise.all([
+    getViewer(),
+    getViewerTier(),
+    createSupabaseServer().rpc('has_material_access', { p_material: material.id }),
+  ]);
+  const level = accessLevel(material.access_level);
+  const canRead = data === true;
+  const base = { level, tier, canRead };
+  if (canRead && material.content_path) {
+    const userId = viewer.isRegistered ? viewer.user!.id : null;
+    return { ...base, showing: 'full', readerSrc: readerUrl(issueReaderToken(material.id, 'full', userId)) };
   }
   if (material.preview_path) {
-    return { hasAccess, reason, isRegistered: viewer.isRegistered, showing: 'preview', readerSrc: readerUrl(issueReaderToken(material.id, 'preview', null)) };
+    return { ...base, showing: 'preview', readerSrc: readerUrl(issueReaderToken(material.id, 'preview', null)) };
   }
-  return { hasAccess, reason, isRegistered: viewer.isRegistered, showing: null, readerSrc: null };
+  return { ...base, showing: null, readerSrc: null };
 }
