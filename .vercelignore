@@ -1,0 +1,22 @@
+# Deploy lewat Vercel CLI mengunggah folder ini; Vercel membangun ulang di servernya sendiri.
+# Rahasia tidak boleh ikut terunggah (env diambil dari Environment Variables proyek Vercel).
+.env
+.env*.local
+*.pem
+
+# Hasil build & dependensi lokal (dipasang ulang saat build)
+node_modules
+.next
+out
+build
+coverage
+*.tsbuildinfo
+
+# Supabase CLI lokal, OS & editor
+supabase/.branches
+supabase/.temp
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode
+.idea

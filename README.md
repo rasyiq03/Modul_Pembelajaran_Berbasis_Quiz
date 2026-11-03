@@ -81,8 +81,8 @@ Pemeriksaan sebelum deploy: `npm run lint`, `npm run typecheck`, `npm run build`
    Setelah itu jalankan `npm run content:import` agar semua pratinjau dibuat ulang dengan format baru.
 2. **Authentication → Sign In / Providers:** aktifkan *Allow anonymous sign-ins* (tamu kuis).
 3. **Authentication → URL Configuration:** isi *Site URL* dengan domain produksi (mis.
-   `https://studystudio.vercel.app`) dan tambahkan ke *Redirect URLs*:
-   - `https://studystudio.vercel.app/auth/callback` (domain produksi, termasuk domain kustom bila ada)
+   `https://kuiskelas.vercel.app`) dan tambahkan ke *Redirect URLs*:
+   - `https://kuiskelas.vercel.app/auth/callback` (domain produksi, termasuk domain kustom bila ada)
    - `https://*-<slug-tim-vercel>.vercel.app/**` agar konfirmasi email juga jalan di *preview deployment*
    - `http://localhost:3000/**` untuk pengembangan lokal
 4. Daftar akun lewat situs, lalu jadikan admin di SQL Editor:
@@ -107,11 +107,23 @@ Pemeriksaan sebelum deploy: `npm run lint`, `npm run typecheck`, `npm run build`
 
 ## Deploy (Vercel)
 
-Aplikasi ini Next.js standar, jadi Vercel mendeteksinya otomatis; tidak perlu `vercel.json`.
+Produksi: proyek Vercel `kuiskelas` (https://kuiskelas.vercel.app), di-deploy lewat **Vercel CLI**
+dari komputer lokal, bukan dari integrasi GitHub. Vercel membangun ulang di servernya; `.vercelignore`
+mencegah `.env.local` dan hasil build lokal ikut terunggah.
 
-1. **Add New → Project** di dashboard Vercel, lalu impor repo ini dari GitHub. Biarkan
-   *Framework Preset* = Next.js dan *Root Directory* = `./` (root repo). Perintah build, instal, dan
-   output memakai bawaan.
+```bash
+npx vercel login                                   # sekali per komputer
+npx vercel link --yes --project kuiskelas          # sekali per folder (membuat .vercel/)
+npx vercel deploy --prod                           # setiap rilis
+```
+
+`vercel.json` mengunci region functions ke `sin1` (Singapura), sama dengan region Supabase. Tanpanya
+functions berjalan di AS dan setiap halaman menunggu 1–3 detik karena query bolak-balik ke Singapura.
+
+Untuk proyek Vercel baru:
+
+1. Jalankan `vercel link` di atas (tanpa `--project` untuk membuat proyek baru). *Framework Preset*
+   = Next.js dan *Root Directory* = `./`; perintah build, instal, dan output memakai bawaan.
 2. **Settings → Environment Variables:** tambahkan variabel berikut untuk *Production* dan
    *Preview* (juga *Development* bila memakai `vercel env pull`):
 
@@ -123,10 +135,9 @@ Aplikasi ini Next.js standar, jadi Vercel mendeteksinya otomatis; tidak perlu `v
    | `MATERIAL_TOKEN_SECRET` | **Rahasia** (tandai *Sensitive*), minimal 32 karakter. Menandatangani URL pembaca materi |
 
    Variabel `NEXT_PUBLIC_*` ditanam saat build; setelah mengubahnya, lakukan *Redeploy*.
-3. **Settings → Functions → Function Region:** pilih region terdekat dengan region proyek Supabase
-   (mis. `sin1` Singapura untuk Supabase `ap-southeast-1`) agar setiap halaman tidak menunggu lama.
-4. Deploy. Setiap push ke `main` menjadi deployment produksi, dan setiap branch/PR mendapat
-   *preview deployment*. Lalu daftarkan domain produksi di Supabase (langkah 3 bagian sebelumnya).
+3. Bila proyek Supabase bukan di Singapura, ganti `regions` di `vercel.json` ke region Vercel
+   terdekat dengannya.
+4. `npx vercel deploy --prod`, lalu daftarkan domain produksi di Supabase (langkah 3 bagian sebelumnya).
 
 Menjalankan migrasi database dan `npm run content:import` dilakukan dari komputer lokal atau SQL
 Editor, bukan saat build Vercel. Jangan pernah meng-commit `.env.local` atau kunci rahasia.
