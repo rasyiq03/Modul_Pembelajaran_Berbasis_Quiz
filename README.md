@@ -1,4 +1,4 @@
-# StudyStudio: Catatan Kuliah Interaktif Berbasis Kuis
+# Cognify: Catatan Kuliah Interaktif Berbasis Kuis
 
 Platform web (Next.js + Supabase) untuk materi kuliah interaktif. Setiap materi adalah satu file HTML
 mandiri berisi rangkuman, lab interaktif, dan kuis bergaya Kahoot. Platform menambahkan akun dan
@@ -81,8 +81,8 @@ Pemeriksaan sebelum deploy: `npm run lint`, `npm run typecheck`, `npm run build`
    Setelah itu jalankan `npm run content:import` agar semua pratinjau dibuat ulang dengan format baru.
 2. **Authentication → Sign In / Providers:** aktifkan *Allow anonymous sign-ins* (tamu kuis).
 3. **Authentication → URL Configuration:** isi *Site URL* dengan domain produksi (mis.
-   `https://kuiskelas.vercel.app`) dan tambahkan ke *Redirect URLs*:
-   - `https://kuiskelas.vercel.app/auth/callback` (domain produksi, termasuk domain kustom bila ada)
+   `https://cognify-id.vercel.app`) dan tambahkan ke *Redirect URLs*:
+   - `https://cognify-id.vercel.app/auth/callback` (domain produksi, termasuk domain kustom bila ada)
    - `https://*-<slug-tim-vercel>.vercel.app/**` agar konfirmasi email juga jalan di *preview deployment*
    - `http://localhost:3000/**` untuk pengembangan lokal
 4. Daftar akun lewat situs, lalu jadikan admin di SQL Editor:
@@ -107,7 +107,7 @@ Pemeriksaan sebelum deploy: `npm run lint`, `npm run typecheck`, `npm run build`
 
 ## Deploy (Vercel)
 
-Produksi: proyek Vercel `kuiskelas` (https://kuiskelas.vercel.app), di-deploy lewat **Vercel CLI**
+Produksi: proyek Vercel `kuiskelas` (https://cognify-id.vercel.app; domain lama `kuiskelas.vercel.app` dialihkan 308 ke sana), di-deploy lewat **Vercel CLI**
 dari komputer lokal, bukan dari integrasi GitHub. Vercel membangun ulang di servernya; `.vercelignore`
 mencegah `.env.local` dan hasil build lokal ikut terunggah.
 

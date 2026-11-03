@@ -9,7 +9,7 @@ const heading = Bricolage_Grotesque({ subsets: ['latin'], axes: ['opsz'], variab
 const body = Source_Serif_4({ subsets: ['latin'], weight: ['400', '600'], style: ['normal', 'italic'], variable: '--font-body', display: 'swap' });
 
 export const metadata: Metadata = {
-  title: 'StudyStudio: Catatan Kuliah Interaktif',
+  title: 'Cognify: Catatan Kuliah Interaktif',
   description: 'Materi kuliah interaktif, kuis mandiri, dan kuis live dengan kode sesi.',
 };
 

@@ -84,7 +84,7 @@ export function MaterialReader({ course, material, access, siblings, quizzes, la
             <ArrowLeft className="h-5 w-5" />
           </Link>
         </Button>
-        <Link href="/" className="hidden shrink-0 no-underline sm:block" aria-label="Beranda StudyStudio"><BrandMark className="h-7 w-7" /></Link>
+        <Link href="/" className="hidden shrink-0 no-underline sm:block" aria-label="Beranda Cognify"><BrandMark className="h-7 w-7" /></Link>
         <div className="min-w-0 flex-1 px-1 leading-tight">
           <p className="truncate font-heading text-[0.9rem] font-bold text-foreground">{material.title}</p>
           <p className="hidden truncate font-heading text-xs text-muted-foreground sm:block">

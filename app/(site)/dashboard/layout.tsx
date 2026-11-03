@@ -2,7 +2,7 @@ import { DashboardNav } from '@/components/dashboard/dashboard-nav';
 import { requireUser } from '@/lib/auth';
 
 export const dynamic = 'force-dynamic';
-export const metadata = { title: 'Dashboard · StudyStudio' };
+export const metadata = { title: 'Dashboard · Cognify' };
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const viewer = await requireUser('/dashboard');

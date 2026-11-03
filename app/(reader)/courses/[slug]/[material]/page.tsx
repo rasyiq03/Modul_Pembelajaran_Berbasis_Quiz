@@ -11,7 +11,7 @@ export const dynamic = 'force-dynamic';
 export async function generateMetadata(props: { params: Promise<{ slug: string; material: string }> }) {
   const params = await props.params;
   const { material } = await getMaterialBySlug(params.slug, params.material);
-  return { title: `${material?.title ?? 'Materi'} · StudyStudio` };
+  return { title: `${material?.title ?? 'Materi'} · Cognify` };
 }
 
 /** Pembaca materi layar penuh (tanpa header & footer situs) */

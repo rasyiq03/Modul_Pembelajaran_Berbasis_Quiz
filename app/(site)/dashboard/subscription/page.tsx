@@ -13,7 +13,7 @@ import { ACCESS_LEVEL_HELP, ACCESS_LEVEL_LABEL, ACCESS_LEVELS, SUBSCRIPTION_STAT
 import type { AccessLevel } from '@/lib/database.types';
 import { requireUser } from '@/lib/auth';
 
-export const metadata = { title: 'Langganan · StudyStudio' };
+export const metadata = { title: 'Langganan · Cognify' };
 
 const LEVEL_ICON = { public: Globe, member: LogIn, subscriber: Crown } as const;
 

@@ -12,7 +12,7 @@ import { ACCESS_LEVEL_LABEL } from '@/lib/labels';
 
 export const revalidate = 0;
 
-export const metadata = { title: 'Materi · StudyStudio' };
+export const metadata = { title: 'Materi · Cognify' };
 
 export default async function MaterialsPage(props: { searchParams: Promise<{ q?: string; courseId?: string; sort?: string; page?: string }> }) {
   const searchParams = await props.searchParams;

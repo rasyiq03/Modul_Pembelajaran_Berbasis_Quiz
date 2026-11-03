@@ -5,7 +5,7 @@ import { HostConsole } from '@/components/live/host-console';
 import { requireAdmin } from '@/lib/auth';
 
 export const dynamic = 'force-dynamic';
-export const metadata = { title: 'Host sesi · StudyStudio' };
+export const metadata = { title: 'Host sesi · Cognify' };
 
 export default async function HostSessionPage(props: { params: Promise<{ id: string }> }) {
   const params = await props.params;

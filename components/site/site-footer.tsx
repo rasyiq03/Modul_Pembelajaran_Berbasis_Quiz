@@ -7,7 +7,7 @@ export function SiteFooter() {
       <div className="container-wide flex flex-col items-center justify-between gap-4 py-8 text-sm text-muted-foreground sm:flex-row">
         <div className="flex items-center gap-2">
           <BrandMark className="h-7 w-7" />
-          <span className="font-heading text-base font-extrabold text-foreground">StudyStudio</span>
+          <span className="font-heading text-base font-extrabold text-foreground">Cognify</span>
         </div>
         <nav className="flex flex-wrap items-center justify-center gap-4 font-heading font-bold" aria-label="Tautan footer">
           <Link href="/courses" className="text-muted-foreground no-underline hover:text-foreground hover:underline">Mata Kuliah</Link>

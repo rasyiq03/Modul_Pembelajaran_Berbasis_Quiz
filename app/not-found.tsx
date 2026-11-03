@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { EmptyState } from '@/components/site/page-parts';
 import { SiteShell } from '@/components/site/site-shell';
 
-export const metadata = { title: 'Halaman tidak ditemukan · StudyStudio' };
+export const metadata = { title: 'Halaman tidak ditemukan · Cognify' };
 
 /* Dirender di bawah layout root (tanpa layout situs), jadi membawa header & footer sendiri */
 export default function NotFound() {

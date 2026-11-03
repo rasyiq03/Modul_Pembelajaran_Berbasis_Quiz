@@ -14,7 +14,7 @@ import { rich } from '@/lib/rich';
 import { cn } from '@/lib/utils';
 
 export const dynamic = 'force-dynamic';
-export const metadata = { title: 'Hasil kuis · StudyStudio' };
+export const metadata = { title: 'Hasil kuis · Cognify' };
 
 export default async function AttemptPage(props: { params: Promise<{ id: string }> }) {
   const params = await props.params;

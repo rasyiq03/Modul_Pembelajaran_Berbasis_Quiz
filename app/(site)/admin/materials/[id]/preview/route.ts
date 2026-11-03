@@ -24,7 +24,7 @@ export async function POST(_req: NextRequest, props: { params: Promise<{ id: str
   const { data: file, error } = await db.storage.from('materials').download(`${m.content_path}/index.html`);
   if (error || !file) return fail(404, 'HTML lengkap tidak ditemukan di Storage.');
   const preview = buildPreview(await file.text());
-  if (!preview) return fail(422, 'HTML ini bukan format materi StudyStudio, jadi pratinjau tidak bisa dibuat otomatis. Unggah HTML pratinjau sendiri.');
+  if (!preview) return fail(422, 'HTML ini bukan format materi Cognify, jadi pratinjau tidak bisa dibuat otomatis. Unggah HTML pratinjau sendiri.');
 
   const path = `${m.id}/preview/index.html`;
   const up = await db.storage.from('materials').upload(path, new Blob([preview], { type: 'text/html; charset=utf-8' }), {

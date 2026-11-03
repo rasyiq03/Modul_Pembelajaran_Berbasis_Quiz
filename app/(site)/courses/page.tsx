@@ -6,7 +6,7 @@ import { getPublishedCourses } from '@/lib/catalog/queries';
 
 export const revalidate = 60;
 
-export const metadata = { title: 'Mata Kuliah · StudyStudio' };
+export const metadata = { title: 'Mata Kuliah · Cognify' };
 
 export default async function CoursesPage() {
   const courses = await getPublishedCourses();

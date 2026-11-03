@@ -52,7 +52,7 @@ export function SiteHeader() {
         <div className="flex min-w-0 items-center gap-5">
           <Link href="/" className="flex items-center gap-2.5 font-heading text-foreground no-underline">
             <BrandMark />
-            <span className="hidden text-lg font-extrabold tracking-tight sm:inline">StudyStudio</span>
+            <span className="hidden text-lg font-extrabold tracking-tight sm:inline">Cognify</span>
           </Link>
           <nav className="hidden gap-1 lg:flex" aria-label="Navigasi utama">
             {publicLinks.map((l) => (

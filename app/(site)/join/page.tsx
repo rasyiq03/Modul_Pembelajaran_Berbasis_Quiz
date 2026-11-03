@@ -1,6 +1,6 @@
 import { JoinForm } from '@/components/live/join-form';
 
-export const metadata = { title: 'Gabung kuis · StudyStudio' };
+export const metadata = { title: 'Gabung kuis · Cognify' };
 
 export default async function JoinPage(props: { searchParams: Promise<{ code?: string }> }) {
   const searchParams = await props.searchParams;

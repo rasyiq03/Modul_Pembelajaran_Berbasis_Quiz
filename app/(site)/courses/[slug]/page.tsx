@@ -15,7 +15,7 @@ export const dynamic = 'force-dynamic';
 export async function generateMetadata(props: { params: Promise<{ slug: string }> }) {
   const params = await props.params;
   const course = await getCourseBySlug(params.slug);
-  return { title: `${course?.title ?? 'Mata kuliah'} · StudyStudio` };
+  return { title: `${course?.title ?? 'Mata kuliah'} · Cognify` };
 }
 
 export default async function CourseDetailPage(props: { params: Promise<{ slug: string }> }) {

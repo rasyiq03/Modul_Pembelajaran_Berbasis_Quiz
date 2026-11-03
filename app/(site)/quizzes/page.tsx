@@ -6,7 +6,7 @@ import { QuizCard, type PublicQuiz } from '@/components/quiz/quiz-card';
 import { createSupabaseServer } from '@/lib/supabase/server';
 
 export const dynamic = 'force-dynamic';
-export const metadata = { title: 'Kuis · StudyStudio' };
+export const metadata = { title: 'Kuis · Cognify' };
 
 export default async function QuizzesPage() {
   const { data } = await createSupabaseServer().rpc('list_public_quizzes', {});
