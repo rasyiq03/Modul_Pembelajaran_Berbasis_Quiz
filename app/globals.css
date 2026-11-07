@@ -4,8 +4,8 @@
 
 /*
   Tema soft-brutalism: latar krem, tinta hitam, garis 2px dan bayangan offset pada kartu & tombol,
-  aksen warna bentuk Kahoot. Isi materi (iframe) tetap memakai tema mesin materi sendiri.
-  Mode gelap mengikuti sistem; data-theme="light|dark" di <html> memaksa salah satunya.
+  aksen warna bentuk Kahoot. Isi materi (iframe) diberi tahu tema yang tampil oleh pembaca materi.
+  Mode gelap (ungu tua ala Kahoot) mengikuti sistem; data-theme="light|dark" di <html> memaksa salah satunya.
 */
 @layer base {
   :root {
@@ -52,19 +52,19 @@
 
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme='light']) {
-      --background: 37 23% 8%;
-      --foreground: 38 52% 91%;
-      --card: 37 19% 11%;
-      --card-foreground: 38 52% 91%;
-      --popover: 37 19% 11%;
-      --popover-foreground: 38 52% 91%;
-      --primary: 38 52% 91%;
-      --primary-foreground: 37 23% 8%;
-      --secondary: 37 28% 14%;
-      --secondary-foreground: 38 52% 91%;
-      --muted: 37 28% 14%;
-      --muted-foreground: 36 18% 68%;
-      --accent: 42 81% 54%;
+      --background: 266 52% 9%;
+      --foreground: 262 60% 96%;
+      --card: 265 44% 13%;
+      --card-foreground: 262 60% 96%;
+      --popover: 265 44% 13%;
+      --popover-foreground: 262 60% 96%;
+      --primary: 262 60% 96%;
+      --primary-foreground: 266 52% 9%;
+      --secondary: 264 38% 18%;
+      --secondary-foreground: 262 60% 96%;
+      --muted: 264 38% 18%;
+      --muted-foreground: 262 25% 74%;
+      --accent: 43 100% 62%;
       --accent-foreground: 0 0% 10%;
       --destructive: 351 75% 62%;
       --destructive-foreground: 0 0% 10%;
@@ -73,33 +73,33 @@
       --warning: 45 70% 55%;
       --warning-foreground: 0 0% 10%;
       --warning-soft: 45 40% 15%;
-      --border: 36 15% 25%;
-      --input: 38 52% 91%;
-      --ring: 42 81% 54%;
-      --ink: 38 52% 91%;
-      --yellow: 42 81% 54%;
-      --violet: 260 77% 78%;
-      --cover-violet: 262 34% 23%;
-      --cover-blue: 214 43% 19%;
-      --cover-green: 106 37% 15%;
-      --cover-red: 345 35% 20%;
-      --chart-5: 260 77% 78%;
+      --border: 264 30% 28%;
+      --input: 262 60% 96%;
+      --ring: 43 100% 62%;
+      --ink: 262 60% 96%;
+      --yellow: 43 100% 62%;
+      --violet: 262 85% 80%;
+      --cover-violet: 264 50% 24%;
+      --cover-blue: 222 50% 22%;
+      --cover-green: 140 35% 18%;
+      --cover-red: 345 45% 22%;
+      --chart-5: 262 85% 80%;
     }
   }
   :root[data-theme='dark'] {
-    --background: 37 23% 8%;
-    --foreground: 38 52% 91%;
-    --card: 37 19% 11%;
-    --card-foreground: 38 52% 91%;
-    --popover: 37 19% 11%;
-    --popover-foreground: 38 52% 91%;
-    --primary: 38 52% 91%;
-    --primary-foreground: 37 23% 8%;
-    --secondary: 37 28% 14%;
-    --secondary-foreground: 38 52% 91%;
-    --muted: 37 28% 14%;
-    --muted-foreground: 36 18% 68%;
-    --accent: 42 81% 54%;
+    --background: 266 52% 9%;
+    --foreground: 262 60% 96%;
+    --card: 265 44% 13%;
+    --card-foreground: 262 60% 96%;
+    --popover: 265 44% 13%;
+    --popover-foreground: 262 60% 96%;
+    --primary: 262 60% 96%;
+    --primary-foreground: 266 52% 9%;
+    --secondary: 264 38% 18%;
+    --secondary-foreground: 262 60% 96%;
+    --muted: 264 38% 18%;
+    --muted-foreground: 262 25% 74%;
+    --accent: 43 100% 62%;
     --accent-foreground: 0 0% 10%;
     --destructive: 351 75% 62%;
     --destructive-foreground: 0 0% 10%;
@@ -108,17 +108,17 @@
     --warning: 45 70% 55%;
     --warning-foreground: 0 0% 10%;
     --warning-soft: 45 40% 15%;
-    --border: 36 15% 25%;
-    --input: 38 52% 91%;
-    --ring: 42 81% 54%;
-    --ink: 38 52% 91%;
-    --yellow: 42 81% 54%;
-    --violet: 260 77% 78%;
-    --cover-violet: 262 34% 23%;
-    --cover-blue: 214 43% 19%;
-    --cover-green: 106 37% 15%;
-    --cover-red: 345 35% 20%;
-    --chart-5: 260 77% 78%;
+    --border: 264 30% 28%;
+    --input: 262 60% 96%;
+    --ring: 43 100% 62%;
+    --ink: 262 60% 96%;
+    --yellow: 43 100% 62%;
+    --violet: 262 85% 80%;
+    --cover-violet: 264 50% 24%;
+    --cover-blue: 222 50% 22%;
+    --cover-green: 140 35% 18%;
+    --cover-red: 345 45% 22%;
+    --chart-5: 262 85% 80%;
   }
 }
 
@@ -196,6 +196,35 @@
   .cover-blue { background: hsl(var(--cover-blue)); }
   .cover-green { background: hsl(var(--cover-green)); }
   .cover-red { background: hsl(var(--cover-red)); }
+
+  /* ---------- Arena: panggung ungu Kahoot, sama di mode terang dan gelap ---------- */
+  .arena-stage {
+    @apply text-white;
+    background: radial-gradient(120% 90% at 50% 0%, #5B22B0 0%, #46178F 45%, #2E0E63 100%);
+  }
+  .arena-stage a:not([class]) { @apply text-white; }
+  .arena-btn {
+    @apply border-2 border-[#1A1A1A] bg-white font-extrabold text-[#46178F] shadow-[0_4px_0_#1A1A1A] hover:bg-[#F3EEFF] active:translate-y-[3px] active:shadow-[0_1px_0_#1A1A1A];
+  }
+  .arena-chip {
+    @apply rounded-full border-2 border-white/60 px-4 py-1.5 font-heading text-sm font-bold text-white transition-colors hover:bg-white/10;
+  }
+  .arena-chip-on {
+    @apply border-white bg-white text-[#46178F] hover:bg-white;
+  }
+  /* Tombol jawaban: warna + bentuk, agar tidak bergantung pada warna saja */
+  .arena-ans {
+    @apply flex min-h-[4.5rem] items-center gap-3 rounded-lg px-4 py-3 font-heading text-base font-bold text-white shadow-[0_5px_0_rgba(0,0,0,.3)] transition-transform active:translate-y-[3px] sm:min-h-[6rem] sm:text-lg;
+  }
+  .arena-c0 { @apply bg-kahoot-red text-white; }
+  .arena-c1 { @apply bg-kahoot-blue text-white; }
+  .arena-c2 { @apply bg-kahoot-yellow text-[#1A1A1A]; }   /* teks gelap: putih di atas kuning kurang kontras */
+  .arena-c3 { @apply bg-kahoot-green text-white; }
+  .arena-tile { @apply text-white; }
+  .arena-tile-0 { @apply bg-[#46178F]; }
+  .arena-tile-1 { @apply bg-kahoot-blue; }
+  .arena-tile-2 { @apply bg-kahoot-red; }
+  .arena-tile-3 { @apply bg-kahoot-green; }
 }
 
 /* Sorotan stabilo kuning seperti contoh */

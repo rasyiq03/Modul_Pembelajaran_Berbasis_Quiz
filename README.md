@@ -41,12 +41,16 @@ membaca isi dan soalnya tanpa mengubah file tersebut.
 | Tingkat akses | Per materi: **Terbuka** (semua orang, termasuk tamu), **Wajib masuk** (pengguna terdaftar), **Langganan** (pelanggan aktif, bawaan). Diubah admin langsung dari daftar materi. Yang belum berhak melihat pratinjau |
 | Langganan | Pengguna mengajukan langganan (dengan pesan); admin menyetujui dengan masa berlaku (tanpa batas, 1/6/12 bulan, atau tanggal tertentu), menolak dengan alasan, memperpanjang, atau mencabut; perpanjangan diajukan ulang oleh pengguna; lencana jumlah pengajuan di menu admin |
 | Bank soal | 7 jenis (pilihan tunggal, pilihan jamak, benar/salah, jawaban singkat, esai, menjodohkan, mengurutkan), kunci & pembahasan, materi/topik/kesulitan/tag, duplikasi, impor & ekspor CSV |
-| Kuis | Soal dari satu atau banyak materi, urutan & bobot, batas waktu / waktu per soal, acak soal & opsi, batas percobaan, waktu tampil pembahasan, izin tamu, 5 mode, draf/publikasi/arsip, pratinjau admin |
+| Kuis | Soal dari satu atau banyak materi, urutan & bobot, batas waktu / waktu per soal, acak soal & opsi, batas percobaan, waktu tampil kunci, izin tamu, 5 mode, draf/publikasi/arsip, pratinjau admin. Tingkat akses kuis mandiri mengikuti materinya (paling ketat), bisa ditimpa per kuis |
+| Arena | Kuis gaya Kahoot melawan 7 bot (Santai/Seimbang/Jago), per kuis atau acak per mata kuliah, 10/20/semua soal. Hanya pengguna terdaftar; soal pilihan tunggal (2–4 opsi) & benar/salah; waktu & skor dihitung server (soal HOTS 40 detik, poin ganda; bonus beruntun); hasil masuk riwayat & statistik |
+| Teman | Kode teman 8 karakter (tanpa pencarian email), permintaan masuk/keluar, terima/tolak/hapus, peringkat Arena mingguan antar teman, skor terbaik teman di akhir setiap Arena |
+| Tampilan | Tema Ikuti sistem / Terang / Gelap (ungu tua ala Kahoot), ikut diterapkan ke isi materi |
 | Live | Kode & tautan sesi, tamu dengan nickname, ruang tunggu, kontrol host, sinkron realtime + polling cadangan, skor berbasis kecepatan, papan peringkat, hasil & CSV, pemulihan koneksi |
 | Hasil | Dashboard & riwayat pengguna, detail jawaban + pembahasan, penilaian manual esai, dashboard admin, analitik per kuis & per soal, ekspor CSV |
 
 Kunci jawaban tidak pernah dikirim ke peramban sebelum jawaban dikirim; penilaian berjalan di
-fungsi database (`SECURITY DEFINER`) dan semua tabel memakai RLS.
+fungsi database (`SECURITY DEFINER`) dan semua tabel memakai RLS. **Pembahasan soal hanya untuk
+pelanggan aktif dan admin** di semua tempat (hasil kuis, latihan, Arena, sesi live; host tetap melihatnya).
 
 ## Menjalankan secara lokal
 
@@ -78,6 +82,12 @@ Pemeriksaan sebelum deploy: `npm run lint`, `npm run typecheck`, `npm run build`
    `20261030000500_subscriptions.sql`. Migrasi ini menambah tingkat akses per materi (semua materi
    lama menjadi *Langganan*), membuat tabel `subscriptions`, mengubah pemegang enrollment aktif menjadi
    pengajuan langganan yang menunggu persetujuan, lalu **menghapus** tabel & fungsi enrollment key.
+
+   **Memperbarui ke akses kuis, Arena, dan teman:** jalankan berurutan
+   `20261105000600_quiz_access.sql`, `20261105000700_arena.sql`, `20261105000800_friends.sql`.
+   Setelah 0600, kuis mandiri mengikuti tingkat akses materinya: kuis dari materi *Langganan* hanya
+   untuk pelanggan (Arena tetap terbuka untuk semua pengguna terdaftar). 0800 membuat kode teman untuk
+   semua akun yang sudah ada.
    Setelah itu jalankan `npm run content:import` agar semua pratinjau dibuat ulang dengan format baru.
 2. **Authentication → Sign In / Providers:** aktifkan *Allow anonymous sign-ins* (tamu kuis).
 3. **Authentication → URL Configuration:** isi *Site URL* dengan domain produksi (mis.

@@ -22,9 +22,9 @@ export default async function QuizEditPage(props: { params: Promise<{ id: string
   const bank: BankQuestion[] = ((bankRows ?? []) as unknown as (Omit<BankQuestion, 'material_ids'> & { question_materials: { material_id: string }[] })[])
     .map(({ question_materials, ...b }) => ({ ...b, material_ids: question_materials.map((m) => m.material_id) }));
 
-  let quiz: EditorQuiz = { title: '', description: null, mode: 'self_paced', status: 'draft', settings: { allow_guests: true, show_feedback: 'after_submit', pass_threshold: 60 }, questions: [] };
+  let quiz: EditorQuiz = { title: '', description: null, mode: 'self_paced', status: 'draft', access_level: null, settings: { allow_guests: true, show_feedback: 'after_submit', pass_threshold: 60 }, questions: [] };
   if (params.id !== 'new') {
-    const { data } = await supabase.from('quizzes').select('id, title, description, mode, status, settings, quiz_questions(question_id, points, display_order)').eq('id', params.id).maybeSingle();
+    const { data } = await supabase.from('quizzes').select('id, title, description, mode, status, settings, access_level, quiz_questions(question_id, points, display_order)').eq('id', params.id).maybeSingle();
     if (!data) notFound();
     const r = data as unknown as EditorQuiz & { quiz_questions: { question_id: string; points: number; display_order: number }[] };
     /* Soal yang sudah diarsipkan tetap tampil di kuis yang memakainya */
@@ -34,7 +34,7 @@ export default async function QuizEditPage(props: { params: Promise<{ id: string
       (extra ?? []).forEach((e) => bank.push({ ...(e as Omit<BankQuestion, 'material_ids'>), material_ids: [] }));
     }
     quiz = {
-      id: r.id, title: r.title, description: r.description, mode: r.mode, status: r.status, settings: r.settings ?? {},
+      id: r.id, title: r.title, description: r.description, mode: r.mode, status: r.status, settings: r.settings ?? {}, access_level: r.access_level ?? null,
       questions: [...r.quiz_questions].sort((a, b) => a.display_order - b.display_order).map(({ question_id, points }) => ({ question_id, points: Number(points) })),
     };
   }

@@ -14,7 +14,7 @@ export interface Database {
   public: {
     Tables: {
       profiles: Table<
-        { id: string; email: string | null; display_name: string | null; role: 'student' | 'admin'; avatar_url: string | null; created_at: string; updated_at: string },
+        { id: string; email: string | null; display_name: string | null; role: 'student' | 'admin'; avatar_url: string | null; friend_code: string; created_at: string; updated_at: string },
         { id: string },
         { display_name?: string | null; avatar_url?: string | null }
       >;
@@ -69,7 +69,11 @@ export interface Database {
       question_materials: Table<{ question_id: string; material_id: string }, { question_id: string; material_id: string }>;
       question_tags: Table<{ question_id: string; tag: string }, { question_id: string; tag: string }>;
       quizzes: Table<
-        { id: string; title: string; description: string | null; mode: QuizMode; settings: any; status: Status; created_by: string | null; created_at: string; updated_at: string },
+        {
+          id: string; title: string; description: string | null; mode: QuizMode; settings: any; status: Status;
+          /** null = ikuti tingkat akses materi soal-soalnya */
+          access_level: AccessLevel | null; created_by: string | null; created_at: string; updated_at: string;
+        },
         { id?: string; title: string; description?: string | null; mode?: QuizMode; settings?: any; status?: Status; created_by?: string | null }
       >;
       quiz_questions: Table<
@@ -115,6 +119,23 @@ export interface Database {
         },
         never, never
       >;
+      arena_runs: Table<
+        {
+          id: string; user_id: string; quiz_id: string | null; course_id: string | null; is_preview: boolean;
+          status: 'in_progress' | 'finished' | 'abandoned'; question_order: string[]; option_order: any;
+          current_index: number; served_at: string | null; score: number; correct: number; streak: number; best_streak: number;
+          started_at: string; finished_at: string | null;
+        },
+        never, never
+      >;
+      arena_answers: Table<
+        { run_id: string; question_index: number; question_id: string; response: any; is_correct: boolean; time_ms: number | null; points: number; answered_at: string },
+        never, never
+      >;
+      friendships: Table<
+        { id: string; requester_id: string; addressee_id: string; status: 'pending' | 'accepted'; created_at: string; accepted_at: string | null },
+        never, never
+      >;
     };
     Functions: {
       is_admin: { Args: Record<string, never>; Returns: boolean };
@@ -144,6 +165,18 @@ export interface Database {
       admin_save_quiz: { Args: { p: any }; Returns: string };
       quiz_stats: { Args: { p_quiz: string }; Returns: any };
       list_public_quizzes: { Args: { p_material?: string | null }; Returns: any };
+      quiz_access: { Args: { p_quiz: string }; Returns: { level: AccessLevel; can_take: boolean; explanations: boolean; arena_count: number } | null };
+      admin_set_quiz_access: { Args: { p_quiz: string; p_level: AccessLevel | null }; Returns: undefined };
+      arena_start: { Args: { p_quiz?: string | null; p_course?: string | null; p_count?: number | null }; Returns: { run_id: string; title: string; count: number } };
+      arena_next: { Args: { p_run: string }; Returns: any };
+      arena_answer: { Args: { p_run: string; p_response: any }; Returns: any };
+      arena_result: { Args: { p_run: string }; Returns: any };
+      arena_courses: { Args: Record<string, never>; Returns: { id: string; slug: string; title: string; question_count: number }[] };
+      arena_friends_leaderboard: { Args: { p_quiz?: string | null; p_course?: string | null }; Returns: { name: string | null; best: number; runs: number; me: boolean }[] };
+      send_friend_request: { Args: { p_code: string }; Returns: { status: 'pending' | 'accepted'; name: string | null } };
+      respond_friend_request: { Args: { p_id: string; p_accept: boolean }; Returns: undefined };
+      remove_friend: { Args: { p_id: string }; Returns: undefined };
+      list_friends: { Args: Record<string, never>; Returns: any };
     };
     Views: Record<string, never>;
     Enums: Record<string, never>;

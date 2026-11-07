@@ -9,6 +9,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { AnswerInput, Prompt } from '@/components/quiz/answer-input';
+import { ExplanationLocked } from '@/components/subscription/explanation-locked';
 import { getSupabaseBrowser } from '@/lib/supabase/clients';
 import { errorMessage } from '@/lib/labels';
 import { describeAnswer, initialResponse, isAnswered, type QuestionPayload, type Response } from '@/lib/quiz/types';
@@ -20,7 +21,7 @@ type Started = {
   quiz: { id: string; title: string; mode: string; show_feedback: 'after_each' | 'after_submit' | 'never' };
   questions: QuestionPayload[];
 };
-type Checked = { correct: boolean | null; answer: any; explanation: string | null };
+type Checked = { correct: boolean | null; answer: any; explanation: string | null; explanation_locked?: boolean };
 
 const store = {
   get(k: string) { try { return JSON.parse(localStorage.getItem(k) || 'null'); } catch { return null; } },
@@ -181,6 +182,7 @@ export function QuizPlayer({
                 </p>
                 <p className="mt-1"><b>Jawaban:</b> <span dangerouslySetInnerHTML={{ __html: rich(describeAnswer(q, c.answer)) }} /></p>
                 {c.explanation && <p className="mt-1 text-muted-foreground" dangerouslySetInnerHTML={{ __html: rich(c.explanation) }} />}
+                {c.explanation_locked && <ExplanationLocked className="mt-2" />}
               </div>
             )}
           </CardContent>

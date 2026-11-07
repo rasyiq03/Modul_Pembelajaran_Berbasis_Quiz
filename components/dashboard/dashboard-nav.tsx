@@ -8,6 +8,7 @@ const LINKS = [
   { href: '/dashboard', label: 'Ringkasan' },
   { href: '/dashboard/subscription', label: 'Langganan' },
   { href: '/dashboard/history', label: 'Riwayat kuis' },
+  { href: '/dashboard/friends', label: 'Teman' },
   { href: '/dashboard/profile', label: 'Profil' },
 ];
 

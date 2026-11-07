@@ -1,5 +1,5 @@
 /*!
- * KuisKelas engine v2.1.1 (offline)
+ * KuisKelas engine v2.2.0 (offline)
  * Mesin tampilan materi + kuis gaya Kahoot + profil, XP, dan lencana. Berjalan penuh tanpa internet.
  * Materi cukup menyediakan: window.KQ_CONFIG, window.COURSE, dan <main id="view-summary">.
  * Kuis bersama satu kelas (sesi live dengan kode), enrollment, dan riwayat nilai ada di platform web;
@@ -9,10 +9,16 @@
 (function () {
 'use strict';
 
+/* Tema dari platform Cognify: #theme=light|dark saat dimuat, lalu pesan {type: 'cognify:theme'} dari
+   pembaca materi saat pengguna mengganti tema. Tanpa keduanya, tema mengikuti sistem. */
+const setTheme = t => { if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t); };
+setTheme((location.hash.match(/(?:^#|&)theme=(light|dark)/) || [])[1]);
+window.addEventListener('message', e => { if (e.source === window.parent && e.data && e.data.type === 'cognify:theme') setTheme(e.data.theme); });
+
 /* =====================================================================
    0. Konfigurasi & data
    ===================================================================== */
-const VERSION = '2.1.1';
+const VERSION = '2.2.0';
 const CFG = Object.assign({
   defaultClass: '',
   bots: 12

@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { GradeAnswer } from '@/components/quiz/grade-answer';
+import { ExplanationLocked } from '@/components/subscription/explanation-locked';
 import { Prompt } from '@/components/quiz/answer-input';
 import { getViewer } from '@/lib/auth';
 import { createSupabaseServer } from '@/lib/supabase/server';
@@ -56,6 +57,7 @@ export default async function AttemptPage(props: { params: Promise<{ id: string 
       </Card>
 
       {!r.feedback && <p className="note-box text-sm">Pengajar tidak menampilkan kunci jawaban dan pembahasan untuk kuis ini.</p>}
+      {r.explanations_locked && <ExplanationLocked />}
 
       <ol className="space-y-3">
         {items.map((it, k) => {

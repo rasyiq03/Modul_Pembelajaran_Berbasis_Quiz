@@ -3,7 +3,7 @@ import type { AccessLevel, SubscriptionStatus } from '@/lib/database.types';
 
 export async function adminStats() {
   const supabase = createSupabaseServer();
-  const [courses, materials, questions, quizzes, subscribers, pending, attempts, sessions, participants] = await Promise.all([
+  const [courses, materials, questions, quizzes, subscribers, pending, attempts, sessions, participants, arena] = await Promise.all([
     supabase.from('courses').select('*', { count: 'exact', head: true }),
     supabase.from('materials').select('*', { count: 'exact', head: true }).eq('status', 'published'),
     supabase.from('questions').select('*', { count: 'exact', head: true }).eq('status', 'published'),
@@ -14,6 +14,7 @@ export async function adminStats() {
     supabase.from('quiz_attempts').select('*', { count: 'exact', head: true }).eq('status', 'graded').eq('is_preview', false),
     supabase.from('quiz_sessions').select('*', { count: 'exact', head: true }).eq('status', 'active'),
     supabase.from('quiz_participants').select('*', { count: 'exact', head: true }),
+    supabase.from('arena_runs').select('*', { count: 'exact', head: true }).eq('status', 'finished').eq('is_preview', false),
   ]);
   return {
     courses: courses.count ?? 0,
@@ -25,6 +26,7 @@ export async function adminStats() {
     gradedAttempts: attempts.count ?? 0,
     activeSessions: sessions.count ?? 0,
     participants: participants.count ?? 0,
+    arenaRuns: arena.count ?? 0,
   };
 }
 

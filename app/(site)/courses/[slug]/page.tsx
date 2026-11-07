@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { ArrowLeft, ArrowRight, BookOpen, Lock, LockOpen } from 'lucide-react';
+import { ArrowLeft, ArrowRight, BookOpen, Gamepad2, Lock, LockOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -30,9 +30,14 @@ export default async function CourseDetailPage(props: { params: Promise<{ slug: 
       <Button asChild variant="ghost" size="sm" className="mb-4">
         <Link href="/courses"><ArrowLeft className="mr-1 h-4 w-4" /> Semua mata kuliah</Link>
       </Button>
-      <div className="space-y-2 pb-6">
-        <h1 className="text-3xl font-extrabold tracking-tight">{course.title}</h1>
-        <p className="max-w-3xl text-sm text-muted-foreground">{course.description}</p>
+      <div className="flex flex-wrap items-end justify-between gap-4 pb-6">
+        <div className="space-y-2">
+          <h1 className="text-3xl font-extrabold tracking-tight">{course.title}</h1>
+          <p className="max-w-3xl text-sm text-muted-foreground">{course.description}</p>
+        </div>
+        {materials.length > 0 && (
+          <Button asChild className="arena-btn shrink-0"><Link href={`/arena/course/${course.slug}`}><Gamepad2 className="mr-1 h-4 w-4" /> Arena acak</Link></Button>
+        )}
       </div>
 
       {lockedCount > 0 && tier !== 'admin' && (

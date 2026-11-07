@@ -1,10 +1,10 @@
 import Link from 'next/link';
-import { ArrowRight, BadgeCheck, ClipboardList, Crown, Hourglass, Radio, Trophy } from 'lucide-react';
+import { ArrowRight, BadgeCheck, ClipboardList, Crown, Gamepad2, Hourglass, Radio, Trophy } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { AttemptList } from '@/components/dashboard/attempt-list';
 import { requireUser } from '@/lib/auth';
-import { myAttempts } from '@/lib/dashboard';
+import { myArenaRuns, myAttempts } from '@/lib/dashboard';
 import { getSubscriptionState } from '@/lib/subscriptions';
 import { daysLeft } from '@/lib/access';
 import { fmtDate, fmtNum } from '@/lib/labels';
@@ -12,7 +12,7 @@ import { fmtDate, fmtNum } from '@/lib/labels';
 /** FR-61: ringkasan aktivitas belajar */
 export default async function DashboardPage() {
   const { user } = await requireUser('/dashboard');
-  const [{ active, pending }, attempts] = await Promise.all([getSubscriptionState(), myAttempts(user!.id)]);
+  const [{ active, pending }, attempts, runs] = await Promise.all([getSubscriptionState(), myAttempts(user!.id), myArenaRuns(user!.id)]);
   const graded = attempts.filter((a) => a.status === 'graded');
   const avg = graded.length ? graded.reduce((t, a) => t + Number(a.percent), 0) / graded.length : null;
   const passed = graded.filter((a) => a.passed).length;
@@ -22,10 +22,11 @@ export default async function DashboardPage() {
     { label: 'Kuis dikerjakan', value: attempts.length, icon: ClipboardList },
     { label: 'Rata-rata skor', value: avg == null ? '–' : `${fmtNum(avg)}%`, icon: Trophy },
     { label: 'Lulus', value: graded.length ? `${passed}/${graded.length}` : '–', icon: Trophy },
+    { label: 'Arena dimainkan', value: runs.length, icon: Gamepad2 },
   ];
   return (
     <div className="space-y-6">
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
         {stats.map((s) => (
           <Card key={s.label}><CardContent className="flex items-center justify-between p-4">
             <div><div className="font-heading text-xs font-bold text-muted-foreground">{s.label}</div><div className="font-heading text-2xl font-extrabold">{s.value}</div></div>

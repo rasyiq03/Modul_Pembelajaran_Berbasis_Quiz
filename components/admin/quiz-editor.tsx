@@ -11,21 +11,26 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { getSupabaseBrowser } from '@/lib/supabase/clients';
-import { FEEDBACK_LABEL, QUESTION_TYPE_LABEL, QUIZ_MODES, QUIZ_MODE_HELP, QUIZ_MODE_LABEL, STATUS_LABEL, errorMessage, type Feedback } from '@/lib/labels';
-import type { QuestionType, QuizMode, Status } from '@/lib/database.types';
+import { ACCESS_LEVEL_LABEL, ACCESS_LEVELS, FEEDBACK_LABEL, QUESTION_TYPE_LABEL, QUIZ_MODES, QUIZ_MODE_HELP, QUIZ_MODE_LABEL, STATUS_LABEL, errorMessage, type Feedback } from '@/lib/labels';
+import type { AccessLevel, QuestionType, QuizMode, Status } from '@/lib/database.types';
 import { plain } from '@/lib/rich';
 import { cn } from '@/lib/utils';
 
 export type BankQuestion = { id: string; type: QuestionType; prompt: string; status: Status; topic: string | null; material_ids: string[] };
 export type EditorQuiz = {
   id?: string; title: string; description: string | null; mode: QuizMode; status: Status;
+  /** null = ikuti tingkat akses materi soal-soalnya */
+  access_level: AccessLevel | null;
   settings: {
     shuffle_questions?: boolean; shuffle_options?: boolean; time_limit_sec?: number | null; question_time_sec?: number;
     attempts_allowed?: number | null; show_feedback?: Feedback; allow_guests?: boolean; pass_threshold?: number; show_leaderboard?: boolean;
   };
   questions: { question_id: string; points: number }[];
 };
-type Material = { id: string; title: string; course: string };
+type Material = { id: string; title: string; course: string; access_level: AccessLevel };
+
+/* Sama dengan _quiz_access_level di database: tingkat paling ketat di antara materi soal-soalnya */
+const RANK: Record<AccessLevel, number> = { public: 1, member: 2, subscriber: 3 };
 
 const sel = 'h-10 w-full rounded-md border-[1.5px] border-input bg-background px-3 font-heading text-sm';
 const Check = ({ label, checked, onChange }: { label: string; checked: boolean; onChange: (v: boolean) => void }) => (
@@ -56,8 +61,10 @@ export function QuizEditor({ quiz, bank, materials }: { quiz: EditorQuiz; bank: 
   async function save(status?: Status) {
     setBusy(true);
     const { data, error } = await getSupabaseBrowser().rpc('admin_save_quiz', { p: { ...z, status: status ?? z.status } });
+    if (error) { setBusy(false); return toast({ title: 'Kuis belum tersimpan', description: errorMessage(error), variant: 'destructive' }); }
+    const { error: e2 } = await getSupabaseBrowser().rpc('admin_set_quiz_access', { p_quiz: data, p_level: z.access_level });
     setBusy(false);
-    if (error) return toast({ title: 'Kuis belum tersimpan', description: errorMessage(error), variant: 'destructive' });
+    if (e2) return toast({ title: 'Tingkat akses belum tersimpan', description: errorMessage(e2), variant: 'destructive' });
     if (status) setZ((x) => ({ ...x, status }));
     toast({ title: 'Kuis tersimpan' });
     if (!z.id) router.replace(`/admin/quizzes/${data}`);
@@ -65,6 +72,10 @@ export function QuizEditor({ quiz, bank, materials }: { quiz: EditorQuiz; bank: 
   }
 
   const totalPoints = z.questions.reduce((t, q) => t + Number(q.points || 0), 0);
+  const matLevel = new Map(materials.map((m) => [m.id, m.access_level]));
+  const inherited = z.questions.flatMap((q) => byId.get(q.question_id)?.material_ids ?? [])
+    .map((id) => matLevel.get(id)).filter((l): l is AccessLevel => !!l)
+    .reduce<AccessLevel>((a, l) => (RANK[l] > RANK[a] ? l : a), 'public');
   const unpublished = z.questions.filter((q) => byId.get(q.question_id)?.status !== 'published').length;
 
   return (
@@ -87,6 +98,14 @@ export function QuizEditor({ quiz, bank, materials }: { quiz: EditorQuiz; bank: 
                   {QUIZ_MODES.map((m) => <option key={m} value={m}>{QUIZ_MODE_LABEL[m]}</option>)}
                 </select>
                 <p className="text-xs text-muted-foreground">{QUIZ_MODE_HELP[z.mode]}</p>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="zx">Akses kuis mandiri</Label>
+                <select id="zx" className={sel} value={z.access_level ?? ''} onChange={(e) => setZ({ ...z, access_level: (e.target.value || null) as AccessLevel | null })}>
+                  <option value="">Ikuti materi (saat ini: {ACCESS_LEVEL_LABEL[inherited]})</option>
+                  {ACCESS_LEVELS.map((l) => <option key={l} value={l}>{ACCESS_LEVEL_LABEL[l]}</option>)}
+                </select>
+                <p className="text-xs text-muted-foreground">Arena terbuka untuk semua pengguna terdaftar; pembahasan selalu khusus pelanggan.</p>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="zf">Tampilkan kunci & pembahasan</Label>

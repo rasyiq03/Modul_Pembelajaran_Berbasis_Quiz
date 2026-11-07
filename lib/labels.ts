@@ -81,6 +81,17 @@ const ERRORS: Record<string, string> = {
   ADMIN_ONLY: 'Hanya admin yang bisa melakukan ini.',
   CANNOT_DEMOTE_SELF: 'Kamu tidak bisa mencabut peran admin dari akunmu sendiri.',
   MATERIAL_NOT_FOUND: 'Materi tidak ditemukan.',
+  SUBSCRIPTION_REQUIRED: 'Kuis ini khusus pelanggan. Ajukan langganan untuk mengerjakannya.',
+  COURSE_NOT_FOUND: 'Mata kuliah tidak ditemukan atau belum dipublikasikan.',
+  ARENA_EMPTY: 'Belum ada soal pilihan ganda atau benar/salah yang bisa dimainkan di Arena.',
+  ARENA_NOT_FOUND: 'Permainan Arena tidak ditemukan.',
+  ARENA_FINISHED: 'Permainan ini sudah selesai.',
+  FRIEND_CODE_NOT_FOUND: 'Kode teman tidak ditemukan. Periksa lagi kodenya.',
+  FRIEND_SELF: 'Itu kode temanmu sendiri.',
+  ALREADY_FRIENDS: 'Kalian sudah berteman.',
+  REQUEST_PENDING: 'Permintaan pertemanan sudah dikirim dan menunggu jawaban.',
+  TOO_MANY_REQUESTS: 'Terlalu banyak permintaan yang belum dijawab. Batalkan sebagian dulu.',
+  FRIEND_REQUEST_NOT_FOUND: 'Permintaan pertemanan tidak ditemukan.',
 };
 
 export function errorMessage(e: unknown): string {

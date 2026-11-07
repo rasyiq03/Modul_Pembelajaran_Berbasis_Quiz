@@ -10,7 +10,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&family=Source+Serif+4:ital,wght@0,400;0,600;1,400;1,600&display=swap" rel="stylesheet">
 <!-- KUISKELAS:ENGINE-CSS -->
 <style>
-/*! KuisKelas engine CSS v2.1.0 (offline) — jangan diubah per materi; sumber: content/engine/kuiskelas.css */
+/*! KuisKelas engine CSS v2.2.0 (offline) — jangan diubah per materi; sumber: content/engine/kuiskelas.css */
 :root{
   --bg:#F4F5FA; --surface:#FFFFFF; --ink:#161A3C; --muted:#5B6285; --line:#D9DCEC;
   --accent:#46178F; --accent-ink:#FFFFFF; --soft:#EEE8FA; --warn:#FBF3D9; --warn-line:#C99A1B;
@@ -22,13 +22,13 @@
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --bg:#0E1024; --surface:#171A38; --ink:#EDEFFC; --muted:#A5ABCF; --line:#2B2F5C;
-    --accent:#B99CF2; --accent-ink:#1A0B3B; --soft:#261E52; --warn:#2E2810; --warn-line:#8C7326;
+    --bg:#150B23; --surface:#21123A; --ink:#F3EEFF; --muted:#B8ABD6; --line:#3A2A5C;
+    --accent:#C4A8FF; --accent-ink:#1A0B3B; --soft:#2C1A4D; --warn:#2E2810; --warn-line:#8C7326;
   }
 }
 :root[data-theme="dark"]{
-  --bg:#0E1024; --surface:#171A38; --ink:#EDEFFC; --muted:#A5ABCF; --line:#2B2F5C;
-  --accent:#B99CF2; --accent-ink:#1A0B3B; --soft:#261E52; --warn:#2E2810; --warn-line:#8C7326;
+  --bg:#150B23; --surface:#21123A; --ink:#F3EEFF; --muted:#B8ABD6; --line:#3A2A5C;
+  --accent:#C4A8FF; --accent-ink:#1A0B3B; --soft:#2C1A4D; --warn:#2E2810; --warn-line:#8C7326;
 }
 html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 76px);scroll-behavior:smooth}
 *,*::before,*::after{box-sizing:border-box}
@@ -1110,7 +1110,7 @@ window.COURSE = {
 <!-- KUISKELAS:ENGINE-JS -->
 <script>
 /*!
- * KuisKelas engine v2.1.1 (offline)
+ * KuisKelas engine v2.2.0 (offline)
  * Mesin tampilan materi + kuis gaya Kahoot + profil, XP, dan lencana. Berjalan penuh tanpa internet.
  * Materi cukup menyediakan: window.KQ_CONFIG, window.COURSE, dan <main id="view-summary">.
  * Kuis bersama satu kelas (sesi live dengan kode), enrollment, dan riwayat nilai ada di platform web;
@@ -1120,10 +1120,16 @@ window.COURSE = {
 (function () {
 'use strict';
 
+/* Tema dari platform Cognify: #theme=light|dark saat dimuat, lalu pesan {type: 'cognify:theme'} dari
+   pembaca materi saat pengguna mengganti tema. Tanpa keduanya, tema mengikuti sistem. */
+const setTheme = t => { if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t); };
+setTheme((location.hash.match(/(?:^#|&)theme=(light|dark)/) || [])[1]);
+window.addEventListener('message', e => { if (e.source === window.parent && e.data && e.data.type === 'cognify:theme') setTheme(e.data.theme); });
+
 /* =====================================================================
    0. Konfigurasi & data
    ===================================================================== */
-const VERSION = '2.1.1';
+const VERSION = '2.2.0';
 const CFG = Object.assign({
   defaultClass: '',
   bots: 12

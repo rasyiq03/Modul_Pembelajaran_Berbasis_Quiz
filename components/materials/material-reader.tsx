@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import {
   ArrowLeft, CheckCircle2, ChevronLeft, ChevronRight, ClipboardList, ExternalLink, Loader2, Lock, LockOpen,
@@ -11,8 +11,10 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Sheet, SheetClose, SheetContent, SheetTitle } from '@/components/ui/sheet';
 import { BrandMark } from '@/components/site/brand-mark';
+import { ThemeToggle } from '@/components/site/theme-toggle';
 import { AccessPanel, type LatestSubscription } from '@/components/subscription/access-panel';
 import { ACCESS_LEVEL_HELP, ACCESS_LEVEL_LABEL, fmtDate } from '@/lib/labels';
+import { readChoice, resolveTheme, useResolvedTheme, type ResolvedTheme } from '@/lib/theme';
 import { cn } from '@/lib/utils';
 import type { MaterialAccess } from '@/lib/materials/access';
 import type { AccessLevel, QuizMode } from '@/lib/database.types';
@@ -41,6 +43,11 @@ export function MaterialReader({ course, material, access, siblings, quizzes, la
   const [loaded, setLoaded] = useState(false);
   const [fsSupported, setFsSupported] = useState(false);
   const [fullscreen, setFullscreen] = useState(false);
+  /* Tema materi mengikuti situs: awalnya lewat #theme= di URL, perubahan berikutnya lewat postMessage */
+  const [startTheme, setStartTheme] = useState<ResolvedTheme>('light');
+  const theme = useResolvedTheme();
+  const frame = useRef<HTMLIFrameElement>(null);
+  const sendTheme = () => frame.current?.contentWindow?.postMessage({ type: 'cognify:theme', theme }, '*');
 
   const here = `/courses/${course.slug}/${material.slug}`;
   const href = (s: ReaderSibling) => `/courses/${course.slug}/${s.slug}`;
@@ -51,6 +58,7 @@ export function MaterialReader({ course, material, access, siblings, quizzes, la
 
   /* Iframe dipasang setelah hidrasi agar onLoad pasti tertangkap (indikator muat tidak macet) */
   useEffect(() => {
+    setStartTheme(resolveTheme(readChoice()));
     setMounted(true);
     setFsSupported(typeof document.documentElement.requestFullscreen === 'function');
     const onFs = () => setFullscreen(!!document.fullscreenElement);
@@ -58,6 +66,7 @@ export function MaterialReader({ course, material, access, siblings, quizzes, la
     return () => document.removeEventListener('fullscreenchange', onFs);
   }, []);
   useEffect(() => setLoaded(false), [access.readerSrc]);
+  useEffect(sendTheme, [theme]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const toggleFullscreen = () => {
     const p = document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen();
@@ -117,6 +126,7 @@ export function MaterialReader({ course, material, access, siblings, quizzes, la
             {fullscreen ? <Minimize2 className="h-5 w-5" /> : <Maximize2 className="h-5 w-5" />}
           </Button>
         )}
+        <ThemeToggle className="h-9 w-9" />
         <Button variant="ghost" size="icon" className="h-9 w-9 shrink-0" onClick={() => setPanel('info')} title="Info, kuis, dan daftar materi" aria-label="Buka panel materi">
           <PanelRight className="h-5 w-5" />
         </Button>
@@ -128,13 +138,14 @@ export function MaterialReader({ course, material, access, siblings, quizzes, la
             {mounted && (
               <iframe
                 key={access.readerSrc}
+                ref={frame}
                 title={material.title}
-                src={access.readerSrc}
+                src={`${access.readerSrc}#theme=${startTheme}`}
                 className="absolute inset-0 h-full w-full border-0"
                 sandbox={SANDBOX}
                 referrerPolicy="no-referrer"
                 allowFullScreen
-                onLoad={() => setLoaded(true)}
+                onLoad={() => { setLoaded(true); sendTheme(); }}
               />
             )}
             {!loaded && (

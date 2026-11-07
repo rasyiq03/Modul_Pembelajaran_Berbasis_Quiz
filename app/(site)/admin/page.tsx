@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { BookOpen, Boxes, ClipboardList, Crown, Hourglass, ListChecks, Radio, Trophy, TrendingUp, Users } from 'lucide-react';
+import { BookOpen, Boxes, ClipboardList, Crown, Gamepad2, Hourglass, ListChecks, Radio, Trophy, TrendingUp, Users } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
@@ -24,6 +24,7 @@ export default async function AdminOverviewPage() {
     { label: 'Percobaan dinilai', value: stats.gradedAttempts, icon: TrendingUp, href: '/admin/results' },
     { label: 'Sesi live berjalan', value: stats.activeSessions, icon: Radio, href: '/admin/sessions' },
     { label: 'Peserta sesi live', value: stats.participants, icon: Users, href: '/admin/sessions' },
+    { label: 'Permainan Arena', value: stats.arenaRuns, icon: Gamepad2, href: '/admin/results' },
     { label: 'Rata-rata skor', value: `${fmtNum(avg)}%`, icon: Trophy, href: '/admin/results' },
   ];
 

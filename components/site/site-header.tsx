@@ -9,6 +9,7 @@ import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetClose } from '@/com
 import { useAuth } from '@/lib/supabase/auth-provider';
 import { cn } from '@/lib/utils';
 import { BrandMark } from '@/components/site/brand-mark';
+import { ThemeToggle } from '@/components/site/theme-toggle';
 import { ADMIN_LINKS } from '@/components/admin/admin-shell';
 
 const publicLinks = [
@@ -72,6 +73,7 @@ export function SiteHeader() {
         </div>
 
         <div className="flex items-center gap-2">
+          <ThemeToggle />
           <div className="hidden lg:flex lg:items-center lg:gap-2">
             {loading ? null : user ? (
               <>
@@ -123,6 +125,7 @@ export function SiteHeader() {
                       {mobileLink('/dashboard', 'Dashboard')}
                       {mobileLink('/dashboard/subscription', 'Langganan')}
                       {mobileLink('/dashboard/history', 'Riwayat kuis')}
+                      {mobileLink('/dashboard/friends', 'Teman')}
                       {mobileLink('/dashboard/profile', 'Profil')}
                       <SheetClose asChild>
                         <button onClick={doSignOut} className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-left font-heading text-sm font-bold hover:bg-secondary">

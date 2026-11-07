@@ -1,4 +1,4 @@
-/*! KuisKelas engine CSS v2.1.0 (offline) — jangan diubah per materi; sumber: content/engine/kuiskelas.css */
+/*! KuisKelas engine CSS v2.2.0 (offline) — jangan diubah per materi; sumber: content/engine/kuiskelas.css */
 :root{
   --bg:#F4F5FA; --surface:#FFFFFF; --ink:#161A3C; --muted:#5B6285; --line:#D9DCEC;
   --accent:#46178F; --accent-ink:#FFFFFF; --soft:#EEE8FA; --warn:#FBF3D9; --warn-line:#C99A1B;
@@ -10,13 +10,13 @@
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --bg:#0E1024; --surface:#171A38; --ink:#EDEFFC; --muted:#A5ABCF; --line:#2B2F5C;
-    --accent:#B99CF2; --accent-ink:#1A0B3B; --soft:#261E52; --warn:#2E2810; --warn-line:#8C7326;
+    --bg:#150B23; --surface:#21123A; --ink:#F3EEFF; --muted:#B8ABD6; --line:#3A2A5C;
+    --accent:#C4A8FF; --accent-ink:#1A0B3B; --soft:#2C1A4D; --warn:#2E2810; --warn-line:#8C7326;
   }
 }
 :root[data-theme="dark"]{
-  --bg:#0E1024; --surface:#171A38; --ink:#EDEFFC; --muted:#A5ABCF; --line:#2B2F5C;
-  --accent:#B99CF2; --accent-ink:#1A0B3B; --soft:#261E52; --warn:#2E2810; --warn-line:#8C7326;
+  --bg:#150B23; --surface:#21123A; --ink:#F3EEFF; --muted:#B8ABD6; --line:#3A2A5C;
+  --accent:#C4A8FF; --accent-ink:#1A0B3B; --soft:#2C1A4D; --warn:#2E2810; --warn-line:#8C7326;
 }
 html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 76px);scroll-behavior:smooth}
 *,*::before,*::after{box-sizing:border-box}

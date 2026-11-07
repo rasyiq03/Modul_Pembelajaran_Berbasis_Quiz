@@ -28,7 +28,7 @@ export default async function AdminResultsPage(props: { searchParams: Promise<{ 
 
   return (
     <div className="space-y-6">
-      <PageHeader title="Hasil & analitik" description="Partisipasi, skor, dan tingkat jawaban benar per soal untuk kuis mandiri. Hasil sesi live ada di konsol tiap sesi." />
+      <PageHeader title="Hasil & analitik" description="Partisipasi, skor, dan tingkat jawaban benar per soal untuk kuis mandiri dan Arena. Hasil sesi live ada di konsol tiap sesi." />
       <form action="/admin/results" className="flex flex-wrap gap-2">
         <select name="quiz" defaultValue={quizId} aria-label="Pilih kuis" className="h-10 min-w-[16rem] rounded-md border-[1.5px] border-input bg-background px-3 font-heading text-sm">
           {(quizzes ?? []).map((q) => <option key={q.id} value={q.id}>{q.title} · {QUIZ_MODE_LABEL[q.mode as QuizMode]}</option>)}
@@ -48,21 +48,36 @@ export default async function AdminResultsPage(props: { searchParams: Promise<{ 
             ))}
           </div>
 
+          <div>
+            <p className="eyebrow mb-2">Arena</p>
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+              {[
+                ['Permainan selesai', fmtNum(st.arena?.runs ?? 0, 0)], ['Pemain', fmtNum(st.arena?.players ?? 0, 0)],
+                ['Rata-rata benar', st.arena?.avg_accuracy == null ? '–' : `${fmtNum(st.arena.avg_accuracy)}%`],
+                ['Rata-rata skor', st.arena?.avg_score == null ? '–' : fmtNum(st.arena.avg_score, 0)], ['Skor tertinggi', st.arena?.best_score == null ? '–' : fmtNum(st.arena.best_score, 0)],
+              ].map(([k, v]) => (
+                <Card key={k}><CardContent className="p-4"><div className="eyebrow">{k}</div><div className="font-heading text-2xl font-extrabold">{v}</div></CardContent></Card>
+              ))}
+            </div>
+          </div>
+
           <Card>
             <CardHeader><CardTitle className="text-lg">Tingkat jawaban benar per soal</CardTitle></CardHeader>
             <CardContent className="space-y-2">
               {st.questions.length === 0 && <p className="text-sm text-muted-foreground">Kuis ini belum punya soal.</p>}
-              {st.questions.map((q: any, i: number) => {
-                const rate = q.answered ? (q.correct / q.answered) * 100 : null;
-                return (
-                  <div key={q.question_id} className="grid items-center gap-2 font-heading text-sm sm:grid-cols-[2rem_1fr_12rem_6rem]">
-                    <span className="font-extrabold">{i + 1}</span>
-                    <Link href={`/admin/questions/${q.question_id}`} className="line-clamp-1 text-foreground">{plain(q.prompt)} <span className="text-xs text-muted-foreground">· {QUESTION_TYPE_LABEL[q.type as QuestionType]}</span></Link>
-                    <span className="h-2 overflow-hidden rounded-full bg-secondary"><span className={`block h-full ${rate != null && rate < 50 ? 'bg-destructive' : 'bg-success'}`} style={{ width: `${rate ?? 0}%` }} /></span>
-                    <span className="text-right">{rate == null ? '–' : `${fmtNum(rate, 0)}%`} <span className="text-xs text-muted-foreground">({q.correct}/{q.answered})</span></span>
-                  </div>
-                );
-              })}
+              {st.questions.length > 0 && (
+                <div className="hidden gap-2 font-heading text-xs font-bold text-muted-foreground sm:grid sm:grid-cols-[2rem_1fr_9rem_9rem]">
+                  <span /><span>Soal</span><span className="text-right">Kuis mandiri</span><span className="text-right">Arena</span>
+                </div>
+              )}
+              {st.questions.map((q: any, i: number) => (
+                <div key={q.question_id} className="grid items-center gap-2 font-heading text-sm sm:grid-cols-[2rem_1fr_9rem_9rem]">
+                  <span className="font-extrabold">{i + 1}</span>
+                  <Link href={`/admin/questions/${q.question_id}`} className="line-clamp-1 text-foreground">{plain(q.prompt)} <span className="text-xs text-muted-foreground">· {QUESTION_TYPE_LABEL[q.type as QuestionType]}</span></Link>
+                  <Rate label="Kuis mandiri" correct={q.correct} answered={q.answered} />
+                  <Rate label="Arena" correct={q.arena_correct ?? 0} answered={q.arena_answered ?? 0} />
+                </div>
+              ))}
             </CardContent>
           </Card>
 
@@ -89,5 +104,16 @@ export default async function AdminResultsPage(props: { searchParams: Promise<{ 
         </>
       )}
     </div>
+  );
+}
+
+/** Persentase jawaban benar satu soal, dengan bilah */
+function Rate({ label, correct, answered }: { label: string; correct: number; answered: number }) {
+  const rate = answered ? (correct / answered) * 100 : null;
+  return (
+    <span className="grid grid-cols-[1fr_auto] items-center gap-2" title={`${label}: ${correct}/${answered} benar`}>
+      <span className="h-2 overflow-hidden rounded-full bg-secondary"><span className={`block h-full ${rate != null && rate < 50 ? 'bg-destructive' : 'bg-success'}`} style={{ width: `${rate ?? 0}%` }} /></span>
+      <span className="w-20 text-right">{rate == null ? '–' : `${fmtNum(rate, 0)}%`} <span className="text-xs text-muted-foreground">({correct}/{answered})</span></span>
+    </span>
   );
 }
