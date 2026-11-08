@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 import type { Session, User } from '@supabase/supabase-js';
 import { getSupabaseBrowser } from '@/lib/supabase/clients';
 import type { Database } from '@/lib/database.types';
@@ -14,6 +14,7 @@ interface AuthContextValue {
   isAdmin: boolean;
   loading: boolean;
   signOut: () => Promise<void>;
+  refreshProfile: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextValue>({
@@ -23,6 +24,7 @@ const AuthContext = createContext<AuthContextValue>({
   isAdmin: false,
   loading: true,
   signOut: async () => {},
+  refreshProfile: async () => {},
 });
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -30,6 +32,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
+
+  const fetchProfile = useCallback(async (userId: string) => {
+    const { data } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', userId)
+      .maybeSingle();
+    const p = (data as unknown as Profile) ?? null;
+    setProfile(p);
+    return p;
+  }, [supabase]);
+
+  const refreshProfile = useCallback(async () => {
+    if (!session?.user) return;
+    await fetchProfile(session.user.id);
+  }, [session?.user, fetchProfile]);
 
   useEffect(() => {
     let mounted = true;
@@ -57,16 +75,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (!session?.user) return;
     setLoading(true);
-    (async () => {
-      const { data } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', session.user.id)
-        .maybeSingle();
-      setProfile((data as unknown as Profile) ?? null);
-      setLoading(false);
-    })();
-  }, [session, supabase]);
+    fetchProfile(session.user.id).finally(() => setLoading(false));
+  }, [session, fetchProfile]);
 
   const value = useMemo<AuthContextValue>(
     () => ({
@@ -79,8 +89,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         await supabase.auth.signOut();
         setProfile(null);
       },
+      refreshProfile,
     }),
-    [session, profile, loading, supabase],
+    [session, profile, loading, supabase, refreshProfile],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

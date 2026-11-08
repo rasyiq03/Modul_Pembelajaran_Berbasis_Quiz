@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { ArrowRight, Clock, Gamepad2, Lock, Radio, Users } from 'lucide-react';
+import { ArrowRight, Clock, Gamepad2, Layers, Lock, Radio, Users } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -23,6 +23,9 @@ export function QuizCard({ q }: { q: PublicQuiz }) {
       <CardHeader>
         <div className="flex flex-wrap gap-1.5">
           <Badge variant="secondary">{QUIZ_MODE_LABEL[q.mode]}</Badge>
+          {q.materials.length > 1 && (
+            <Badge variant="outline"><Layers className="mr-1 h-3 w-3" /> {q.materials.length} materi</Badge>
+          )}
           {!live && q.access_level !== 'public' && (
             <Badge variant="outline">{!q.can_take && <Lock className="mr-1 h-3 w-3" />}{ACCESS_LEVEL_LABEL[q.access_level]}</Badge>
           )}
@@ -38,7 +41,10 @@ export function QuizCard({ q }: { q: PublicQuiz }) {
           {q.attempts_allowed ? <> · maks. {q.attempts_allowed}× percobaan</> : null}
         </p>
         {q.materials.length > 0 && (
-          <p className="line-clamp-2">Materi: {q.materials.map((m) => m.title).join(', ')}</p>
+          <p className="line-clamp-2">
+            {q.materials.length > 1 ? `Campuran ${q.materials.length} materi: ` : 'Materi: '}
+            {q.materials.map((m) => m.title).join(', ')}
+          </p>
         )}
       </CardContent>
       <CardFooter className="mt-auto flex flex-wrap gap-2">

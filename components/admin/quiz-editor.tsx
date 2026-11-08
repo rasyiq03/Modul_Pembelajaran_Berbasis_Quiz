@@ -3,7 +3,8 @@
 import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { ArrowDown, ArrowUp, Eye, Loader2, Plus, Radio, Save, Trash2 } from 'lucide-react';
+import { ArrowDown, ArrowUp, Eye, Layers, Loader2, Plus, Radio, Save, Shuffle, Trash2 } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -13,6 +14,7 @@ import { useToast } from '@/hooks/use-toast';
 import { getSupabaseBrowser } from '@/lib/supabase/clients';
 import { ACCESS_LEVEL_LABEL, ACCESS_LEVELS, FEEDBACK_LABEL, QUESTION_TYPE_LABEL, QUIZ_MODES, QUIZ_MODE_HELP, QUIZ_MODE_LABEL, STATUS_LABEL, errorMessage, type Feedback } from '@/lib/labels';
 import type { AccessLevel, QuestionType, QuizMode, Status } from '@/lib/database.types';
+import { analyzeQuizMaterials, mixQuestionsAcrossMaterials } from '@/lib/dsl';
 import { plain } from '@/lib/rich';
 import { cn } from '@/lib/utils';
 
@@ -29,9 +31,6 @@ export type EditorQuiz = {
 };
 type Material = { id: string; title: string; course: string; access_level: AccessLevel };
 
-/* Sama dengan _quiz_access_level di database: tingkat paling ketat di antara materi soal-soalnya */
-const RANK: Record<AccessLevel, number> = { public: 1, member: 2, subscriber: 3 };
-
 const sel = 'h-10 w-full rounded-md border-[1.5px] border-input bg-background px-3 font-heading text-sm';
 const Check = ({ label, checked, onChange }: { label: string; checked: boolean; onChange: (v: boolean) => void }) => (
   <label className="flex items-center gap-2 font-heading text-sm"><input type="checkbox" checked={checked} onChange={(e) => onChange(e.target.checked)} className="h-4 w-4 accent-[hsl(var(--primary))]" /> {label}</label>
@@ -42,9 +41,12 @@ export function QuizEditor({ quiz, bank, materials }: { quiz: EditorQuiz; bank: 
   const { toast } = useToast();
   const [z, setZ] = useState<EditorQuiz>(quiz);
   const [mats, setMats] = useState<string[]>([]);
+  const [perMat, setPerMat] = useState<number>(5);
   const [search, setSearch] = useState('');
   const [busy, setBusy] = useState(false);
   const byId = useMemo(() => new Map(bank.map((b) => [b.id, b])), [bank]);
+  const matById = useMemo(() => new Map(materials.map((m) => [m.id, m])), [materials]);
+  const qMatMap = useMemo(() => new Map(bank.map((b) => [b.id, b.material_ids])), [bank]);
   const chosen = new Set(z.questions.map((q) => q.question_id));
   const s = z.settings;
   const setS = (patch: Partial<EditorQuiz['settings']>) => setZ((x) => ({ ...x, settings: { ...x.settings, ...patch } }));
@@ -57,6 +59,18 @@ export function QuizEditor({ quiz, bank, materials }: { quiz: EditorQuiz; bank: 
 
   const add = (ids: string[]) => setZ((x) => ({ ...x, questions: [...x.questions, ...ids.map((id) => ({ question_id: id, points: 1 }))] }));
   const move = (i: number, d: number) => setZ((x) => { const q = [...x.questions]; [q[i], q[i + d]] = [q[i + d], q[i]]; return { ...x, questions: q }; });
+
+  function handleSmartMix() {
+    const { pickedIds, pickedByMaterial } = mixQuestionsAcrossMaterials(available, mats, perMat);
+    if (!pickedIds.length) {
+      return toast({ title: 'Tidak ada soal yang dapat dicampur', variant: 'destructive' });
+    }
+    add(pickedIds);
+    toast({
+      title: `${pickedIds.length} soal ditambahkan dari ${pickedByMaterial.size} materi`,
+      description: 'Soal dicampur secara merata antar materi terpilih.',
+    });
+  }
 
   async function save(status?: Status) {
     setBusy(true);
@@ -72,11 +86,14 @@ export function QuizEditor({ quiz, bank, materials }: { quiz: EditorQuiz; bank: 
   }
 
   const totalPoints = z.questions.reduce((t, q) => t + Number(q.points || 0), 0);
-  const matLevel = new Map(materials.map((m) => [m.id, m.access_level]));
-  const inherited = z.questions.flatMap((q) => byId.get(q.question_id)?.material_ids ?? [])
-    .map((id) => matLevel.get(id)).filter((l): l is AccessLevel => !!l)
-    .reduce<AccessLevel>((a, l) => (RANK[l] > RANK[a] ? l : a), 'public');
+  const analysis = useMemo(
+    () => analyzeQuizMaterials(z.questions.map((q) => q.question_id), qMatMap, materials, z.access_level),
+    [z.questions, qMatMap, materials, z.access_level],
+  );
+  const inherited = analysis.inheritedLevel;
   const unpublished = z.questions.filter((q) => byId.get(q.question_id)?.status !== 'published').length;
+  const matTitlesFor = (qId: string) =>
+    (byId.get(qId)?.material_ids ?? []).map((id) => matById.get(id)?.title).filter((t): t is string => !!t);
 
   return (
     <div className="space-y-6">
@@ -105,7 +122,7 @@ export function QuizEditor({ quiz, bank, materials }: { quiz: EditorQuiz; bank: 
                   <option value="">Ikuti materi (saat ini: {ACCESS_LEVEL_LABEL[inherited]})</option>
                   {ACCESS_LEVELS.map((l) => <option key={l} value={l}>{ACCESS_LEVEL_LABEL[l]}</option>)}
                 </select>
-                <p className="text-xs text-muted-foreground">Arena terbuka untuk semua pengguna terdaftar; pembahasan selalu khusus pelanggan.</p>
+                <p className="text-xs text-muted-foreground">{analysis.justification}</p>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="zf">Tampilkan kunci & pembahasan</Label>
@@ -144,6 +161,22 @@ export function QuizEditor({ quiz, bank, materials }: { quiz: EditorQuiz; bank: 
           <CardContent className="space-y-3 p-5 font-heading text-sm">
             <p><b>Status:</b> {STATUS_LABEL[z.status]}</p>
             <p>{z.questions.length} soal · {totalPoints} poin total</p>
+            {analysis.materials.length > 0 && (
+              <div className="space-y-1.5 rounded-md border bg-secondary/40 p-2.5 text-xs">
+                <p className="flex items-center gap-1.5 font-bold">
+                  <Layers className="h-3.5 w-3.5" />
+                  {analysis.isMultiMaterial ? `Campuran ${analysis.materials.length} materi` : '1 materi terkait'}
+                </p>
+                <ul className="space-y-1 text-muted-foreground">
+                  {analysis.materials.map((m) => (
+                    <li key={m.id} className="flex items-center justify-between gap-2">
+                      <span className="truncate">{m.title}</span>
+                      <Badge variant="outline" className="shrink-0 text-[10px]">{m.questionCount} soal · {ACCESS_LEVEL_LABEL[m.access_level]}</Badge>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
             {unpublished > 0 && <p className="note-box-warn text-xs">{unpublished} soal masih draf. Publikasikan soalnya sebelum kuis dipublikasikan.</p>}
             <Button className="w-full" onClick={() => save()} disabled={busy}>{busy ? <Loader2 className="mr-1 h-4 w-4 animate-spin" /> : <Save className="mr-1 h-4 w-4" />} Simpan</Button>
             {z.status !== 'published'
@@ -165,16 +198,21 @@ export function QuizEditor({ quiz, bank, materials }: { quiz: EditorQuiz; bank: 
         <Card>
           <CardHeader><CardTitle className="text-base">Soal di kuis ({z.questions.length})</CardTitle></CardHeader>
           <CardContent className="space-y-2">
-            {z.questions.length === 0 && <p className="text-sm text-muted-foreground">Tambahkan soal dari bank soal di sebelah.</p>}
+            {z.questions.length === 0 && <p className="text-sm text-muted-foreground">Tambahkan soal dari satu atau beberapa materi di bank soal sebelah.</p>}
             <ol className="space-y-2">
               {z.questions.map((q, i) => {
                 const b = byId.get(q.question_id);
+                const mTitles = matTitlesFor(q.question_id);
                 return (
                   <li key={q.question_id} className="flex items-start gap-2 rounded-md border-[1.5px] p-2.5">
                     <span className="mt-1 w-6 font-heading text-sm font-extrabold">{i + 1}</span>
                     <div className="min-w-0 flex-1">
                       <p className="line-clamp-2 text-sm">{plain(b?.prompt ?? '(soal tidak ditemukan)')}</p>
-                      <p className="font-heading text-xs text-muted-foreground">{b ? QUESTION_TYPE_LABEL[b.type] : ''}{b?.status !== 'published' ? ' · draf' : ''}</p>
+                      <p className="font-heading text-xs text-muted-foreground">
+                        {b ? QUESTION_TYPE_LABEL[b.type] : ''}
+                        {mTitles.length > 0 ? ` · ${mTitles.join(', ')}` : ''}
+                        {b?.status !== 'published' ? ' · draf' : ''}
+                      </p>
                     </div>
                     <Input type="number" min={0} step="0.5" value={q.points} aria-label={`Poin soal ${i + 1}`} className="h-8 w-16"
                       onChange={(e) => setZ((x) => ({ ...x, questions: x.questions.map((y, k) => (k === i ? { ...y, points: Number(e.target.value) } : y)) }))} />
@@ -195,31 +233,55 @@ export function QuizEditor({ quiz, bank, materials }: { quiz: EditorQuiz; bank: 
             <CardTitle className="text-base">Bank soal</CardTitle>
             <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Cari soal" aria-label="Cari soal di bank" />
             <details className="rounded-md border-[1.5px] p-2 font-heading text-sm">
-              <summary className="cursor-pointer font-bold">Saring materi {mats.length ? `(${mats.length})` : ''}</summary>
+              <summary className="cursor-pointer font-bold">Pilih / campur materi {mats.length ? `(${mats.length} dipilih)` : '(semua materi)'}</summary>
               <div className="mt-2 max-h-48 space-y-1 overflow-y-auto">
                 {materials.map((m) => (
                   <label key={m.id} className="flex items-start gap-2">
                     <input type="checkbox" className="mt-1 h-4 w-4 accent-[hsl(var(--primary))]" checked={mats.includes(m.id)} onChange={(e) => setMats(e.target.checked ? [...mats, m.id] : mats.filter((x) => x !== m.id))} />
-                    <span>{m.title} <span className="text-xs text-muted-foreground">· {m.course}</span></span>
+                    <span>{m.title} <span className="text-xs text-muted-foreground">· {m.course} ({ACCESS_LEVEL_LABEL[m.access_level]})</span></span>
                   </label>
                 ))}
               </div>
             </details>
-            <Button size="sm" variant="outline" disabled={!available.length} onClick={() => add(available.slice(0, 200).map((a) => a.id))}>
-              <Plus className="mr-1 h-4 w-4" /> Tambahkan semua ({Math.min(available.length, 200)})
-            </Button>
+            <div className="flex flex-wrap items-center gap-2">
+              <Button size="sm" variant="outline" disabled={!available.length} onClick={() => add(available.slice(0, 200).map((a) => a.id))}>
+                <Plus className="mr-1 h-4 w-4" /> Tambahkan semua ({Math.min(available.length, 200)})
+              </Button>
+              <div className="flex items-center gap-1.5">
+                <Input
+                  type="number"
+                  min={1}
+                  max={50}
+                  value={perMat}
+                  onChange={(e) => setPerMat(Math.max(1, Number(e.target.value) || 1))}
+                  aria-label="Jumlah soal per materi"
+                  className="h-9 w-16 text-center font-heading text-xs"
+                />
+                <Button size="sm" variant="secondary" disabled={!available.length} onClick={handleSmartMix}>
+                  <Shuffle className="mr-1 h-3.5 w-3.5" /> Campur ({perMat} soal/materi)
+                </Button>
+              </div>
+            </div>
           </CardHeader>
           <CardContent>
             <ul className="max-h-[32rem] space-y-1.5 overflow-y-auto">
-              {available.slice(0, 300).map((b) => (
-                <li key={b.id} className={cn('flex items-start gap-2 rounded-md p-2 hover:bg-secondary')}>
-                  <button type="button" onClick={() => add([b.id])} aria-label="Tambahkan ke kuis" className="mt-0.5 rounded bg-primary p-1 text-primary-foreground"><Plus className="h-3.5 w-3.5" /></button>
-                  <div className="min-w-0">
-                    <p className="line-clamp-2 text-sm">{plain(b.prompt)}</p>
-                    <p className="font-heading text-xs text-muted-foreground">{QUESTION_TYPE_LABEL[b.type]}{b.topic ? ` · ${b.topic}` : ''}{b.status !== 'published' ? ' · draf' : ''}</p>
-                  </div>
-                </li>
-              ))}
+              {available.slice(0, 300).map((b) => {
+                const mTitles = matTitlesFor(b.id);
+                return (
+                  <li key={b.id} className={cn('flex items-start gap-2 rounded-md p-2 hover:bg-secondary')}>
+                    <button type="button" onClick={() => add([b.id])} aria-label="Tambahkan ke kuis" className="mt-0.5 rounded bg-primary p-1 text-primary-foreground"><Plus className="h-3.5 w-3.5" /></button>
+                    <div className="min-w-0">
+                      <p className="line-clamp-2 text-sm">{plain(b.prompt)}</p>
+                      <p className="font-heading text-xs text-muted-foreground">
+                        {QUESTION_TYPE_LABEL[b.type]}
+                        {mTitles.length > 0 ? ` · ${mTitles.join(', ')}` : ''}
+                        {b.topic ? ` · ${b.topic}` : ''}
+                        {b.status !== 'published' ? ' · draf' : ''}
+                      </p>
+                    </div>
+                  </li>
+                );
+              })}
               {available.length === 0 && <li className="text-sm text-muted-foreground">Tidak ada soal yang cocok.</li>}
             </ul>
           </CardContent>

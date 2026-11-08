@@ -1,5 +1,6 @@
 import { cache } from 'react';
 import { createSupabaseServer } from '@/lib/supabase/server';
+import { QueryFilterDSL } from '@/lib/dsl/query/filter';
 import type { Database } from '@/lib/database.types';
 
 export type CourseRow = Database['public']['Tables']['courses']['Row'];
@@ -13,52 +14,68 @@ export type MaterialWithCourse = MaterialRow & {
 };
 
 export async function getPublishedCourses(): Promise<CourseWithCounts[]> {
-  const supabase = createSupabaseServer();
-  const { data } = await supabase
-    .from('courses')
-    .select('id, title, slug, description, cover_url, status, display_order, created_at, updated_at, materials(count)')
-    .eq('status', 'published')
-    .order('display_order', { ascending: true });
+  try {
+    const supabase = createSupabaseServer();
+    const { data } = await supabase
+      .from('courses')
+      .select('id, title, slug, description, cover_url, status, display_order, created_at, updated_at, materials(count)')
+      .eq('status', 'published')
+      .order('display_order', { ascending: true });
 
-  if (!data) return [];
-  return (data as unknown as Array<CourseRow & { materials: { count: number }[] }>).map((c) => ({
-    ...c,
-    material_count: c.materials?.[0]?.count ?? 0,
-  })) as CourseWithCounts[];
+    if (!data) return [];
+    return (data as unknown as Array<CourseRow & { materials: { count: number }[] }>).map((c) => ({
+      ...c,
+      material_count: c.materials?.[0]?.count ?? 0,
+    })) as CourseWithCounts[];
+  } catch {
+    return [];
+  }
 }
 
 /* cache(): generateMetadata dan halaman memakai hasil yang sama dalam satu permintaan */
 export const getCourseBySlug = cache(async (slug: string): Promise<CourseRow | null> => {
-  const supabase = createSupabaseServer();
-  const { data } = await supabase
-    .from('courses')
-    .select('*')
-    .eq('slug', slug)
-    .eq('status', 'published')
-    .maybeSingle();
-  return (data as unknown as CourseRow) ?? null;
+  try {
+    const supabase = createSupabaseServer();
+    const { data } = await supabase
+      .from('courses')
+      .select('*')
+      .eq('slug', slug)
+      .eq('status', 'published')
+      .maybeSingle();
+    return (data as unknown as CourseRow) ?? null;
+  } catch {
+    return null;
+  }
 });
 
 export async function getMaterialsForCourse(courseId: string): Promise<MaterialWithCourse[]> {
-  const supabase = createSupabaseServer();
-  const { data } = await supabase
-    .from('materials')
-    .select('*, courses(id, title, slug), material_tags(tag)')
-    .eq('course_id', courseId)
-    .eq('status', 'published')
-    .order('display_order', { ascending: true });
-  return ((data as unknown as MaterialWithCourse[]) ?? []) as MaterialWithCourse[];
+  try {
+    const supabase = createSupabaseServer();
+    const { data } = await supabase
+      .from('materials')
+      .select('*, courses(id, title, slug), material_tags(tag)')
+      .eq('course_id', courseId)
+      .eq('status', 'published')
+      .order('display_order', { ascending: true });
+    return ((data as unknown as MaterialWithCourse[]) ?? []) as MaterialWithCourse[];
+  } catch {
+    return [];
+  }
 }
 
 export async function getRecentMaterials(limit = 6): Promise<MaterialWithCourse[]> {
-  const supabase = createSupabaseServer();
-  const { data } = await supabase
-    .from('materials')
-    .select('*, courses(id, title, slug), material_tags(tag)')
-    .eq('status', 'published')
-    .order('updated_at', { ascending: false })
-    .limit(limit);
-  return ((data as unknown as MaterialWithCourse[]) ?? []) as MaterialWithCourse[];
+  try {
+    const supabase = createSupabaseServer();
+    const { data } = await supabase
+      .from('materials')
+      .select('*, courses(id, title, slug), material_tags(tag)')
+      .eq('status', 'published')
+      .order('updated_at', { ascending: false })
+      .limit(limit);
+    return ((data as unknown as MaterialWithCourse[]) ?? []) as MaterialWithCourse[];
+  } catch {
+    return [];
+  }
 }
 
 export async function searchPublishedMaterials(opts: {
@@ -69,20 +86,15 @@ export async function searchPublishedMaterials(opts: {
   pageSize?: number;
 }): Promise<{ items: MaterialWithCourse[]; total: number }> {
   const supabase = createSupabaseServer();
-  const pageSize = opts.pageSize ?? 12;
-  const page = opts.page ?? 1;
-  const from = (page - 1) * pageSize;
-  const to = from + pageSize - 1;
+  const { from, to } = QueryFilterDSL.paginate(opts, 12);
 
   let query = supabase
     .from('materials')
     .select('*, courses(id, title, slug), material_tags(tag)', { count: 'exact' })
     .eq('status', 'published');
 
-  /* Teks pencarian disisipkan ke filter .or() PostgREST: buang karakter sintaks filter (, . ( ) : " \)
-     dan wildcard (% * _) agar pengguna tidak bisa menambah kondisi sendiri. */
-  const q = (opts.q ?? '').replace(/[,.():"\\%*_]/g, ' ').trim().slice(0, 100);
-  if (q) query = query.or(`title.ilike.%${q}%,description.ilike.%${q}%`);
+  const filter = QueryFilterDSL.orIlike(['title', 'description'], opts.q);
+  if (filter) query = query.or(filter);
   if (opts.courseId) query = query.eq('course_id', opts.courseId);
   query = opts.sort === 'title' ? query.order('title', { ascending: true }) : query.order('updated_at', { ascending: false });
   query = query.range(from, to);

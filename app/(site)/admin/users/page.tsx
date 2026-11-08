@@ -4,6 +4,7 @@ import { PageHeader } from '@/components/site/page-parts';
 import { RoleToggle } from '@/components/admin/role-toggle';
 import { getViewer, requireAdmin } from '@/lib/auth';
 import { createSupabaseServer } from '@/lib/supabase/server';
+import { QueryFilterDSL } from '@/lib/dsl/query/filter';
 import { SUBSCRIPTION_STATUS_LABEL, fmtDate } from '@/lib/labels';
 import { effectiveStatus } from '@/lib/access';
 import type { SubscriptionStatus } from '@/lib/database.types';
@@ -16,7 +17,8 @@ export default async function AdminUsersPage(props: { searchParams: Promise<{ q?
   await requireAdmin('/admin/users');
   const viewer = await getViewer();
   let q = createSupabaseServer().from('profiles').select('id, email, display_name, role, created_at, subscriptions(status, expires_at, created_at)').order('created_at', { ascending: false }).limit(500);
-  if (searchParams.q) q = q.or(`email.ilike.%${searchParams.q.replace(/[%_,()]/g, '')}%,display_name.ilike.%${searchParams.q.replace(/[%_,()]/g, '')}%`);
+  const filter = QueryFilterDSL.orIlike(['email', 'display_name'], searchParams.q);
+  if (filter) q = q.or(filter);
   const { data } = await q;
   const rows = (data ?? []) as unknown as { id: string; email: string | null; display_name: string | null; role: 'student' | 'admin'; created_at: string; subscriptions: { status: SubscriptionStatus; expires_at: string | null; created_at: string }[] }[];
   /* Status yang paling relevan: aktif > menunggu > pengajuan terbaru */

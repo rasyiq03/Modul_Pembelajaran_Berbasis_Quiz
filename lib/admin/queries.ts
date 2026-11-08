@@ -51,14 +51,19 @@ export async function adminListSubscriptions() {
 
 export async function avgScore() {
   const supabase = createSupabaseServer();
-  const { data } = await supabase
+  const { data, error } = await supabase.rpc('quiz_attempts_avg_score' as any, {});
+  if (!error && data !== null && data !== undefined) {
+    return Number(data);
+  }
+  const { data: rows } = await supabase
     .from('quiz_attempts')
     .select('percent')
     .eq('status', 'graded')
-    .eq('is_preview', false);
-  if (!data || data.length === 0) return 0;
-  const total = data.reduce((s: number, a) => s + (a as unknown as { percent: number }).percent, 0);
-  return Math.round((total / data.length) * 10) / 10;
+    .eq('is_preview', false)
+    .limit(1000);
+  if (!rows || rows.length === 0) return 0;
+  const total = rows.reduce((s: number, a) => s + (a as unknown as { percent: number }).percent, 0);
+  return Math.round((total / rows.length) * 10) / 10;
 }
 
 export async function recentAttempts(limit = 10) {

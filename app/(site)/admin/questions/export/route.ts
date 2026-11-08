@@ -39,7 +39,9 @@ export async function GET(req: NextRequest) {
       order ? order.indexOf(a.key) - order.indexOf(b.key) : a.side === b.side ? a.key.localeCompare(b.key, undefined, { numeric: true }) : a.side === 'left' ? -1 : 1);
     return questionToRow({
       ...r, options: opts, answer: r.question_keys?.answer, explanation: r.question_keys?.explanation ?? null,
-      materials: r.question_materials.map((m) => `${m.materials?.courses?.slug}/${m.materials?.slug}`),
+      materials: r.question_materials.flatMap((m) =>
+        m.materials?.courses?.slug && m.materials?.slug ? [`${m.materials.courses.slug}/${m.materials.slug}`] : [],
+      ),
       tags: r.question_tags.map((t) => t.tag),
     });
   });

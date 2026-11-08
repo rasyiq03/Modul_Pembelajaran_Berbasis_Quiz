@@ -165,7 +165,8 @@ export interface Database {
       admin_save_quiz: { Args: { p: any }; Returns: string };
       quiz_stats: { Args: { p_quiz: string }; Returns: any };
       list_public_quizzes: { Args: { p_material?: string | null }; Returns: any };
-      quiz_access: { Args: { p_quiz: string }; Returns: { level: AccessLevel; can_take: boolean; explanations: boolean; arena_count: number } | null };
+      quiz_access: { Args: { p_quiz: string }; Returns: { level: AccessLevel; can_take: boolean; explanations: boolean; arena_count: number; materials?: { title: string; slug: string; course_slug: string }[] } | null };
+      quiz_attempts_avg_score: { Args: Record<string, never>; Returns: number };
       admin_set_quiz_access: { Args: { p_quiz: string; p_level: AccessLevel | null }; Returns: undefined };
       arena_start: { Args: { p_quiz?: string | null; p_course?: string | null; p_count?: number | null }; Returns: { run_id: string; title: string; count: number } };
       arena_next: { Args: { p_run: string }; Returns: any };

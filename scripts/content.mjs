@@ -10,13 +10,17 @@
 import { writeFileSync } from 'node:fs';
 import { listMaterialFiles, loadCourses, parseMaterial, read, withEngine } from './lib/content.mjs';
 
+const norm = (s) => (s ? s.replace(/\r\n/g, '\n') : s);
+
 function sync() {
   let changed = 0;
   for (const m of listMaterialFiles()) {
     const old = read(m.path);
     const next = withEngine(old);
     if (next === null) { console.log(`  lewati (tanpa mesin KuisKelas): ${m.rel}`); continue; }
-    if (next !== old) { writeFileSync(m.path, next); changed++; console.log(`  diperbarui: ${m.rel}`); }
+    const usesCrlf = old.includes('\r\n');
+    const formatted = usesCrlf ? next.replace(/\r?\n/g, '\r\n') : next.replace(/\r\n/g, '\n');
+    if (formatted !== old) { writeFileSync(m.path, formatted); changed++; console.log(`  diperbarui: ${m.rel}`); }
   }
   console.log(`sync: ${changed} file diperbarui`);
 }
@@ -42,7 +46,7 @@ function check() {
     const html = read(m.path);
     const next = withEngine(html);
     if (next === null) bad.push(`${m.rel}: tidak memakai mesin KuisKelas`);
-    else if (next !== html) bad.push(`${m.rel}: mesin usang (jalankan npm run content:sync)`);
+    else if (norm(next) !== norm(html)) bad.push(`${m.rel}: mesin usang (jalankan npm run content:sync)`);
     try {
       const p = parseMaterial(html, m.rel);
       bad.push(...validateQuestions(p.questions, m.rel));

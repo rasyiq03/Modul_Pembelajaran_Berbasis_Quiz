@@ -5,11 +5,13 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useAuth } from '@/lib/supabase/auth-provider';
 import { getSupabaseBrowser } from '@/lib/supabase/clients';
 import { errorMessage } from '@/lib/labels';
 
 export function ProfileForm({ userId, displayName }: { userId: string; displayName: string }) {
   const router = useRouter();
+  const { refreshProfile } = useAuth();
   const [name, setName] = useState(displayName);
   const [pw, setPw] = useState('');
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null);
@@ -21,6 +23,9 @@ export function ProfileForm({ userId, displayName }: { userId: string; displayNa
     setBusy(true); setMsg(null);
     const { error } = await supabase.from('profiles').update({ display_name: name.trim() || null }).eq('id', userId);
     setBusy(false);
+    if (!error) {
+      await refreshProfile();
+    }
     setMsg(error ? { ok: false, text: errorMessage(error) } : { ok: true, text: 'Profil tersimpan.' });
     router.refresh();
   }

@@ -92,6 +92,8 @@ const ERRORS: Record<string, string> = {
   REQUEST_PENDING: 'Permintaan pertemanan sudah dikirim dan menunggu jawaban.',
   TOO_MANY_REQUESTS: 'Terlalu banyak permintaan yang belum dijawab. Batalkan sebagian dulu.',
   FRIEND_REQUEST_NOT_FOUND: 'Permintaan pertemanan tidak ditemukan.',
+  BAD_POINTS: 'Nilai di luar rentang poin maksimal atau kurang dari 0.',
+  ANSWER_NOT_FOUND: 'Jawaban tidak ditemukan.',
 };
 
 export function errorMessage(e: unknown): string {
